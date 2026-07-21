@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Générateur de Facture - Terratransport</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
@@ -68,7 +68,7 @@
                         📄 Générer la facture
                     </button>
                     <button type="reset" class="btn-secondary" onclick="resetForm()">
-                        🗑️ Réinitialiser
+                        Réinitialiser
                     </button>
                 </div>
             </form>
@@ -77,9 +77,9 @@
         <!-- ============ APERÇU DE LA FACTURE ============ -->
         <div id="previewSection" class="preview-section" style="display: none;">
             <div class="preview-header">
-                <h2>👁️ Aperçu de la facture</h2>
+                <h2>Aperçu de la facture</h2>
                 <button class="btn-download" onclick="downloadPDF()">
-                    ⬇️ Télécharger PDF
+                    Télécharger PDF
                 </button>
             </div>
             <div id="invoicePreview">
