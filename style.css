@@ -32,6 +32,12 @@ body {
     gap: 30px;
 }
 
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
 .logo {
     height: 80px;
     width: auto;
@@ -227,6 +233,11 @@ body {
     box-shadow: 0 4px 20px rgba(40, 167, 69, 0.4);
 }
 
+.btn-download:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
 /* ============ APERÇU ============ */
 .preview-section {
     background: white;
@@ -266,6 +277,7 @@ body {
     font-family: 'Helvetica', 'Arial', sans-serif;
 }
 
+/* EN-TÊTE FACTURE */
 .invoice-header {
     display: flex;
     justify-content: space-between;
@@ -281,12 +293,14 @@ body {
     align-items: flex-start;
 }
 
-.invoice-left .logo-invoice {
+.logo-invoice {
     height: 70px;
+    width: auto;
     margin-bottom: 10px;
+    object-fit: contain;
 }
 
-.invoice-left .company-info {
+.company-info {
     font-size: 13px;
     color: #555;
     line-height: 1.8;
@@ -296,17 +310,18 @@ body {
     text-align: right;
 }
 
-.invoice-right .invoice-number {
+.invoice-number {
     font-size: 18px;
     font-weight: 700;
     color: #0a1628;
 }
 
-.invoice-right .invoice-date {
+.invoice-date {
     font-size: 14px;
     color: #666;
 }
 
+/* CLIENT */
 .invoice-client {
     margin: 25px 0 30px 0;
     padding: 20px;
@@ -360,12 +375,27 @@ body {
     padding-top: 15px;
 }
 
+/* IMAGES DANS LE TABLEAU */
 .product-img {
-    width: 60px;
+    width: 70px;
     height: 60px;
     object-fit: cover;
     border-radius: 8px;
     border: 1px solid #ddd;
+}
+
+.img-placeholder {
+    display: flex;
+    width: 70px;
+    height: 60px;
+    background: #f0f0f0;
+    border-radius: 8px;
+    font-size: 28px;
+    color: #999;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
 }
 
 /* NOTE */
@@ -411,7 +441,7 @@ body {
     margin: 4px 0;
 }
 
-/* BANK */
+/* BANQUE */
 .bank-info {
     background: #f8f9fc;
     padding: 20px;
@@ -457,9 +487,10 @@ body {
     align-items: center;
 }
 
-.signature-area img {
+.signature-img {
     height: 80px;
     max-width: 150px;
+    object-fit: contain;
 }
 
 .signature-area p {
@@ -482,6 +513,10 @@ body {
         text-align: center;
     }
     
+    .logo-container {
+        justify-content: center;
+    }
+    
     .form-wrapper {
         padding: 20px;
     }
@@ -499,6 +534,10 @@ body {
         flex-direction: column;
         align-items: center;
         text-align: center;
+    }
+    
+    .invoice-left {
+        align-items: center;
     }
     
     .invoice-right {
@@ -521,8 +560,72 @@ body {
         align-items: stretch;
         text-align: center;
     }
+    
+    .btn-download {
+        width: 100%;
+    }
+    
+    .invoice-table {
+        font-size: 12px;
+    }
+    
+    .invoice-table th,
+    .invoice-table td {
+        padding: 8px 6px;
+    }
+    
+    .product-img,
+    .img-placeholder {
+        width: 50px;
+        height: 45px;
+    }
 }
 
+@media (max-width: 480px) {
+    .container {
+        padding: 10px;
+    }
+    
+    .header h1 {
+        font-size: 20px;
+    }
+    
+    .logo {
+        height: 60px;
+    }
+    
+    .form-wrapper {
+        padding: 15px;
+    }
+    
+    .invoice-table {
+        font-size: 11px;
+    }
+    
+    .invoice-table th,
+    .invoice-table td {
+        padding: 6px 4px;
+    }
+    
+    .product-img,
+    .img-placeholder {
+        width: 40px;
+        height: 35px;
+    }
+    
+    .btn-primary {
+        font-size: 15px;
+        padding: 14px 20px;
+        min-width: auto;
+    }
+    
+    .btn-secondary {
+        font-size: 14px;
+        padding: 14px 20px;
+    }
+}
+
+/* ============ IMPRESSION ============ */
 @media print {
     .header,
     .form-wrapper,
@@ -540,5 +643,95 @@ body {
     #invoicePreview {
         border: none;
         padding: 20px;
+        border-radius: 0;
+    }
+    
+    .btn-download {
+        display: none !important;
+    }
+    
+    .invoice-container {
+        page-break-inside: avoid;
+    }
+    
+    .invoice-table {
+        page-break-inside: auto;
+    }
+    
+    .invoice-table tr {
+        page-break-inside: avoid;
+    }
+    
+    .product-img {
+        break-inside: avoid;
     }
 }
+
+/* ============ UTILITAIRES ============ */
+.text-center {
+    text-align: center;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.mt-10 {
+    margin-top: 10px;
+}
+
+.mb-10 {
+    margin-bottom: 10px;
+}
+
+.mt-20 {
+    margin-top: 20px;
+}
+
+.mb-20 {
+    margin-bottom: 20px;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* ============ ANIMATIONS ============ */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.preview-section {
+    animation: fadeIn 0.5s ease-out;
+}
+
+.product-item {
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* ============ SCROLLBAR ============ */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f0f2f5;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #c9a84c;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #b8923a;
+    }
