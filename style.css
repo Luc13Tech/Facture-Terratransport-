@@ -270,11 +270,15 @@ body {
     border: 1px solid #e0e4ec;
     border-radius: 12px;
     min-height: 500px;
+    overflow: visible !important;
 }
 
 .invoice-container {
     max-width: 100%;
     font-family: 'Helvetica', 'Arial', sans-serif;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
 }
 
 /* EN-TÊTE FACTURE */
@@ -346,19 +350,20 @@ body {
     width: 100%;
     border-collapse: collapse;
     margin: 25px 0;
+    font-size: 13px;
 }
 
 .invoice-table th {
-    background: #0a1628;
-    color: white;
+    background: #0a1628 !important;
+    color: white !important;
     padding: 14px 12px;
     text-align: left;
     font-size: 14px;
-    font-weight: 600;
+    font-weight: 700 !important;
 }
 
 .invoice-table td {
-    padding: 14px 12px;
+    padding: 12px 10px !important;
     border-bottom: 1px solid #e8ecf3;
     font-size: 14px;
     vertical-align: middle;
@@ -377,16 +382,17 @@ body {
 
 /* IMAGES DANS LE TABLEAU */
 .product-img {
-    width: 70px;
+    width: 60px;
     height: 60px;
     object-fit: cover;
     border-radius: 8px;
     border: 1px solid #ddd;
+    display: inline-block !important;
 }
 
 .img-placeholder {
     display: flex;
-    width: 70px;
+    width: 60px;
     height: 60px;
     background: #f0f0f0;
     border-radius: 8px;
@@ -485,6 +491,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    min-width: 150px;
 }
 
 .signature-img {
@@ -661,39 +668,6 @@ body {
     .invoice-table tr {
         page-break-inside: avoid;
     }
-    
-    .product-img {
-        break-inside: avoid;
-    }
-}
-
-/* ============ UTILITAIRES ============ */
-.text-center {
-    text-align: center;
-}
-
-.text-right {
-    text-align: right;
-}
-
-.mt-10 {
-    margin-top: 10px;
-}
-
-.mb-10 {
-    margin-bottom: 10px;
-}
-
-.mt-20 {
-    margin-top: 20px;
-}
-
-.mb-20 {
-    margin-bottom: 20px;
-}
-
-.hidden {
-    display: none !important;
 }
 
 /* ============ ANIMATIONS ============ */
