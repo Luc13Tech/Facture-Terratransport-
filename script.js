@@ -6,6 +6,19 @@ let invoiceData = null;
 let currentInvoiceId = null;
 
 // ============================================================
+// IMAGES EN BASE64 (intégrées dans le code)
+// ============================================================
+
+// LOGO TERRATRANSPORT (texte stylisé)
+const LOGO_HTML = `<div style="font-size:32px; font-weight:700; color:#0a1628; letter-spacing:2px; font-family:'Helvetica',sans-serif;">Terratransport</div>`;
+
+// SIGNATURE (texte stylisé)
+const SIGNATURE_HTML = `<div style="font-size:20px; font-weight:700; color:#0a1628; letter-spacing:1px; font-family:'Helvetica',sans-serif;">Terratransport</div>`;
+
+// IMAGE DU CAMION (emoji)
+const CAMION_EMOJI = '🚛';
+
+// ============================================================
 // AJOUTER UN PRODUIT
 // ============================================================
 function addProduct(productData = null) {
@@ -209,7 +222,7 @@ function generateInvoice() {
                 <!-- EN-TÊTE : GAUCHE = ENTREPRISE, DROITE = FACTURE -->
                 <div class="invoice-header">
                     <div class="invoice-left">
-                        <div class="logo-text">Terratransport</div>
+                        <div class="logo-text" style="font-size:32px; font-weight:700; color:#0a1628; letter-spacing:2px;">Terratransport</div>
                         <div class="company-info">
                             <strong>Terratransport</strong><br>
                             NINEA : 005554789<br>
@@ -313,7 +326,7 @@ function generateInvoice() {
             <!-- FOOTER : GAUCHE = SIGNATURE, DROITE = CONTACT -->
             <div class="invoice-footer">
                 <div class="signature-area">
-                    <div class="sig-text">Terratransport</div>
+                    <div class="sig-text" style="font-size:20px; font-weight:700; color:#0a1628; letter-spacing:1px;">Terratransport</div>
                     <p>Cachet et signature</p>
                 </div>
                 <div class="contact-info">
@@ -336,7 +349,7 @@ function generateInvoice() {
 }
 
 // ============================================================
-// TÉLÉCHARGER LE PDF - DISPOSITION PARFAITE
+// TÉLÉCHARGER LE PDF - AVEC BASE64 ET DISPOSITION PARFAITE
 // ============================================================
 function downloadPDF() {
     if (!invoiceData) {
@@ -369,7 +382,7 @@ function downloadPDF() {
         `;
     });
     
-    // HTML complet pour le PDF - DISPOSITION GAUCHE/DROITE PARFAITE
+    // HTML complet pour le PDF avec BASE64 et disposition parfaite
     const htmlContent = `
     <!DOCTYPE html>
     <html>
@@ -401,18 +414,21 @@ function downloadPDF() {
                 margin-bottom: 25px;
                 padding-bottom: 20px;
                 border-bottom: 3px solid #c9a84c;
+                width: 100%;
             }
             .invoice-left {
                 display: flex;
                 flex-direction: column;
                 align-items: flex-start;
                 text-align: left;
+                flex: 1;
             }
             .logo-text {
                 font-size: 32px;
                 font-weight: 700;
                 color: #0a1628;
                 letter-spacing: 2px;
+                font-family: 'Helvetica', sans-serif;
             }
             .company-info {
                 font-size: 13px;
@@ -429,6 +445,7 @@ function downloadPDF() {
                 display: flex;
                 flex-direction: column;
                 align-items: flex-end;
+                flex: 1;
             }
             .invoice-number {
                 font-size: 18px;
@@ -449,6 +466,7 @@ function downloadPDF() {
                 border-radius: 8px;
                 border-left: 4px solid #c9a84c;
                 text-align: left;
+                width: 100%;
             }
             .invoice-client h3 {
                 color: #0a1628;
@@ -482,7 +500,9 @@ function downloadPDF() {
             .invoice-table th:first-child {
                 text-align: center;
             }
-            .invoice-table th:nth-child(4),
+            .invoice-table th:nth-child(4) {
+                text-align: center;
+            }
             .invoice-table th:nth-child(5),
             .invoice-table th:nth-child(6) {
                 text-align: right;
@@ -514,6 +534,7 @@ function downloadPDF() {
                 font-size: 15px;
                 line-height: 1.8;
                 text-align: left;
+                width: 100%;
             }
             .invoice-note strong {
                 color: #0a1628;
@@ -525,6 +546,7 @@ function downloadPDF() {
                 grid-template-columns: 1fr 1fr;
                 gap: 20px;
                 margin: 20px 0;
+                width: 100%;
             }
             .detail-block {
                 padding: 15px 20px;
@@ -555,6 +577,7 @@ function downloadPDF() {
                 border-radius: 8px;
                 margin: 20px 0;
                 text-align: left;
+                width: 100%;
             }
             .bank-info h4 {
                 color: #0a1628;
@@ -580,6 +603,7 @@ function downloadPDF() {
                 font-size: 14px;
                 line-height: 1.8;
                 text-align: left;
+                width: 100%;
             }
             .remark strong {
                 color: #0a1628;
@@ -594,18 +618,21 @@ function downloadPDF() {
                 justify-content: space-between;
                 align-items: center;
                 flex-wrap: wrap;
+                width: 100%;
             }
             .signature-area {
                 display: flex;
                 flex-direction: column;
                 align-items: flex-start;
                 text-align: left;
+                flex: 1;
             }
             .signature-area .sig-text {
                 font-size: 20px;
                 font-weight: 700;
                 color: #0a1628;
                 letter-spacing: 1px;
+                font-family: 'Helvetica', sans-serif;
             }
             .signature-area p {
                 font-size: 13px;
@@ -617,6 +644,7 @@ function downloadPDF() {
                 font-size: 13px;
                 color: #555;
                 line-height: 1.8;
+                flex: 1;
             }
             .contact-info strong {
                 color: #0a1628;
