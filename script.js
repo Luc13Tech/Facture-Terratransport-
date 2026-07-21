@@ -5,6 +5,9 @@ let productCount = 0;
 let invoiceData = null;
 let currentInvoiceId = null;
 
+// Image du camion (fixe)
+const CAMION_IMAGE = 'assets/images/camion.jpg';
+
 // ============================================================
 // AJOUTER UN PRODUIT
 // ============================================================
@@ -19,7 +22,6 @@ function addProduct(productData = null) {
     let specs = productData?.specs || '';
     let qty = productData?.qty || 1;
     let price = productData?.price || 0;
-    let image = productData?.image || '';
     
     div.innerHTML = `
         <button type="button" class="btn-remove" onclick="removeProduct(${productCount})">×</button>
@@ -30,7 +32,7 @@ function addProduct(productData = null) {
             </div>
             <div class="form-group">
                 <label>Spécifications</label>
-                <textarea class="product-specs" rows="3" placeholder="Ex: Réf: X123, Moteur: V8, ...">${specs}</textarea>
+                <textarea class="product-specs" rows="3" placeholder="Ex: Réf: X123, Moteur: V8, 500ch, Clim, ABS">${specs}</textarea>
             </div>
             <div class="form-group">
                 <label>Quantité *</label>
@@ -39,10 +41,6 @@ function addProduct(productData = null) {
             <div class="form-group">
                 <label>Prix unitaire (FCFA) *</label>
                 <input type="number" class="product-price" value="${price}" min="0" step="1000" required>
-            </div>
-            <div class="form-group">
-                <label>Image du produit (URL)</label>
-                <input type="text" class="product-image" value="${image}" placeholder="https://exemple.com/camion.jpg">
             </div>
         </div>
     `;
@@ -65,6 +63,20 @@ function removeProduct(id) {
         });
         productCount = document.querySelectorAll('.product-item').length;
     }
+}
+
+// ============================================================
+// RÉINITIALISER LE FORMULAIRE
+// ============================================================
+function resetForm() {
+    document.getElementById('clientName').value = '';
+    document.getElementById('clientAddress').value = '';
+    document.getElementById('clientBP').value = '';
+    document.getElementById('clientCountry').value = '';
+    document.getElementById('productsContainer').innerHTML = '';
+    document.getElementById('previewSection').style.display = 'none';
+    productCount = 0;
+    addProduct();
 }
 
 // ============================================================
@@ -92,23 +104,26 @@ function getFormData() {
     const products = [];
     let total = 0;
     
-    productItems.forEach(item => {
-        const name = item.querySelector('.product-name').value.trim();
-        const specs = item.querySelector('.product-specs').value.trim();
-        const qty = parseInt(item.querySelector('.product-qty').value) || 0;
-        const price = parseFloat(item.querySelector('.product-price').value) || 0;
-        const image = item.querySelector('.product-image').value.trim();
-        
-        if (!name || qty <= 0 || price <= 0) {
-            alert('Veuillez remplir correctement tous les champs produits.');
-            throw new Error('Produit invalide');
-        }
-        
-        const lineTotal = qty * price;
-        total += lineTotal;
-        
-        products.push({ name, specs, qty, price, image, lineTotal });
-    });
+    try {
+        productItems.forEach(item => {
+            const name = item.querySelector('.product-name').value.trim();
+            const specs = item.querySelector('.product-specs').value.trim();
+            const qty = parseInt(item.querySelector('.product-qty').value) || 0;
+            const price = parseFloat(item.querySelector('.product-price').value) || 0;
+            
+            if (!name || qty <= 0 || price <= 0) {
+                alert('Veuillez remplir correctement tous les champs produits.');
+                throw new Error('Produit invalide');
+            }
+            
+            const lineTotal = qty * price;
+            total += lineTotal;
+            
+            products.push({ name, specs, qty, price, lineTotal });
+        });
+    } catch (error) {
+        return null;
+    }
     
     return {
         client: { name: clientName, address: clientAddress, bp: clientBP, country: clientCountry },
@@ -197,11 +212,12 @@ function generateInvoice() {
         
         // Construire le HTML de la facture
         let html = `
-            <div class="invoice-container">
+            <div class="invoice-container" id="invoiceContent">
                 <!-- EN-TÊTE -->
                 <div class="invoice-header">
                     <div class="invoice-left">
-                        <img src="assets/images/logo.png" alt="Terratransport" class="logo-invoice" id="logoInvoice">
+                        <img src="assets/images/logo.png" alt="Terratransport" class="logo-invoice" onerror="this.style.display='none'; this.parentElement.querySelector('.logo-fallback').style.display='block';">
+                        <span class="logo-fallback" style="display:none; font-size:24px; font-weight:700; color:#0a1628;">Terratransport</span>
                         <div class="company-info">
                             <strong>Terratransport</strong><br>
                             NINEA : 005554789<br>
@@ -228,22 +244,27 @@ function generateInvoice() {
                 <table class="invoice-table">
                     <thead>
                         <tr>
-                            <th style="width:8%">Image</th>
+                            <th style="width:10%">Image</th>
                             <th style="width:22%">Produit</th>
                             <th style="width:30%">Spécifications</th>
                             <th style="width:10%">Qté</th>
-                            <th style="width:15%">Prix Unitaire</th>
-                            <th style="width:15%">Total</th>
+                            <th style="width:14%">Prix Unitaire</th>
+                            <th style="width:14%">Total</th>
                         </tr>
                     </thead>
                     <tbody>
         `;
         
-        data.products.forEach(p => {
-            const imgHtml = p.image ? `<img src="${p.image}" class="product-img" alt="${p.name}">` : '<span style="color:#aaa;">Aucune image</span>';
+        data.products.forEach((p, index) => {
+            // Image fixe du camion pour chaque produit
+            const imgHtml = `
+                <img src="${CAMION_IMAGE}" class="product-img" alt="Camion Terratransport" onerror="this.style.display='none'; this.parentElement.querySelector('.img-placeholder').style.display='flex';">
+                <span class="img-placeholder" style="display:none; background:#f0f0f0; border-radius:8px; padding:8px; font-size:11px; color:#999; text-align:center; justify-content:center; align-items:center;">🚛</span>
+            `;
+            
             html += `
                 <tr>
-                    <td>${imgHtml}</td>
+                    <td style="text-align:center;">${imgHtml}</td>
                     <td><strong>${p.name}</strong></td>
                     <td>${p.specs || '—'}</td>
                     <td>${p.qty}</td>
@@ -306,7 +327,8 @@ function generateInvoice() {
             <!-- FOOTER -->
             <div class="invoice-footer">
                 <div class="signature-area">
-                    <img src="assets/images/signature.png" alt="Cachet et signature" id="signatureImg">
+                    <img src="assets/images/signature.png" alt="Cachet et signature" class="signature-img" onerror="this.style.display='none'; this.parentElement.querySelector('.sig-fallback').style.display='block';">
+                    <span class="sig-fallback" style="display:none; font-size:12px; color:#999;">Cachet et signature</span>
                     <p>Cachet et signature de Terratransport</p>
                 </div>
                 <div class="contact-info">
@@ -315,6 +337,7 @@ function generateInvoice() {
                     Tel : 338971403 / 770720202 / 779398484
                 </div>
             </div>
+        </div>
         `;
         
         // Afficher l'aperçu
@@ -326,11 +349,12 @@ function generateInvoice() {
         
     } catch (error) {
         console.error(error);
+        alert('Une erreur est survenue. Veuillez vérifier vos données.');
     }
 }
 
 // ============================================================
-// TÉLÉCHARGER LE PDF
+// TÉLÉCHARGER LE PDF (AVEC html2pdf.js)
 // ============================================================
 function downloadPDF() {
     if (!invoiceData) {
@@ -338,71 +362,53 @@ function downloadPDF() {
         return;
     }
     
-    // On va utiliser la fonction générée dans le HTML
-    // Pour le PDF, on utilise le contenu déjà affiché
-    const content = document.getElementById('invoicePreview').innerHTML;
-    
-    // Créer une fenêtre d'impression
-    const win = window.open('', '_blank');
-    if (!win) {
-        alert('Veuillez autoriser les pop-ups pour télécharger le PDF.');
+    const element = document.getElementById('invoiceContent');
+    if (!element) {
+        alert('Erreur : Contenu de la facture introuvable.');
         return;
     }
     
-    const styles = document.querySelector('style').innerHTML;
+    // Afficher un indicateur de chargement
+    const btn = document.querySelector('.btn-download');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '⏳ Génération en cours...';
+    btn.disabled = true;
+    
+    // Nom du fichier
     const clientName = invoiceData.client.name.replace(/\s+/g, '_');
     const filename = `facture-Terratransport-${clientName}-${currentInvoiceId}.pdf`;
     
-    win.document.write(`
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <meta charset="UTF-8">
-            <title>Facture ${currentInvoiceId}</title>
-            <style>
-                ${styles}
-                body { padding: 20px; background: white; }
-                #invoicePreview { border: none; padding: 0; }
-                .header, .form-wrapper, .form-actions, .preview-header .btn-download { display: none !important; }
-                .preview-section { box-shadow: none; padding: 0; margin: 0; }
-                .btn-download { display: none !important; }
-                .logo-invoice, #signatureImg { 
-                    max-width: 150px; 
-                    height: auto;
-                }
-                .product-img {
-                    max-width: 60px;
-                    height: auto;
-                }
-                @page {
-                    size: A4;
-                    margin: 15mm;
-                }
-                @media print {
-                    .btn-download, .preview-header .btn-download { display: none !important; }
-                }
-            </style>
-        </head>
-        <body>
-            <div id="invoicePreview">${content}</div>
-            <script>
-                // Imprimer automatiquement
-                window.onload = function() {
-                    setTimeout(() => {
-                        window.print();
-                    }, 500);
-                };
-            <\/script>
-        </body>
-        </html>
-    `);
+    // Options de html2pdf
+    const opt = {
+        margin:        [10, 10, 10, 10],
+        filename:      filename,
+        image:         { type: 'jpeg', quality: 0.98 },
+        html2canvas:   { 
+            scale: 2,
+            useCORS: true,
+            letterRendering: true,
+            width: element.scrollWidth,
+            height: element.scrollHeight
+        },
+        jsPDF:         { 
+            unit: 'mm', 
+            format: 'a4', 
+            orientation: 'portrait' 
+        },
+        pagebreak:     { mode: ['avoid-all', 'css', 'legacy'] }
+    };
     
-    win.document.close();
-    
-    // Changer le nom du fichier lors du téléchargement (pour Chrome)
-    setTimeout(() => {
-        win.document.title = filename;
-    }, 1000);
+    // Générer le PDF
+    html2pdf().set(opt).from(element).save().then(function() {
+        // Restaurer le bouton
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+    }).catch(function(error) {
+        console.error('Erreur PDF:', error);
+        alert('Erreur lors de la génération du PDF. Veuillez réessayer.');
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+    });
 }
 
 // ============================================================
@@ -410,20 +416,4 @@ function downloadPDF() {
 // ============================================================
 document.addEventListener('DOMContentLoaded', function() {
     addProduct();
-    
-    // Gérer l'affichage du logo par défaut si l'image n'existe pas
-    const logoPlaceholder = document.getElementById('logoPlaceholder');
-    if (logoPlaceholder) {
-        logoPlaceholder.onerror = function() {
-            this.style.display = 'none';
-            // Afficher un texte à la place
-            const parent = this.parentElement;
-            const text = document.createElement('span');
-            text.textContent = 'Terratransport';
-            text.style.fontSize = '24px';
-            text.style.fontWeight = 'bold';
-            text.style.color = '#c9a84c';
-            parent.insertBefore(text, this);
-        };
-    }
 });
