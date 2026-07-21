@@ -12,7 +12,10 @@
     <header class="header">
         <div class="container">
             <div class="header-content">
-                <img src="assets/images/logo.png" alt="Terratransport" class="logo" id="logoPlaceholder">
+                <div class="logo-container">
+                    <img src="assets/images/logo.png" alt="Terratransport" class="logo" id="logoPlaceholder" onerror="this.style.display='none'; document.getElementById('logoText').style.display='block';">
+                    <span id="logoText" style="display:none; font-size:28px; font-weight:700; color:#c9a84c;">Terratransport</span>
+                </div>
                 <h1>Générateur de Facture Professionnelle</h1>
             </div>
         </div>
@@ -21,7 +24,7 @@
     <!-- ============ FORMULAIRE ============ -->
     <main class="container">
         <div class="form-wrapper">
-            <form id="invoiceForm">
+            <form id="invoiceForm" onsubmit="return false;">
                 <!-- SECTION CLIENT -->
                 <section class="form-section">
                     <h2>Informations du Client</h2>
@@ -61,7 +64,7 @@
                     <button type="button" class="btn-primary" onclick="generateInvoice()">
                         📄 Générer la facture
                     </button>
-                    <button type="reset" class="btn-secondary">
+                    <button type="reset" class="btn-secondary" onclick="resetForm()">
                         🗑️ Réinitialiser
                     </button>
                 </div>
@@ -82,7 +85,9 @@
         </div>
     </main>
 
-    <!-- ============ SCRIPT ============ -->
+    <!-- ============ BIBLIOTHÈQUES POUR LE PDF ============ -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    
     <script src="script.js"></script>
 </body>
 </html>
