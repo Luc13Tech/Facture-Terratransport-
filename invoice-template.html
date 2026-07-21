@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Template Facture Terratransport</title>
+    <style>
+        /* ===== STYLES DE LA FACTURE ===== */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            background: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+        .invoice-wrapper {
+            max-width: 1000px;
+            width: 100%;
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+        
+        /* ===== MÊMES STYLES QUE DANS LA FACTURE ===== */
+        .invoice-container { max-width: 100%; }
+        .invoice-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #c9a84c;
+        }
+        .invoice-left { display: flex; flex-direction: column; align-items: flex-start; }
+        .invoice-left .logo-invoice { height: 70px; margin-bottom: 10px; }
+        .invoice-left .company-info { font-size: 13px; color: #555; line-height: 1.8; }
+        .invoice-right { text-align: right; }
+        .invoice-right .invoice-number { font-size: 18px; font-weight: 700; color: #0a1628; }
+        .invoice-right .invoice-date { font-size: 14px; color: #666; }
+        
+        .invoice-client {
+            margin: 25px 0 30px 0;
+            padding: 20px;
+            background: #f8f9fc;
+            border-radius: 10px;
+            border-left: 4px solid #c9a84c;
+        }
+        .invoice-client h3 { color: #0a1628; margin-bottom: 5px; }
+        .invoice-client p { margin: 3px 0; color: #444; font-size: 14px; }
+        
+        .invoice-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+        }
+        .invoice-table th {
+            background: #0a1628;
+            color: white;
+            padding: 14px 12px;
+            text-align: left;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .invoice-table td {
+            padding: 14px 12px;
+            border-bottom: 1px solid #e8ecf3;
+            font-size: 14px;
+            vertical-align: middle;
+        }
+        .invoice-table tr:hover td { background: #f8f9fc; }
+        .invoice-table .total-row td {
+            font-weight: 700;
+            font-size: 16px;
+            border-top: 3px solid #0a1628;
+            padding-top: 15px;
+        }
+        .product-img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+        
+        .invoice-note {
+            margin: 25px 0;
+            padding: 20px;
+            background: #fef9e7;
+            border-radius: 10px;
+            border: 1px solid #f0e4c6;
+            font-size: 15px;
+            line-height: 1.8;
+        }
+        .invoice-note strong { color: #0a1628; }
+        
+        .invoice-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 25px 0;
+        }
+        .detail-block {
+            padding: 15px 20px;
+            background: #f8f9fc;
+            border-radius: 10px;
+        }
+        .detail-block h4 {
+            color: #0a1628;
+            margin-bottom: 8px;
+            font-size: 15px;
+            border-bottom: 2px solid #c9a84c;
+            padding-bottom: 5px;
+        }
+        .detail-block p { font-size: 14px; color: #444; margin: 4px 0; }
+        
+        .bank-info {
+            background: #f8f9fc;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 25px 0;
+        }
+        .bank-info h4 { color: #0a1628; margin-bottom: 10px; }
+        .bank-info p { font-size: 14px; color: #444; margin: 3px 0; }
+        
+        .remark {
+            background: #fff3cd;
+            padding: 15px 20px;
+            border-radius: 10px;
+            border-left: 4px solid #ffc107;
+            margin: 20px 0;
+            font-size: 14px;
+        }
+        
+        .invoice-footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #e8ecf3;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .signature-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .signature-area img {
+            height: 80px;
+            max-width: 150px;
+        }
+        .signature-area p { font-size: 13px; color: #666; margin-top: 5px; }
+        .contact-info {
+            text-align: right;
+            font-size: 13px;
+            color: #555;
+            line-height: 1.8;
+        }
+        
+        @media (max-width: 768px) {
+            .invoice-wrapper { padding: 20px; }
+            .invoice-details { grid-template-columns: 1fr; }
+            .invoice-header { flex-direction: column; align-items: center; text-align: center; }
+            .invoice-right { text-align: center; margin-top: 15px; }
+            .invoice-footer { flex-direction: column; text-align: center; gap: 15px; }
+            .contact-info { text-align: center; }
+        }
+    </style>
+</head>
+<body>
+    <div class="invoice-wrapper">
+        <div class="invoice-container">
+            <!-- EN-TÊTE -->
+            <div class="invoice-header">
+                <div class="invoice-left">
+                    <img src="assets/images/logo.png" alt="Terratransport" class="logo-invoice" style="height:70px;">
+                    <div class="company-info">
+                        <strong>Terratransport</strong><br>
+                        NINEA : 005554789<br>
+                        RCSN DKR 2015 B13085<br>
+                        Adresse : Ngor Sénégal 11045
+                    </div>
+                </div>
+                <div class="invoice-right">
+                    <div class="invoice-number">Facture N° FCT-2026-0001</div>
+                    <div class="invoice-date">Date : 21/07/2026</div>
+                </div>
+            </div>
+            
+            <!-- CLIENT -->
+            <div class="invoice-client">
+                <h3>À l'attention de :</h3>
+                <p><strong>M. Abdoulaye DIOP</strong></p>
+                <p>123 Rue de la République</p>
+                <p>BP : 12345</p>
+                <p>Sénégal</p>
+            </div>
+            
+            <!-- TABLEAU -->
+            <table class="invoice-table">
+                <thead>
+                    <tr>
+                        <th style="width:8%">Image</th>
+                        <th style="width:22%">Produit</th>
+                        <th style="width:30%">Spécifications</th>
+                        <th style="width:10%">Qté</th>
+                        <th style="width:15%">Prix Unitaire</th>
+                        <th style="width:15%">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><img src="https://via.placeholder.com/60x60/C9A84C/FFFFFF?text=CAMION" class="product-img" alt="Camion"></td>
+                        <td><strong>Camion Mercedes Actros</strong></td>
+                        <td>Réf: ACT-2024, Moteur V8, 500ch, Clim, ABS</td>
+                        <td>2</td>
+                        <td>25 000 000 FCFA</td>
+                        <td>50 000 000 FCFA</td>
+                    </tr>
+                    <tr>
+                        <td><img src="https://via.placeholder.com/60x60/C9A84C/FFFFFF?text=CAMION" class="product-img" alt="Camion"></td>
+                        <td><strong>Camion Volvo FH</strong></td>
+                        <td>Réf: VOL-2024, Moteur D13, 460ch, GPS</td>
+                        <td>1</td>
+                        <td>30 000 000 FCFA</td>
+                        <td>30 000 000 FCFA</td>
+                    </tr>
+                    <tr class="total-row">
+                        <td colspan="5" style="text-align:right; font-weight:700;">TOTAL NET</td>
+                        <td style="font-weight:700; color:#c9a84c; font-size:18px;">80 000 000 FCFA</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <!-- NOTE -->
+            <div class="invoice-note">
+                <strong>Note :</strong> Cette facture Terratransport s'élève sur une somme de <strong>QUATRE-VINGT MILLIONS</strong> FCFA SOUS DOUANE.<br>
+                À compte de 10% avant la livraison des camions et 90% à l'expédition port de Dakar.
+            </div>
+            
+            <!-- DÉTAILS -->
+            <div class="invoice-details">
+                <div class="detail-block">
+                    <h4>Détails de la commande</h4>
+                    <p><strong>Délai de la commande :</strong> 60 jours ouvrables</p>
+                    <p><strong>Port de destination :</strong> CIF port de Dakar</p>
+                    <p><strong>Véhicules :</strong> Tous neufs - 00km/h - Provenance Chine</p>
+                    <p><strong>Type de camion :</strong> Camion Mercedes Actros</p>
+                </div>
+                <div class="detail-block">
+                    <h4>Conditions commerciales</h4>
+                    <p><strong>Délai de livraison :</strong> 60 jours ouvrables après réception du paiement</p>
+                    <p><strong>Emballage :</strong> Emballage standard pour exportation</p>
+                </div>
+            </div>
+            
+            <!-- BANQUE -->
+            <div class="bank-info">
+                <h4>Informations bancaires</h4>
+                <p><strong>RIB :</strong> SN0790111125105957700107</p>
+                <p><strong>CODE SWIFT :</strong> ISSNSNDA</p>
+                <p><strong>N° du compte :</strong> 251059577001</p>
+                <p><strong>Nom du compte :</strong> Terratransport</p>
+                <p><strong>Banque :</strong> BIS Banque Sénégal</p>
+                <p><strong>Agence :</strong> Ngor Almadies</p>
+                <p><strong>Adresse banque :</strong> Dakar - zone 12 Almadies, immeuble BIS en face Route du King Fahd (Sénégal) - SG</p>
+                <p><strong>Type de compte :</strong> Compte professionnel</p>
+            </div>
+            
+            <!-- REMARQUE -->
+            <div class="remark">
+                <strong>📌 Remarque :</strong><br>
+                Paiement par virement bancaire.<br>
+                Veuillez indiquer le nom de l'acheteur, le numéro de la facture/contrat et le nom du produit dans le libellé du paiement.
+            </div>
+            
+            <!-- FOOTER -->
+            <div class="invoice-footer">
+                <div class="signature-area">
+                    <img src="assets/images/signature.png" alt="Cachet et signature" style="height:80px; max-width:150px;">
+                    <p>Cachet et signature de Terratransport</p>
+                </div>
+                <div class="contact-info">
+                    <strong>Terratransport</strong><br>
+                    B13085 - Adresse : Ngor Almadies 11045<br>
+                    Tel : 338971403 / 770720202 / 779398484
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
