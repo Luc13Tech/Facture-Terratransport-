@@ -55,7 +55,6 @@ function removeProduct(id) {
     const el = document.getElementById(`product-${id}`);
     if (el) {
         el.remove();
-        // Réorganiser les IDs
         document.querySelectorAll('.product-item').forEach((item, index) => {
             item.id = `product-${index + 1}`;
             const btn = item.querySelector('.btn-remove');
@@ -83,7 +82,6 @@ function resetForm() {
 // RÉCUPÉRER LES DONNÉES DU FORMULAIRE
 // ============================================================
 function getFormData() {
-    // Client
     const clientName = document.getElementById('clientName').value.trim();
     const clientAddress = document.getElementById('clientAddress').value.trim();
     const clientBP = document.getElementById('clientBP').value.trim();
@@ -94,7 +92,6 @@ function getFormData() {
         return null;
     }
     
-    // Produits
     const productItems = document.querySelectorAll('.product-item');
     if (productItems.length === 0) {
         alert('Veuillez ajouter au moins un produit.');
@@ -133,7 +130,7 @@ function getFormData() {
 }
 
 // ============================================================
-// CONVERSION NOMBRE EN LETTRES (FRANÇAIS)
+// CONVERSION NOMBRE EN LETTRES
 // ============================================================
 function numberToLetters(n) {
     if (n === 0) return 'ZÉRO';
@@ -210,10 +207,8 @@ function generateInvoice() {
         const date = new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' });
         const totalLetters = numberToLetters(data.total);
         
-        // Construire le HTML de la facture
         let html = `
             <div class="invoice-container" id="invoiceContent">
-                <!-- EN-TÊTE -->
                 <div class="invoice-header">
                     <div class="invoice-left">
                         <img src="assets/images/logo.png" alt="Terratransport" class="logo-invoice" onerror="this.style.display='none'; this.parentElement.querySelector('.logo-fallback').style.display='block';">
@@ -231,7 +226,6 @@ function generateInvoice() {
                     </div>
                 </div>
                 
-                <!-- CLIENT -->
                 <div class="invoice-client">
                     <h3>À l'attention de :</h3>
                     <p><strong>${data.client.name}</strong></p>
@@ -240,7 +234,6 @@ function generateInvoice() {
                     <p>${data.client.country}</p>
                 </div>
                 
-                <!-- TABLEAU -->
                 <table class="invoice-table">
                     <thead>
                         <tr>
@@ -255,8 +248,7 @@ function generateInvoice() {
                     <tbody>
         `;
         
-        data.products.forEach((p, index) => {
-            // Image fixe du camion pour chaque produit
+        data.products.forEach((p) => {
             const imgHtml = `
                 <img src="${CAMION_IMAGE}" class="product-img" alt="Camion Terratransport" onerror="this.style.display='none'; this.parentElement.querySelector('.img-placeholder').style.display='flex';">
                 <span class="img-placeholder" style="display:none; background:#f0f0f0; border-radius:8px; padding:8px; font-size:11px; color:#999; text-align:center; justify-content:center; align-items:center;">🚛</span>
@@ -282,13 +274,11 @@ function generateInvoice() {
                 </tbody>
             </table>
             
-            <!-- NOTE -->
             <div class="invoice-note">
                 <strong>Note :</strong> Cette facture Terratransport s'élève sur une somme de <strong>${totalLetters}</strong> FCFA SOUS DOUANE.<br>
                 À compte de 10% avant la livraison des camions et 90% à l'expédition port de Dakar.
             </div>
             
-            <!-- DÉTAILS -->
             <div class="invoice-details">
                 <div class="detail-block">
                     <h4>Détails de la commande</h4>
@@ -304,7 +294,6 @@ function generateInvoice() {
                 </div>
             </div>
             
-            <!-- BANQUE -->
             <div class="bank-info">
                 <h4>Informations bancaires</h4>
                 <p><strong>RIB :</strong> SN0790111125105957700107</p>
@@ -317,14 +306,12 @@ function generateInvoice() {
                 <p><strong>Type de compte :</strong> Compte professionnel</p>
             </div>
             
-            <!-- REMARQUE -->
             <div class="remark">
                 <strong>📌 Remarque :</strong><br>
                 Paiement par virement bancaire.<br>
                 Veuillez indiquer le nom de l'acheteur, le numéro de la facture/contrat et le nom du produit dans le libellé du paiement.
             </div>
             
-            <!-- FOOTER -->
             <div class="invoice-footer">
                 <div class="signature-area">
                     <img src="assets/images/signature.png" alt="Cachet et signature" class="signature-img" onerror="this.style.display='none'; this.parentElement.querySelector('.sig-fallback').style.display='block';">
@@ -340,11 +327,8 @@ function generateInvoice() {
         </div>
         `;
         
-        // Afficher l'aperçu
         document.getElementById('invoicePreview').innerHTML = html;
         document.getElementById('previewSection').style.display = 'block';
-        
-        // Faire défiler vers l'aperçu
         document.getElementById('previewSection').scrollIntoView({ behavior: 'smooth' });
         
     } catch (error) {
@@ -354,7 +338,7 @@ function generateInvoice() {
 }
 
 // ============================================================
-// TÉLÉCHARGER LE PDF (AVEC html2pdf.js) - VERSION CORRIGÉE
+// TÉLÉCHARGER LE PDF - NOUVELLE MÉTHODE FIABLE
 // ============================================================
 function downloadPDF() {
     if (!invoiceData) {
@@ -362,281 +346,365 @@ function downloadPDF() {
         return;
     }
     
-    // Récupérer le contenu de la facture
-    const element = document.getElementById('invoiceContent');
-    if (!element) {
-        alert('Erreur : Contenu de la facture introuvable.');
-        return;
-    }
-    
-    // Afficher un indicateur de chargement
     const btn = document.querySelector('.btn-download');
     const originalText = btn.innerHTML;
     btn.innerHTML = '⏳ Génération en cours...';
     btn.disabled = true;
     
-    // Nom du fichier
     const clientName = invoiceData.client.name.replace(/\s+/g, '_');
     const filename = `facture-Terratransport-${clientName}-${currentInvoiceId}.pdf`;
+    const date = new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    const totalLetters = numberToLetters(invoiceData.total);
     
-    // Créer un conteneur temporaire pour le PDF
-    const tempDiv = document.createElement('div');
-    tempDiv.style.cssText = `
-        position: fixed;
-        left: -9999px;
-        top: 0;
-        width: 1000px;
-        background: white;
-        padding: 40px;
-        z-index: 9999;
-        font-family: 'Helvetica', 'Arial', sans-serif;
-    `;
-    
-    // Cloner le contenu
-    const cloneContent = element.cloneNode(true);
-    
-    // Ajouter les styles nécessaires pour le PDF
-    const style = document.createElement('style');
-    style.textContent = `
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        .invoice-container {
-            max-width: 1000px;
-            margin: 0 auto;
-            font-family: 'Helvetica', 'Arial', sans-serif;
-        }
-        .invoice-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 3px solid #c9a84c;
-        }
-        .invoice-left {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-        }
-        .logo-invoice {
-            height: 70px;
-            width: auto;
-            margin-bottom: 10px;
-            object-fit: contain;
-        }
-        .company-info {
-            font-size: 13px;
-            color: #555;
-            line-height: 1.8;
-        }
-        .invoice-right {
-            text-align: right;
-        }
-        .invoice-number {
-            font-size: 18px;
-            font-weight: 700;
-            color: #0a1628;
-        }
-        .invoice-date {
-            font-size: 14px;
-            color: #666;
-        }
-        .invoice-client {
-            margin: 25px 0 30px 0;
-            padding: 20px;
-            background: #f8f9fc;
-            border-radius: 10px;
-            border-left: 4px solid #c9a84c;
-        }
-        .invoice-client h3 {
-            color: #0a1628;
-            margin-bottom: 5px;
-        }
-        .invoice-client p {
-            margin: 3px 0;
-            color: #444;
-            font-size: 14px;
-        }
-        .invoice-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 25px 0;
-        }
-        .invoice-table th {
-            background: #0a1628 !important;
-            color: white !important;
-            padding: 14px 12px;
-            text-align: left;
-            font-size: 14px;
-            font-weight: 700 !important;
-        }
-        .invoice-table td {
-            padding: 12px 10px !important;
-            border-bottom: 1px solid #e8ecf3;
-            font-size: 14px;
-            vertical-align: middle;
-        }
-        .invoice-table .total-row td {
-            font-weight: 700;
-            font-size: 16px;
-            border-top: 3px solid #0a1628;
-            padding-top: 15px;
-        }
-        .product-img {
-            width: 60px;
-            height: 60px;
-            object-fit: cover;
-            border-radius: 8px;
-            border: 1px solid #ddd;
-        }
-        .img-placeholder {
-            display: flex;
-            width: 60px;
-            height: 60px;
-            background: #f0f0f0;
-            border-radius: 8px;
-            font-size: 28px;
-            color: #999;
-            text-align: center;
-            justify-content: center;
-            align-items: center;
-            margin: 0 auto;
-        }
-        .invoice-note {
-            margin: 25px 0;
-            padding: 20px;
-            background: #fef9e7;
-            border-radius: 10px;
-            border: 1px solid #f0e4c6;
-            font-size: 15px;
-            line-height: 1.8;
-        }
-        .invoice-note strong {
-            color: #0a1628;
-        }
-        .invoice-details {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin: 25px 0;
-        }
-        .detail-block {
-            padding: 15px 20px;
-            background: #f8f9fc;
-            border-radius: 10px;
-        }
-        .detail-block h4 {
-            color: #0a1628;
-            margin-bottom: 8px;
-            font-size: 15px;
-            border-bottom: 2px solid #c9a84c;
-            padding-bottom: 5px;
-        }
-        .detail-block p {
-            font-size: 14px;
-            color: #444;
-            margin: 4px 0;
-        }
-        .bank-info {
-            background: #f8f9fc;
-            padding: 20px;
-            border-radius: 10px;
-            margin: 25px 0;
-        }
-        .bank-info h4 {
-            color: #0a1628;
-            margin-bottom: 10px;
-        }
-        .bank-info p {
-            font-size: 14px;
-            color: #444;
-            margin: 3px 0;
-        }
-        .remark {
-            background: #fff3cd;
-            padding: 15px 20px;
-            border-radius: 10px;
-            border-left: 4px solid #ffc107;
-            margin: 20px 0;
-            font-size: 14px;
-        }
-        .invoice-footer {
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 2px solid #e8ecf3;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        .signature-area {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .signature-img {
-            height: 80px;
-            max-width: 150px;
-            object-fit: contain;
-        }
-        .signature-area p {
-            font-size: 13px;
-            color: #666;
-            margin-top: 5px;
-        }
-        .contact-info {
-            text-align: right;
-            font-size: 13px;
-            color: #555;
-            line-height: 1.8;
-        }
-        .logo-fallback, .sig-fallback {
-            display: none !important;
-        }
-        @media print {
-            body { padding: 15mm; }
-        }
-    `;
-    tempDiv.appendChild(style);
-    tempDiv.appendChild(cloneContent);
-    document.body.appendChild(tempDiv);
-    
-    // Options de html2pdf
-    const opt = {
-        margin: [15, 15, 15, 15],
-        filename: filename,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: {
-            scale: 2,
-            useCORS: true,
-            letterRendering: true,
-            width: 1000,
-            height: tempDiv.scrollHeight,
-            logging: false
-        },
-        jsPDF: {
-            unit: 'mm',
-            format: 'a4',
-            orientation: 'portrait'
-        },
-        pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
-    };
-    
-    // Générer le PDF
-    html2pdf().set(opt).from(tempDiv).save().then(function() {
-        document.body.removeChild(tempDiv);
-        btn.innerHTML = originalText;
-        btn.disabled = false;
-    }).catch(function(error) {
-        console.error('Erreur PDF:', error);
-        document.body.removeChild(tempDiv);
-        alert('Erreur lors de la génération du PDF. Veuillez réessayer.');
-        btn.innerHTML = originalText;
-        btn.disabled = false;
+    // Construire le contenu HTML complet pour le PDF
+    let tableRows = '';
+    invoiceData.products.forEach((p) => {
+        tableRows += `
+            <tr>
+                <td style="text-align:center; padding: 8px; border: 1px solid #ddd;">🚛</td>
+                <td style="padding: 8px; border: 1px solid #ddd;"><strong>${p.name}</strong></td>
+                <td style="padding: 8px; border: 1px solid #ddd;">${p.specs || '—'}</td>
+                <td style="text-align:center; padding: 8px; border: 1px solid #ddd;">${p.qty}</td>
+                <td style="text-align:right; padding: 8px; border: 1px solid #ddd;">${p.price.toLocaleString('fr-FR')} FCFA</td>
+                <td style="text-align:right; padding: 8px; border: 1px solid #ddd;">${p.lineTotal.toLocaleString('fr-FR')} FCFA</td>
+            </tr>
+        `;
     });
+    
+    const htmlContent = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>Facture ${currentInvoiceId}</title>
+            <style>
+                * { margin: 0; padding: 0; box-sizing: border-box; }
+                body {
+                    font-family: 'Helvetica', 'Arial', sans-serif;
+                    padding: 40px;
+                    background: white;
+                    color: #1a1a2e;
+                    line-height: 1.6;
+                }
+                .invoice-wrapper {
+                    max-width: 1000px;
+                    margin: 0 auto;
+                }
+                .invoice-header {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: flex-start;
+                    margin-bottom: 30px;
+                    padding-bottom: 20px;
+                    border-bottom: 3px solid #c9a84c;
+                }
+                .invoice-left {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: flex-start;
+                }
+                .company-name {
+                    font-size: 28px;
+                    font-weight: 700;
+                    color: #0a1628;
+                }
+                .company-info {
+                    font-size: 13px;
+                    color: #555;
+                    line-height: 1.8;
+                    margin-top: 5px;
+                }
+                .invoice-right {
+                    text-align: right;
+                }
+                .invoice-number {
+                    font-size: 18px;
+                    font-weight: 700;
+                    color: #0a1628;
+                }
+                .invoice-date {
+                    font-size: 14px;
+                    color: #666;
+                }
+                .invoice-client {
+                    margin: 25px 0 30px 0;
+                    padding: 20px;
+                    background: #f8f9fc;
+                    border-radius: 10px;
+                    border-left: 4px solid #c9a84c;
+                }
+                .invoice-client h3 {
+                    color: #0a1628;
+                    margin-bottom: 5px;
+                }
+                .invoice-client p {
+                    margin: 3px 0;
+                    color: #444;
+                    font-size: 14px;
+                }
+                .invoice-table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin: 25px 0;
+                }
+                .invoice-table th {
+                    background: #0a1628;
+                    color: white;
+                    padding: 12px 10px;
+                    text-align: left;
+                    font-size: 13px;
+                    font-weight: 700;
+                }
+                .invoice-table td {
+                    padding: 10px;
+                    border: 1px solid #ddd;
+                    font-size: 13px;
+                    vertical-align: middle;
+                }
+                .invoice-table .total-row td {
+                    font-weight: 700;
+                    font-size: 16px;
+                    border-top: 3px solid #0a1628;
+                    padding-top: 15px;
+                }
+                .invoice-note {
+                    margin: 25px 0;
+                    padding: 20px;
+                    background: #fef9e7;
+                    border-radius: 10px;
+                    border: 1px solid #f0e4c6;
+                    font-size: 15px;
+                    line-height: 1.8;
+                }
+                .invoice-note strong {
+                    color: #0a1628;
+                }
+                .invoice-details {
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 20px;
+                    margin: 25px 0;
+                }
+                .detail-block {
+                    padding: 15px 20px;
+                    background: #f8f9fc;
+                    border-radius: 10px;
+                }
+                .detail-block h4 {
+                    color: #0a1628;
+                    margin-bottom: 8px;
+                    font-size: 15px;
+                    border-bottom: 2px solid #c9a84c;
+                    padding-bottom: 5px;
+                }
+                .detail-block p {
+                    font-size: 14px;
+                    color: #444;
+                    margin: 4px 0;
+                }
+                .bank-info {
+                    background: #f8f9fc;
+                    padding: 20px;
+                    border-radius: 10px;
+                    margin: 25px 0;
+                }
+                .bank-info h4 {
+                    color: #0a1628;
+                    margin-bottom: 10px;
+                }
+                .bank-info p {
+                    font-size: 14px;
+                    color: #444;
+                    margin: 3px 0;
+                }
+                .remark {
+                    background: #fff3cd;
+                    padding: 15px 20px;
+                    border-radius: 10px;
+                    border-left: 4px solid #ffc107;
+                    margin: 20px 0;
+                    font-size: 14px;
+                }
+                .invoice-footer {
+                    margin-top: 30px;
+                    padding-top: 20px;
+                    border-top: 2px solid #e8ecf3;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    flex-wrap: wrap;
+                }
+                .signature-area {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                }
+                .signature-area p {
+                    font-size: 13px;
+                    color: #666;
+                    margin-top: 5px;
+                }
+                .contact-info {
+                    text-align: right;
+                    font-size: 13px;
+                    color: #555;
+                    line-height: 1.8;
+                }
+                .text-right { text-align: right; }
+                .text-center { text-align: center; }
+                .fw-bold { font-weight: 700; }
+                .mt-10 { margin-top: 10px; }
+                .mb-10 { margin-bottom: 10px; }
+                @media print {
+                    body { padding: 15mm; }
+                }
+                @media (max-width: 768px) {
+                    .invoice-details { grid-template-columns: 1fr; }
+                    .invoice-header { flex-direction: column; align-items: center; text-align: center; }
+                    .invoice-left { align-items: center; }
+                    .invoice-right { text-align: center; margin-top: 15px; }
+                    .invoice-footer { flex-direction: column; text-align: center; gap: 15px; }
+                    .contact-info { text-align: center; }
+                }
+            </style>
+        </head>
+        <body>
+            <div class="invoice-wrapper">
+                <!-- EN-TÊTE -->
+                <div class="invoice-header">
+                    <div class="invoice-left">
+                        <div class="company-name">Terratransport</div>
+                        <div class="company-info">
+                            NINEA : 005554789<br>
+                            RCSN DKR 2015 B13085<br>
+                            Adresse : Ngor Sénégal 11045
+                        </div>
+                    </div>
+                    <div class="invoice-right">
+                        <div class="invoice-number">Facture N° ${currentInvoiceId}</div>
+                        <div class="invoice-date">Date : ${date}</div>
+                    </div>
+                </div>
+                
+                <!-- CLIENT -->
+                <div class="invoice-client">
+                    <h3>À l'attention de :</h3>
+                    <p><strong>${invoiceData.client.name}</strong></p>
+                    <p>${invoiceData.client.address}</p>
+                    ${invoiceData.client.bp ? `<p>BP : ${invoiceData.client.bp}</p>` : ''}
+                    <p>${invoiceData.client.country}</p>
+                </div>
+                
+                <!-- TABLEAU -->
+                <table class="invoice-table">
+                    <thead>
+                        <tr>
+                            <th style="width:8%">Image</th>
+                            <th style="width:22%">Produit</th>
+                            <th style="width:30%">Spécifications</th>
+                            <th style="width:10%">Qté</th>
+                            <th style="width:15%">Prix Unitaire</th>
+                            <th style="width:15%">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${tableRows}
+                        <tr class="total-row">
+                            <td colspan="5" style="text-align:right; font-weight:700; border: none;">TOTAL NET</td>
+                            <td style="font-weight:700; color:#c9a84c; font-size:18px; border: none;">${invoiceData.total.toLocaleString('fr-FR')} FCFA</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <!-- NOTE -->
+                <div class="invoice-note">
+                    <strong>Note :</strong> Cette facture Terratransport s'élève sur une somme de <strong>${totalLetters}</strong> FCFA SOUS DOUANE.<br>
+                    À compte de 10% avant la livraison des camions et 90% à l'expédition port de Dakar.
+                </div>
+                
+                <!-- DÉTAILS -->
+                <div class="invoice-details">
+                    <div class="detail-block">
+                        <h4>Détails de la commande</h4>
+                        <p><strong>Délai de la commande :</strong> 60 jours ouvrables</p>
+                        <p><strong>Port de destination :</strong> CIF port de Dakar</p>
+                        <p><strong>Véhicules :</strong> Tous neufs - 00km/h - Provenance Chine</p>
+                        <p><strong>Type de camion :</strong> ${invoiceData.products[0].name}</p>
+                    </div>
+                    <div class="detail-block">
+                        <h4>Conditions commerciales</h4>
+                        <p><strong>Délai de livraison :</strong> 60 jours ouvrables après réception du paiement</p>
+                        <p><strong>Emballage :</strong> Emballage standard pour exportation</p>
+                    </div>
+                </div>
+                
+                <!-- BANQUE -->
+                <div class="bank-info">
+                    <h4>Informations bancaires</h4>
+                    <p><strong>RIB :</strong> SN0790111125105957700107</p>
+                    <p><strong>CODE SWIFT :</strong> ISSNSNDA</p>
+                    <p><strong>N° du compte :</strong> 251059577001</p>
+                    <p><strong>Nom du compte :</strong> Terratransport</p>
+                    <p><strong>Banque :</strong> BIS Banque Sénégal</p>
+                    <p><strong>Agence :</strong> Ngor Almadies</p>
+                    <p><strong>Adresse banque :</strong> Dakar - zone 12 Almadies, immeuble BIS en face Route du King Fahd (Sénégal) - SG</p>
+                    <p><strong>Type de compte :</strong> Compte professionnel</p>
+                </div>
+                
+                <!-- REMARQUE -->
+                <div class="remark">
+                    <strong>📌 Remarque :</strong><br>
+                    Paiement par virement bancaire.<br>
+                    Veuillez indiquer le nom de l'acheteur, le numéro de la facture/contrat et le nom du produit dans le libellé du paiement.
+                </div>
+                
+                <!-- FOOTER -->
+                <div class="invoice-footer">
+                    <div class="signature-area">
+                        <p style="font-size:16px; font-weight:700; color:#0a1628;">Terratransport</p>
+                        <p>Cachet et signature</p>
+                    </div>
+                    <div class="contact-info">
+                        <strong>Terratransport</strong><br>
+                        B13085 - Adresse : Ngor Almadies 11045<br>
+                        Tel : 338971403 / 770720202 / 779398484
+                    </div>
+                </div>
+            </div>
+            
+            <script>
+                // Impression automatique
+                window.onload = function() {
+                    setTimeout(function() {
+                        window.print();
+                        setTimeout(function() {
+                            window.close();
+                        }, 2000);
+                    }, 1000);
+                };
+            <\/script>
+        </body>
+        </html>
+    `;
+    
+    // Ouvrir une nouvelle fenêtre pour le PDF
+    const win = window.open('', '_blank', 'width=1100,height=800');
+    if (!win) {
+        alert('Veuillez autoriser les pop-ups pour générer le PDF.');
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+        return;
+    }
+    
+    win.document.write(htmlContent);
+    win.document.close();
+    
+    btn.innerHTML = originalText;
+    btn.disabled = false;
 }
 
 // ============================================================
-// INITIALISATION - Ajouter un produit par défaut
+// INITIALISATION
 // ============================================================
 document.addEventListener('DOMContentLoaded', function() {
     addProduct();
