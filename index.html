@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Générateur de Facture - Terratransport</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- ============ EN-TÊTE ============ -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <img src="assets/images/logo.png" alt="Terratransport" class="logo" id="logoPlaceholder">
+                <h1>Générateur de Facture Professionnelle</h1>
+            </div>
+        </div>
+    </header>
+
+    <!-- ============ FORMULAIRE ============ -->
+    <main class="container">
+        <div class="form-wrapper">
+            <form id="invoiceForm">
+                <!-- SECTION CLIENT -->
+                <section class="form-section">
+                    <h2>Informations du Client</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="clientName">Nom du client *</label>
+                            <input type="text" id="clientName" required placeholder="Ex: M. Abdoulaye DIOP">
+                        </div>
+                        <div class="form-group">
+                            <label for="clientAddress">Adresse *</label>
+                            <input type="text" id="clientAddress" required placeholder="Ex: 123 Rue de la République">
+                        </div>
+                        <div class="form-group">
+                            <label for="clientBP">BP</label>
+                            <input type="text" id="clientBP" placeholder="Ex: BP 12345">
+                        </div>
+                        <div class="form-group">
+                            <label for="clientCountry">Pays *</label>
+                            <input type="text" id="clientCountry" required placeholder="Ex: Sénégal">
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECTION PRODUITS -->
+                <section class="form-section">
+                    <h2>Produits / Camions</h2>
+                    <div id="productsContainer">
+                        <!-- Les produits seront ajoutés dynamiquement ici -->
+                    </div>
+                    <button type="button" class="btn-add" onclick="addProduct()">
+                        + Ajouter un produit
+                    </button>
+                </section>
+
+                <!-- BOUTONS D'ACTION -->
+                <div class="form-actions">
+                    <button type="button" class="btn-primary" onclick="generateInvoice()">
+                        📄 Générer la facture
+                    </button>
+                    <button type="reset" class="btn-secondary">
+                        🗑️ Réinitialiser
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- ============ APERÇU DE LA FACTURE ============ -->
+        <div id="previewSection" class="preview-section" style="display: none;">
+            <div class="preview-header">
+                <h2>👁️ Aperçu de la facture</h2>
+                <button class="btn-download" onclick="downloadPDF()">
+                    ⬇️ Télécharger PDF
+                </button>
+            </div>
+            <div id="invoicePreview">
+                <!-- Le contenu de la facture sera injecté ici -->
+            </div>
+        </div>
+    </main>
+
+    <!-- ============ SCRIPT ============ -->
+    <script src="script.js"></script>
+</body>
+</html>
