@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Template Facture Terratransport</title>
     <style>
-        /* ===== STYLES DE LA FACTURE ===== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Helvetica', 'Arial', sans-serif;
@@ -22,8 +21,6 @@
             border-radius: 12px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.1);
         }
-        
-        /* ===== MÊMES STYLES QUE DANS LA FACTURE ===== */
         .invoice-container { max-width: 100%; }
         .invoice-header {
             display: flex;
@@ -82,6 +79,19 @@
             object-fit: cover;
             border-radius: 8px;
             border: 1px solid #ddd;
+        }
+        .img-placeholder {
+            display: flex;
+            width: 60px;
+            height: 60px;
+            background: #f0f0f0;
+            border-radius: 8px;
+            font-size: 28px;
+            color: #999;
+            text-align: center;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto;
         }
         
         .invoice-note {
@@ -147,9 +157,10 @@
             flex-direction: column;
             align-items: center;
         }
-        .signature-area img {
+        .signature-img {
             height: 80px;
             max-width: 150px;
+            object-fit: contain;
         }
         .signature-area p { font-size: 13px; color: #666; margin-top: 5px; }
         .contact-info {
@@ -158,6 +169,7 @@
             color: #555;
             line-height: 1.8;
         }
+        .logo-fallback, .sig-fallback { display: none !important; }
         
         @media (max-width: 768px) {
             .invoice-wrapper { padding: 20px; }
@@ -175,7 +187,8 @@
             <!-- EN-TÊTE -->
             <div class="invoice-header">
                 <div class="invoice-left">
-                    <img src="assets/images/logo.png" alt="Terratransport" class="logo-invoice" style="height:70px;">
+                    <img src="assets/images/logo.png" alt="Terratransport" class="logo-invoice" style="height:70px;" onerror="this.style.display='none'; this.parentElement.querySelector('.logo-fallback').style.display='block';">
+                    <span class="logo-fallback" style="display:none; font-size:24px; font-weight:700; color:#0a1628;">Terratransport</span>
                     <div class="company-info">
                         <strong>Terratransport</strong><br>
                         NINEA : 005554789<br>
@@ -202,17 +215,20 @@
             <table class="invoice-table">
                 <thead>
                     <tr>
-                        <th style="width:8%">Image</th>
+                        <th style="width:10%">Image</th>
                         <th style="width:22%">Produit</th>
                         <th style="width:30%">Spécifications</th>
                         <th style="width:10%">Qté</th>
-                        <th style="width:15%">Prix Unitaire</th>
-                        <th style="width:15%">Total</th>
+                        <th style="width:14%">Prix Unitaire</th>
+                        <th style="width:14%">Total</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td><img src="https://via.placeholder.com/60x60/C9A84C/FFFFFF?text=CAMION" class="product-img" alt="Camion"></td>
+                        <td style="text-align:center;">
+                            <img src="assets/images/camion.jpg" class="product-img" alt="Camion Terratransport" onerror="this.style.display='none'; this.parentElement.querySelector('.img-placeholder').style.display='flex';">
+                            <span class="img-placeholder" style="display:none;">🚛</span>
+                        </td>
                         <td><strong>Camion Mercedes Actros</strong></td>
                         <td>Réf: ACT-2024, Moteur V8, 500ch, Clim, ABS</td>
                         <td>2</td>
@@ -220,7 +236,10 @@
                         <td>50 000 000 FCFA</td>
                     </tr>
                     <tr>
-                        <td><img src="https://via.placeholder.com/60x60/C9A84C/FFFFFF?text=CAMION" class="product-img" alt="Camion"></td>
+                        <td style="text-align:center;">
+                            <img src="assets/images/camion.jpg" class="product-img" alt="Camion Terratransport" onerror="this.style.display='none'; this.parentElement.querySelector('.img-placeholder').style.display='flex';">
+                            <span class="img-placeholder" style="display:none;">🚛</span>
+                        </td>
                         <td><strong>Camion Volvo FH</strong></td>
                         <td>Réf: VOL-2024, Moteur D13, 460ch, GPS</td>
                         <td>1</td>
@@ -279,7 +298,8 @@
             <!-- FOOTER -->
             <div class="invoice-footer">
                 <div class="signature-area">
-                    <img src="assets/images/signature.png" alt="Cachet et signature" style="height:80px; max-width:150px;">
+                    <img src="assets/images/signature.png" alt="Cachet et signature" class="signature-img" onerror="this.style.display='none'; this.parentElement.querySelector('.sig-fallback').style.display='block';">
+                    <span class="sig-fallback" style="display:none; font-size:12px; color:#999;">Cachet et signature</span>
                     <p>Cachet et signature de Terratransport</p>
                 </div>
                 <div class="contact-info">
