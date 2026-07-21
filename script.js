@@ -206,6 +206,7 @@ function generateInvoice() {
         
         let html = `
             <div class="invoice-container" id="invoiceContent">
+                <!-- EN-TÊTE : GAUCHE = ENTREPRISE, DROITE = FACTURE -->
                 <div class="invoice-header">
                     <div class="invoice-left">
                         <div class="logo-text">Terratransport</div>
@@ -222,6 +223,7 @@ function generateInvoice() {
                     </div>
                 </div>
                 
+                <!-- CLIENT : À GAUCHE -->
                 <div class="invoice-client">
                     <h3>À l'attention de :</h3>
                     <p><strong>${data.client.name}</strong></p>
@@ -230,15 +232,16 @@ function generateInvoice() {
                     <p>${data.client.country}</p>
                 </div>
                 
+                <!-- TABLEAU -->
                 <table class="invoice-table">
                     <thead>
                         <tr>
-                            <th style="width:10%">Image</th>
-                            <th style="width:22%">Produit</th>
-                            <th style="width:30%">Spécifications</th>
-                            <th style="width:10%">Qté</th>
-                            <th style="width:14%">Prix Unitaire</th>
-                            <th style="width:14%">Total</th>
+                            <th style="width:10%; text-align:center;">Image</th>
+                            <th style="width:22%;">Produit</th>
+                            <th style="width:30%;">Spécifications</th>
+                            <th style="width:10%; text-align:center;">Qté</th>
+                            <th style="width:14%; text-align:right;">Prix Unitaire</th>
+                            <th style="width:14%; text-align:right;">Total</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -247,7 +250,7 @@ function generateInvoice() {
         data.products.forEach((p) => {
             html += `
                 <tr>
-                    <td style="text-align:center; font-size:24px;">🚛</td>
+                    <td style="text-align:center; font-size:28px;">🚛</td>
                     <td><strong>${p.name}</strong></td>
                     <td>${p.specs || '—'}</td>
                     <td style="text-align:center;">${p.qty}</td>
@@ -259,17 +262,19 @@ function generateInvoice() {
         
         html += `
                     <tr class="total-row">
-                        <td colspan="5" style="text-align:right; font-weight:700;">TOTAL NET</td>
+                        <td colspan="5" style="text-align:right; font-weight:700; font-size:16px;">TOTAL NET</td>
                         <td style="font-weight:700; color:#c9a84c; font-size:18px; text-align:right;">${data.total.toLocaleString('fr-FR')} FCFA</td>
                     </tr>
                 </tbody>
             </table>
             
+            <!-- NOTE -->
             <div class="invoice-note">
                 <strong>Note :</strong> Cette facture Terratransport s'élève sur une somme de <strong>${totalLetters}</strong> FCFA SOUS DOUANE.<br>
                 À compte de 10% avant la livraison des camions et 90% à l'expédition port de Dakar.
             </div>
             
+            <!-- DÉTAILS : 2 COLONNES -->
             <div class="invoice-details">
                 <div class="detail-block">
                     <h4>Détails de la commande</h4>
@@ -285,6 +290,7 @@ function generateInvoice() {
                 </div>
             </div>
             
+            <!-- BANQUE -->
             <div class="bank-info">
                 <h4>Informations bancaires</h4>
                 <p><strong>RIB :</strong> SN0790111125105957700107</p>
@@ -297,12 +303,14 @@ function generateInvoice() {
                 <p><strong>Type de compte :</strong> Compte professionnel</p>
             </div>
             
+            <!-- REMARQUE -->
             <div class="remark">
                 <strong>📌 Remarque :</strong><br>
                 Paiement par virement bancaire.<br>
                 Veuillez indiquer le nom de l'acheteur, le numéro de la facture/contrat et le nom du produit dans le libellé du paiement.
             </div>
             
+            <!-- FOOTER : GAUCHE = SIGNATURE, DROITE = CONTACT -->
             <div class="invoice-footer">
                 <div class="signature-area">
                     <div class="sig-text">Terratransport</div>
@@ -328,7 +336,7 @@ function generateInvoice() {
 }
 
 // ============================================================
-// TÉLÉCHARGER LE PDF - VERSION FINALE
+// TÉLÉCHARGER LE PDF - DISPOSITION PARFAITE
 // ============================================================
 function downloadPDF() {
     if (!invoiceData) {
@@ -361,7 +369,7 @@ function downloadPDF() {
         `;
     });
     
-    // HTML complet pour le PDF
+    // HTML complet pour le PDF - DISPOSITION GAUCHE/DROITE PARFAITE
     const htmlContent = `
     <!DOCTYPE html>
     <html>
@@ -369,20 +377,23 @@ function downloadPDF() {
         <meta charset="UTF-8">
         <title>Facture ${currentInvoiceId}</title>
         <style>
+            /* ===== RESET ===== */
             * { margin: 0; padding: 0; box-sizing: border-box; }
             body {
                 font-family: 'Helvetica', 'Arial', sans-serif;
                 padding: 30px;
                 background: white;
                 color: #1a1a2e;
+                line-height: 1.5;
             }
             .invoice-wrapper {
                 max-width: 1000px;
                 margin: 0 auto;
                 background: white;
+                padding: 20px;
             }
             
-            /* ===== EN-TÊTE ===== */
+            /* ===== EN-TÊTE : GAUCHE/DROITE ===== */
             .invoice-header {
                 display: flex;
                 justify-content: space-between;
@@ -395,24 +406,29 @@ function downloadPDF() {
                 display: flex;
                 flex-direction: column;
                 align-items: flex-start;
+                text-align: left;
             }
             .logo-text {
                 font-size: 32px;
                 font-weight: 700;
                 color: #0a1628;
-                letter-spacing: 1px;
+                letter-spacing: 2px;
             }
             .company-info {
                 font-size: 13px;
                 color: #555;
                 line-height: 1.8;
                 margin-top: 5px;
+                text-align: left;
             }
             .company-info strong {
                 color: #0a1628;
             }
             .invoice-right {
                 text-align: right;
+                display: flex;
+                flex-direction: column;
+                align-items: flex-end;
             }
             .invoice-number {
                 font-size: 18px;
@@ -425,13 +441,14 @@ function downloadPDF() {
                 margin-top: 5px;
             }
             
-            /* ===== CLIENT ===== */
+            /* ===== CLIENT : À GAUCHE ===== */
             .invoice-client {
                 margin: 20px 0 25px 0;
                 padding: 18px 22px;
                 background: #f8f9fc;
                 border-radius: 8px;
                 border-left: 4px solid #c9a84c;
+                text-align: left;
             }
             .invoice-client h3 {
                 color: #0a1628;
@@ -462,6 +479,14 @@ function downloadPDF() {
                 font-weight: 700;
                 font-size: 13px;
             }
+            .invoice-table th:first-child {
+                text-align: center;
+            }
+            .invoice-table th:nth-child(4),
+            .invoice-table th:nth-child(5),
+            .invoice-table th:nth-child(6) {
+                text-align: right;
+            }
             .invoice-table td {
                 padding: 10px;
                 border: 1px solid #ddd;
@@ -488,12 +513,13 @@ function downloadPDF() {
                 border: 1px solid #f0e4c6;
                 font-size: 15px;
                 line-height: 1.8;
+                text-align: left;
             }
             .invoice-note strong {
                 color: #0a1628;
             }
             
-            /* ===== DÉTAILS ===== */
+            /* ===== DÉTAILS : 2 COLONNES ===== */
             .invoice-details {
                 display: grid;
                 grid-template-columns: 1fr 1fr;
@@ -504,6 +530,7 @@ function downloadPDF() {
                 padding: 15px 20px;
                 background: #f8f9fc;
                 border-radius: 8px;
+                text-align: left;
             }
             .detail-block h4 {
                 color: #0a1628;
@@ -527,6 +554,7 @@ function downloadPDF() {
                 padding: 18px 22px;
                 border-radius: 8px;
                 margin: 20px 0;
+                text-align: left;
             }
             .bank-info h4 {
                 color: #0a1628;
@@ -551,12 +579,13 @@ function downloadPDF() {
                 margin: 20px 0;
                 font-size: 14px;
                 line-height: 1.8;
+                text-align: left;
             }
             .remark strong {
                 color: #0a1628;
             }
             
-            /* ===== FOOTER ===== */
+            /* ===== FOOTER : GAUCHE = SIGNATURE, DROITE = CONTACT ===== */
             .invoice-footer {
                 margin-top: 30px;
                 padding-top: 20px;
@@ -569,7 +598,8 @@ function downloadPDF() {
             .signature-area {
                 display: flex;
                 flex-direction: column;
-                align-items: center;
+                align-items: flex-start;
+                text-align: left;
             }
             .signature-area .sig-text {
                 font-size: 20px;
@@ -594,55 +624,41 @@ function downloadPDF() {
             
             /* ===== IMPRESSION ===== */
             @media print {
-                body { 
-                    padding: 12mm; 
-                }
-                .invoice-wrapper {
-                    padding: 0;
-                }
-                .invoice-table tr {
-                    page-break-inside: avoid;
-                }
+                body { padding: 10mm; }
+                .invoice-wrapper { padding: 0; }
+                .invoice-table tr { page-break-inside: avoid; }
             }
             
             /* ===== RESPONSIVE ===== */
             @media (max-width: 768px) {
-                .invoice-details { 
-                    grid-template-columns: 1fr; 
-                }
+                .invoice-details { grid-template-columns: 1fr; }
                 .invoice-header { 
                     flex-direction: column; 
-                    align-items: center; 
-                    text-align: center; 
-                }
-                .invoice-left { 
-                    align-items: center; 
+                    align-items: flex-start; 
+                    text-align: left; 
                 }
                 .invoice-right { 
-                    text-align: center; 
+                    text-align: left; 
+                    align-items: flex-start;
                     margin-top: 10px; 
                 }
                 .invoice-footer { 
                     flex-direction: column; 
-                    text-align: center; 
+                    align-items: flex-start;
+                    text-align: left; 
                     gap: 15px; 
                 }
                 .contact-info { 
-                    text-align: center; 
+                    text-align: left; 
                 }
-                .invoice-table {
-                    font-size: 12px;
-                }
-                .invoice-table th,
-                .invoice-table td {
-                    padding: 8px 6px;
-                }
+                .invoice-table { font-size: 12px; }
+                .invoice-table th, .invoice-table td { padding: 8px 6px; }
             }
         </style>
     </head>
     <body>
         <div class="invoice-wrapper">
-            <!-- EN-TÊTE -->
+            <!-- EN-TÊTE : GAUCHE = ENTREPRISE, DROITE = FACTURE -->
             <div class="invoice-header">
                 <div class="invoice-left">
                     <div class="logo-text">Terratransport</div>
@@ -659,7 +675,7 @@ function downloadPDF() {
                 </div>
             </div>
             
-            <!-- CLIENT -->
+            <!-- CLIENT : À GAUCHE -->
             <div class="invoice-client">
                 <h3>À l'attention de :</h3>
                 <p><strong>${invoiceData.client.name}</strong></p>
@@ -683,7 +699,7 @@ function downloadPDF() {
                 <tbody>
                     ${tableRows}
                     <tr class="total-row">
-                        <td colspan="5" style="text-align:right; border: none; font-size:18px;">TOTAL NET</td>
+                        <td colspan="5" style="text-align:right; border: none; font-size:16px;">TOTAL NET</td>
                         <td style="text-align:right; border: none; font-size:20px; color:#c9a84c; font-weight:700;">${invoiceData.total.toLocaleString('fr-FR')} FCFA</td>
                     </tr>
                 </tbody>
@@ -695,7 +711,7 @@ function downloadPDF() {
                 À compte de 10% avant la livraison des camions et 90% à l'expédition port de Dakar.
             </div>
             
-            <!-- DÉTAILS -->
+            <!-- DÉTAILS : 2 COLONNES -->
             <div class="invoice-details">
                 <div class="detail-block">
                     <h4>Détails de la commande</h4>
@@ -731,7 +747,7 @@ function downloadPDF() {
                 Veuillez indiquer le nom de l'acheteur, le numéro de la facture/contrat et le nom du produit dans le libellé du paiement.
             </div>
             
-            <!-- FOOTER -->
+            <!-- FOOTER : GAUCHE = SIGNATURE, DROITE = CONTACT -->
             <div class="invoice-footer">
                 <div class="signature-area">
                     <div class="sig-text">Terratransport</div>
@@ -749,7 +765,7 @@ function downloadPDF() {
             window.onload = function() {
                 setTimeout(function() {
                     window.print();
-                }, 1500);
+                }, 1000);
             };
         <\/script>
     </body>
