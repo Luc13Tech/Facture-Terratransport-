@@ -354,7 +354,7 @@ function generateInvoice() {
 }
 
 // ============================================================
-// TÉLÉCHARGER LE PDF (AVEC html2pdf.js)
+// TÉLÉCHARGER LE PDF (AVEC html2pdf.js) - VERSION CORRIGÉE
 // ============================================================
 function downloadPDF() {
     if (!invoiceData) {
@@ -362,6 +362,7 @@ function downloadPDF() {
         return;
     }
     
+    // Récupérer le contenu de la facture
     const element = document.getElementById('invoiceContent');
     if (!element) {
         alert('Erreur : Contenu de la facture introuvable.');
@@ -378,33 +379,256 @@ function downloadPDF() {
     const clientName = invoiceData.client.name.replace(/\s+/g, '_');
     const filename = `facture-Terratransport-${clientName}-${currentInvoiceId}.pdf`;
     
+    // Créer un conteneur temporaire pour le PDF
+    const tempDiv = document.createElement('div');
+    tempDiv.style.cssText = `
+        position: fixed;
+        left: -9999px;
+        top: 0;
+        width: 1000px;
+        background: white;
+        padding: 40px;
+        z-index: 9999;
+        font-family: 'Helvetica', 'Arial', sans-serif;
+    `;
+    
+    // Cloner le contenu
+    const cloneContent = element.cloneNode(true);
+    
+    // Ajouter les styles nécessaires pour le PDF
+    const style = document.createElement('style');
+    style.textContent = `
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        .invoice-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            font-family: 'Helvetica', 'Arial', sans-serif;
+        }
+        .invoice-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #c9a84c;
+        }
+        .invoice-left {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .logo-invoice {
+            height: 70px;
+            width: auto;
+            margin-bottom: 10px;
+            object-fit: contain;
+        }
+        .company-info {
+            font-size: 13px;
+            color: #555;
+            line-height: 1.8;
+        }
+        .invoice-right {
+            text-align: right;
+        }
+        .invoice-number {
+            font-size: 18px;
+            font-weight: 700;
+            color: #0a1628;
+        }
+        .invoice-date {
+            font-size: 14px;
+            color: #666;
+        }
+        .invoice-client {
+            margin: 25px 0 30px 0;
+            padding: 20px;
+            background: #f8f9fc;
+            border-radius: 10px;
+            border-left: 4px solid #c9a84c;
+        }
+        .invoice-client h3 {
+            color: #0a1628;
+            margin-bottom: 5px;
+        }
+        .invoice-client p {
+            margin: 3px 0;
+            color: #444;
+            font-size: 14px;
+        }
+        .invoice-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+        }
+        .invoice-table th {
+            background: #0a1628 !important;
+            color: white !important;
+            padding: 14px 12px;
+            text-align: left;
+            font-size: 14px;
+            font-weight: 700 !important;
+        }
+        .invoice-table td {
+            padding: 12px 10px !important;
+            border-bottom: 1px solid #e8ecf3;
+            font-size: 14px;
+            vertical-align: middle;
+        }
+        .invoice-table .total-row td {
+            font-weight: 700;
+            font-size: 16px;
+            border-top: 3px solid #0a1628;
+            padding-top: 15px;
+        }
+        .product-img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+        .img-placeholder {
+            display: flex;
+            width: 60px;
+            height: 60px;
+            background: #f0f0f0;
+            border-radius: 8px;
+            font-size: 28px;
+            color: #999;
+            text-align: center;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto;
+        }
+        .invoice-note {
+            margin: 25px 0;
+            padding: 20px;
+            background: #fef9e7;
+            border-radius: 10px;
+            border: 1px solid #f0e4c6;
+            font-size: 15px;
+            line-height: 1.8;
+        }
+        .invoice-note strong {
+            color: #0a1628;
+        }
+        .invoice-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 25px 0;
+        }
+        .detail-block {
+            padding: 15px 20px;
+            background: #f8f9fc;
+            border-radius: 10px;
+        }
+        .detail-block h4 {
+            color: #0a1628;
+            margin-bottom: 8px;
+            font-size: 15px;
+            border-bottom: 2px solid #c9a84c;
+            padding-bottom: 5px;
+        }
+        .detail-block p {
+            font-size: 14px;
+            color: #444;
+            margin: 4px 0;
+        }
+        .bank-info {
+            background: #f8f9fc;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 25px 0;
+        }
+        .bank-info h4 {
+            color: #0a1628;
+            margin-bottom: 10px;
+        }
+        .bank-info p {
+            font-size: 14px;
+            color: #444;
+            margin: 3px 0;
+        }
+        .remark {
+            background: #fff3cd;
+            padding: 15px 20px;
+            border-radius: 10px;
+            border-left: 4px solid #ffc107;
+            margin: 20px 0;
+            font-size: 14px;
+        }
+        .invoice-footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #e8ecf3;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .signature-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .signature-img {
+            height: 80px;
+            max-width: 150px;
+            object-fit: contain;
+        }
+        .signature-area p {
+            font-size: 13px;
+            color: #666;
+            margin-top: 5px;
+        }
+        .contact-info {
+            text-align: right;
+            font-size: 13px;
+            color: #555;
+            line-height: 1.8;
+        }
+        .logo-fallback, .sig-fallback {
+            display: none !important;
+        }
+        @media print {
+            body { padding: 15mm; }
+        }
+    `;
+    tempDiv.appendChild(style);
+    tempDiv.appendChild(cloneContent);
+    document.body.appendChild(tempDiv);
+    
     // Options de html2pdf
     const opt = {
-        margin:        [10, 10, 10, 10],
-        filename:      filename,
-        image:         { type: 'jpeg', quality: 0.98 },
-        html2canvas:   { 
+        margin: [15, 15, 15, 15],
+        filename: filename,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: {
             scale: 2,
             useCORS: true,
             letterRendering: true,
-            width: element.scrollWidth,
-            height: element.scrollHeight
+            width: 1000,
+            height: tempDiv.scrollHeight,
+            logging: false
         },
-        jsPDF:         { 
-            unit: 'mm', 
-            format: 'a4', 
-            orientation: 'portrait' 
+        jsPDF: {
+            unit: 'mm',
+            format: 'a4',
+            orientation: 'portrait'
         },
-        pagebreak:     { mode: ['avoid-all', 'css', 'legacy'] }
+        pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
     };
     
     // Générer le PDF
-    html2pdf().set(opt).from(element).save().then(function() {
-        // Restaurer le bouton
+    html2pdf().set(opt).from(tempDiv).save().then(function() {
+        document.body.removeChild(tempDiv);
         btn.innerHTML = originalText;
         btn.disabled = false;
     }).catch(function(error) {
         console.error('Erreur PDF:', error);
+        document.body.removeChild(tempDiv);
         alert('Erreur lors de la génération du PDF. Veuillez réessayer.');
         btn.innerHTML = originalText;
         btn.disabled = false;
