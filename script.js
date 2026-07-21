@@ -5,9 +5,6 @@ let productCount = 0;
 let invoiceData = null;
 let currentInvoiceId = null;
 
-// Image du camion (fixe)
-const CAMION_IMAGE = 'assets/images/camion.jpg';
-
 // ============================================================
 // AJOUTER UN PRODUIT
 // ============================================================
@@ -211,8 +208,7 @@ function generateInvoice() {
             <div class="invoice-container" id="invoiceContent">
                 <div class="invoice-header">
                     <div class="invoice-left">
-                        <img src="assets/images/logo.png" alt="Terratransport" class="logo-invoice" onerror="this.style.display='none'; this.parentElement.querySelector('.logo-fallback').style.display='block';">
-                        <span class="logo-fallback" style="display:none; font-size:24px; font-weight:700; color:#0a1628;">Terratransport</span>
+                        <div class="logo-text">Terratransport</div>
                         <div class="company-info">
                             <strong>Terratransport</strong><br>
                             NINEA : 005554789<br>
@@ -249,19 +245,14 @@ function generateInvoice() {
         `;
         
         data.products.forEach((p) => {
-            const imgHtml = `
-                <img src="${CAMION_IMAGE}" class="product-img" alt="Camion Terratransport" onerror="this.style.display='none'; this.parentElement.querySelector('.img-placeholder').style.display='flex';">
-                <span class="img-placeholder" style="display:none; background:#f0f0f0; border-radius:8px; padding:8px; font-size:11px; color:#999; text-align:center; justify-content:center; align-items:center;">🚛</span>
-            `;
-            
             html += `
                 <tr>
-                    <td style="text-align:center;">${imgHtml}</td>
+                    <td style="text-align:center; font-size:24px;">🚛</td>
                     <td><strong>${p.name}</strong></td>
                     <td>${p.specs || '—'}</td>
-                    <td>${p.qty}</td>
-                    <td>${p.price.toLocaleString('fr-FR')} FCFA</td>
-                    <td>${p.lineTotal.toLocaleString('fr-FR')} FCFA</td>
+                    <td style="text-align:center;">${p.qty}</td>
+                    <td style="text-align:right;">${p.price.toLocaleString('fr-FR')} FCFA</td>
+                    <td style="text-align:right;">${p.lineTotal.toLocaleString('fr-FR')} FCFA</td>
                 </tr>
             `;
         });
@@ -269,7 +260,7 @@ function generateInvoice() {
         html += `
                     <tr class="total-row">
                         <td colspan="5" style="text-align:right; font-weight:700;">TOTAL NET</td>
-                        <td style="font-weight:700; color:#c9a84c; font-size:18px;">${data.total.toLocaleString('fr-FR')} FCFA</td>
+                        <td style="font-weight:700; color:#c9a84c; font-size:18px; text-align:right;">${data.total.toLocaleString('fr-FR')} FCFA</td>
                     </tr>
                 </tbody>
             </table>
@@ -314,9 +305,8 @@ function generateInvoice() {
             
             <div class="invoice-footer">
                 <div class="signature-area">
-                    <img src="assets/images/signature.png" alt="Cachet et signature" class="signature-img" onerror="this.style.display='none'; this.parentElement.querySelector('.sig-fallback').style.display='block';">
-                    <span class="sig-fallback" style="display:none; font-size:12px; color:#999;">Cachet et signature</span>
-                    <p>Cachet et signature de Terratransport</p>
+                    <div class="sig-text">Terratransport</div>
+                    <p>Cachet et signature</p>
                 </div>
                 <div class="contact-info">
                     <strong>Terratransport</strong><br>
@@ -338,7 +328,7 @@ function generateInvoice() {
 }
 
 // ============================================================
-// TÉLÉCHARGER LE PDF - MÉTHODE FIABLE
+// TÉLÉCHARGER LE PDF - VERSION FINALE
 // ============================================================
 function downloadPDF() {
     if (!invoiceData) {
@@ -361,17 +351,17 @@ function downloadPDF() {
     invoiceData.products.forEach((p) => {
         tableRows += `
             <tr>
-                <td style="text-align:center; padding: 8px; border: 1px solid #ddd;">🚛</td>
-                <td style="padding: 8px; border: 1px solid #ddd;"><strong>${p.name}</strong></td>
-                <td style="padding: 8px; border: 1px solid #ddd;">${p.specs || '—'}</td>
-                <td style="text-align:center; padding: 8px; border: 1px solid #ddd;">${p.qty}</td>
-                <td style="text-align:right; padding: 8px; border: 1px solid #ddd;">${p.price.toLocaleString('fr-FR')} FCFA</td>
-                <td style="text-align:right; padding: 8px; border: 1px solid #ddd;">${p.lineTotal.toLocaleString('fr-FR')} FCFA</td>
+                <td style="text-align:center; padding: 10px; border: 1px solid #ddd; font-size:28px;">🚛</td>
+                <td style="padding: 10px; border: 1px solid #ddd; font-weight:bold;">${p.name}</td>
+                <td style="padding: 10px; border: 1px solid #ddd;">${p.specs || '—'}</td>
+                <td style="text-align:center; padding: 10px; border: 1px solid #ddd;">${p.qty}</td>
+                <td style="text-align:right; padding: 10px; border: 1px solid #ddd;">${p.price.toLocaleString('fr-FR')} FCFA</td>
+                <td style="text-align:right; padding: 10px; border: 1px solid #ddd;">${p.lineTotal.toLocaleString('fr-FR')} FCFA</td>
             </tr>
         `;
     });
     
-    // Créer le HTML complet pour le PDF
+    // HTML complet pour le PDF
     const htmlContent = `
     <!DOCTYPE html>
     <html>
@@ -379,19 +369,16 @@ function downloadPDF() {
         <meta charset="UTF-8">
         <title>Facture ${currentInvoiceId}</title>
         <style>
-            /* ===== RESET ===== */
             * { margin: 0; padding: 0; box-sizing: border-box; }
             body {
                 font-family: 'Helvetica', 'Arial', sans-serif;
-                padding: 20px;
+                padding: 30px;
                 background: white;
                 color: #1a1a2e;
-                line-height: 1.5;
             }
             .invoice-wrapper {
                 max-width: 1000px;
                 margin: 0 auto;
-                padding: 20px;
                 background: white;
             }
             
@@ -401,7 +388,7 @@ function downloadPDF() {
                 justify-content: space-between;
                 align-items: flex-start;
                 margin-bottom: 25px;
-                padding-bottom: 15px;
+                padding-bottom: 20px;
                 border-bottom: 3px solid #c9a84c;
             }
             .invoice-left {
@@ -409,35 +396,39 @@ function downloadPDF() {
                 flex-direction: column;
                 align-items: flex-start;
             }
-            .company-name {
-                font-size: 26px;
+            .logo-text {
+                font-size: 32px;
                 font-weight: 700;
                 color: #0a1628;
-                margin-bottom: 5px;
+                letter-spacing: 1px;
             }
             .company-info {
-                font-size: 12px;
+                font-size: 13px;
                 color: #555;
-                line-height: 1.6;
+                line-height: 1.8;
+                margin-top: 5px;
+            }
+            .company-info strong {
+                color: #0a1628;
             }
             .invoice-right {
                 text-align: right;
             }
             .invoice-number {
-                font-size: 16px;
+                font-size: 18px;
                 font-weight: 700;
                 color: #0a1628;
             }
             .invoice-date {
-                font-size: 13px;
+                font-size: 14px;
                 color: #666;
-                margin-top: 3px;
+                margin-top: 5px;
             }
             
             /* ===== CLIENT ===== */
             .invoice-client {
                 margin: 20px 0 25px 0;
-                padding: 15px 20px;
+                padding: 18px 22px;
                 background: #f8f9fc;
                 border-radius: 8px;
                 border-left: 4px solid #c9a84c;
@@ -448,9 +439,12 @@ function downloadPDF() {
                 margin-bottom: 5px;
             }
             .invoice-client p {
-                margin: 2px 0;
+                margin: 3px 0;
                 color: #444;
-                font-size: 13px;
+                font-size: 14px;
+            }
+            .invoice-client p strong {
+                color: #0a1628;
             }
             
             /* ===== TABLEAU ===== */
@@ -463,37 +457,37 @@ function downloadPDF() {
             .invoice-table th {
                 background: #0a1628;
                 color: white;
-                padding: 10px 8px;
+                padding: 12px 10px;
                 text-align: left;
                 font-weight: 700;
-                font-size: 12px;
+                font-size: 13px;
             }
             .invoice-table td {
-                padding: 8px;
+                padding: 10px;
                 border: 1px solid #ddd;
                 vertical-align: middle;
             }
             .invoice-table .total-row td {
                 font-weight: 700;
-                font-size: 15px;
+                font-size: 16px;
                 border-top: 3px solid #0a1628;
                 border-bottom: none;
-                padding-top: 12px;
+                padding-top: 15px;
             }
             .invoice-table .total-row td:last-child {
                 color: #c9a84c;
-                font-size: 17px;
+                font-size: 18px;
             }
             
             /* ===== NOTE ===== */
             .invoice-note {
                 margin: 20px 0;
-                padding: 15px 20px;
+                padding: 18px 22px;
                 background: #fef9e7;
                 border-radius: 8px;
                 border: 1px solid #f0e4c6;
-                font-size: 14px;
-                line-height: 1.6;
+                font-size: 15px;
+                line-height: 1.8;
             }
             .invoice-note strong {
                 color: #0a1628;
@@ -503,59 +497,69 @@ function downloadPDF() {
             .invoice-details {
                 display: grid;
                 grid-template-columns: 1fr 1fr;
-                gap: 15px;
+                gap: 20px;
                 margin: 20px 0;
             }
             .detail-block {
-                padding: 12px 15px;
+                padding: 15px 20px;
                 background: #f8f9fc;
                 border-radius: 8px;
             }
             .detail-block h4 {
                 color: #0a1628;
-                font-size: 14px;
+                font-size: 15px;
                 border-bottom: 2px solid #c9a84c;
-                padding-bottom: 5px;
-                margin-bottom: 8px;
+                padding-bottom: 8px;
+                margin-bottom: 10px;
             }
             .detail-block p {
-                font-size: 13px;
+                font-size: 14px;
                 color: #444;
-                margin: 3px 0;
+                margin: 4px 0;
+            }
+            .detail-block p strong {
+                color: #0a1628;
             }
             
             /* ===== BANQUE ===== */
             .bank-info {
                 background: #f8f9fc;
-                padding: 15px 20px;
+                padding: 18px 22px;
                 border-radius: 8px;
                 margin: 20px 0;
             }
             .bank-info h4 {
                 color: #0a1628;
-                font-size: 14px;
-                margin-bottom: 8px;
+                font-size: 15px;
+                margin-bottom: 10px;
             }
             .bank-info p {
-                font-size: 13px;
+                font-size: 14px;
                 color: #444;
-                margin: 2px 0;
+                margin: 3px 0;
+            }
+            .bank-info p strong {
+                color: #0a1628;
             }
             
             /* ===== REMARQUE ===== */
             .remark {
                 background: #fff3cd;
-                padding: 12px 18px;
+                padding: 15px 20px;
                 border-radius: 8px;
                 border-left: 4px solid #ffc107;
                 margin: 20px 0;
-                font-size: 13px;
+                font-size: 14px;
+                line-height: 1.8;
+            }
+            .remark strong {
+                color: #0a1628;
             }
             
             /* ===== FOOTER ===== */
             .invoice-footer {
-                margin-top: 25px;
-                padding-top: 15px;
+                margin-top: 30px;
+                padding-top: 20px;
                 border-top: 2px solid #e8ecf3;
                 display: flex;
                 justify-content: space-between;
@@ -568,46 +572,36 @@ function downloadPDF() {
                 align-items: center;
             }
             .signature-area .sig-text {
-                font-size: 16px;
+                font-size: 20px;
                 font-weight: 700;
                 color: #0a1628;
+                letter-spacing: 1px;
             }
             .signature-area p {
-                font-size: 12px;
+                font-size: 13px;
                 color: #666;
-                margin-top: 3px;
+                margin-top: 5px;
             }
             .contact-info {
                 text-align: right;
-                font-size: 12px;
+                font-size: 13px;
                 color: #555;
-                line-height: 1.6;
+                line-height: 1.8;
             }
             .contact-info strong {
                 color: #0a1628;
             }
             
-            /* ===== UTILITAIRES ===== */
-            .text-right { text-align: right; }
-            .text-center { text-align: center; }
-            .fw-bold { font-weight: 700; }
-            .mt-10 { margin-top: 10px; }
-            .mb-10 { margin-bottom: 10px; }
-            
             /* ===== IMPRESSION ===== */
             @media print {
                 body { 
-                    padding: 10mm; 
-                    margin: 0;
+                    padding: 12mm; 
                 }
                 .invoice-wrapper {
                     padding: 0;
                 }
                 .invoice-table tr {
                     page-break-inside: avoid;
-                }
-                .invoice-table {
-                    page-break-inside: auto;
                 }
             }
             
@@ -631,17 +625,17 @@ function downloadPDF() {
                 .invoice-footer { 
                     flex-direction: column; 
                     text-align: center; 
-                    gap: 10px; 
+                    gap: 15px; 
                 }
                 .contact-info { 
                     text-align: center; 
                 }
                 .invoice-table {
-                    font-size: 11px;
+                    font-size: 12px;
                 }
                 .invoice-table th,
                 .invoice-table td {
-                    padding: 5px 4px;
+                    padding: 8px 6px;
                 }
             }
         </style>
@@ -651,8 +645,9 @@ function downloadPDF() {
             <!-- EN-TÊTE -->
             <div class="invoice-header">
                 <div class="invoice-left">
-                    <div class="company-name">Terratransport</div>
+                    <div class="logo-text">Terratransport</div>
                     <div class="company-info">
+                        <strong>Terratransport</strong><br>
                         NINEA : 005554789<br>
                         RCSN DKR 2015 B13085<br>
                         Adresse : Ngor Sénégal 11045
@@ -677,19 +672,19 @@ function downloadPDF() {
             <table class="invoice-table">
                 <thead>
                     <tr>
-                        <th style="width:8%; text-align:center;">Image</th>
+                        <th style="width:10%; text-align:center;">Image</th>
                         <th style="width:22%;">Produit</th>
                         <th style="width:30%;">Spécifications</th>
                         <th style="width:10%; text-align:center;">Qté</th>
-                        <th style="width:15%; text-align:right;">Prix Unitaire</th>
-                        <th style="width:15%; text-align:right;">Total</th>
+                        <th style="width:14%; text-align:right;">Prix Unitaire</th>
+                        <th style="width:14%; text-align:right;">Total</th>
                     </tr>
                 </thead>
                 <tbody>
                     ${tableRows}
                     <tr class="total-row">
-                        <td colspan="5" style="text-align:right; border: none;">TOTAL NET</td>
-                        <td style="text-align:right; border: none;">${invoiceData.total.toLocaleString('fr-FR')} FCFA</td>
+                        <td colspan="5" style="text-align:right; border: none; font-size:18px;">TOTAL NET</td>
+                        <td style="text-align:right; border: none; font-size:20px; color:#c9a84c; font-weight:700;">${invoiceData.total.toLocaleString('fr-FR')} FCFA</td>
                     </tr>
                 </tbody>
             </table>
@@ -731,7 +726,7 @@ function downloadPDF() {
             
             <!-- REMARQUE -->
             <div class="remark">
-                <strong>Remarque :</strong><br>
+                <strong>📌 Remarque :</strong><br>
                 Paiement par virement bancaire.<br>
                 Veuillez indiquer le nom de l'acheteur, le numéro de la facture/contrat et le nom du produit dans le libellé du paiement.
             </div>
@@ -739,7 +734,7 @@ function downloadPDF() {
             <!-- FOOTER -->
             <div class="invoice-footer">
                 <div class="signature-area">
-                    <span class="sig-text">Terratransport</span>
+                    <div class="sig-text">Terratransport</div>
                     <p>Cachet et signature</p>
                 </div>
                 <div class="contact-info">
@@ -751,7 +746,6 @@ function downloadPDF() {
         </div>
         
         <script>
-            // Impression automatique avec un délai pour que tout se charge
             window.onload = function() {
                 setTimeout(function() {
                     window.print();
@@ -762,7 +756,7 @@ function downloadPDF() {
     </html>
     `;
     
-    // Ouvrir une nouvelle fenêtre pour le PDF
+    // Ouvrir une nouvelle fenêtre
     const win = window.open('', '_blank', 'width=1100,height=900,scrollbars=yes');
     if (!win) {
         alert('Veuillez autoriser les pop-ups pour générer le PDF.');
@@ -774,7 +768,6 @@ function downloadPDF() {
     win.document.write(htmlContent);
     win.document.close();
     
-    // Restaurer le bouton après un délai
     setTimeout(function() {
         btn.innerHTML = originalText;
         btn.disabled = false;
