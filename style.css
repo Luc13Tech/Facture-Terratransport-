@@ -633,40 +633,115 @@ body {
 }
 
 /* ============ IMPRESSION ============ */
+@page {
+    size: A4;
+    margin: 12mm;
+}
+
 @media print {
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color-adjust: exact !important;
+    }
+
+    html, body {
+        width: 210mm;
+        background: #fff !important;
+    }
+
+    .container {
+        max-width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
     .header,
     .form-wrapper,
     .form-actions,
-    .preview-header .btn-download {
+    .preview-header {
         display: none !important;
     }
-    
+
     #previewSection {
-        box-shadow: none;
-        padding: 0;
-        margin: 0;
+        box-shadow: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        border: none !important;
+        min-height: 0 !important;
     }
-    
+
     #invoicePreview {
-        border: none;
-        padding: 20px;
-        border-radius: 0;
+        border: none !important;
+        padding: 0 !important;
+        border-radius: 0 !important;
+        min-height: 0 !important;
     }
-    
+
     .btn-download {
         display: none !important;
     }
-    
+
     .invoice-container {
+        max-width: 100% !important;
+        width: 100% !important;
+    }
+
+    /* Chaque bloc logique ne doit pas être coupé en deux entre deux pages,
+       mais le document dans son ensemble peut s'étaler sur plusieurs pages. */
+    .invoice-header,
+    .invoice-client,
+    .detail-block,
+    .bank-info,
+    .remark,
+    .invoice-note,
+    .invoice-footer {
         page-break-inside: avoid;
     }
-    
+
+    /* Empêche l'en-tête (logo/gauche - n° facture/droite) de se replier en colonne à l'impression */
+    .invoice-header {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        justify-content: space-between !important;
+        width: 100% !important;
+    }
+
+    .invoice-left {
+        flex: 0 0 auto;
+    }
+
+    .invoice-right {
+        flex: 0 0 auto;
+        text-align: right !important;
+    }
+
+    .invoice-footer {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        justify-content: space-between !important;
+        width: 100% !important;
+    }
+
+    .invoice-details {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+    }
+
     .invoice-table {
         page-break-inside: auto;
     }
-    
+
     .invoice-table tr {
         page-break-inside: avoid;
+    }
+
+    .logo-invoice,
+    .product-img,
+    .signature-img {
+        display: inline-block !important;
     }
 }
 
