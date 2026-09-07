@@ -335,7 +335,7 @@ function generateInvoice() {
             
             <!-- REMARQUE -->
             <div class="remark">
-                <strong>📌 Remarque :</strong><br>
+                <strong> Remarque :</strong><br>
                 Paiement par virement bancaire.<br>
                 Veuillez indiquer le nom de l'acheteur, le numéro de la facture/contrat et le nom du produit dans le libellé du paiement.
             </div>
