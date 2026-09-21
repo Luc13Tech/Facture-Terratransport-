@@ -16,618 +16,764 @@
 
 <body>
 
-    <!-- =========================
-         EN-TÊTE
-    ========================== -->
-    <header class="header">
-        <div class="container header-content">
+<header class="header">
 
-            <div class="logo-container">
-                <img
-                    src="assets/images/logo.png"
-                    alt="Terratransport"
-                    class="logo"
-                    onerror="this.style.display='none'"
-                >
+    <div class="container header-content">
 
-                <span class="brand-fallback">
-                    Terratransport
-                </span>
-            </div>
+        <div class="logo-container">
 
-            <div class="header-title">
-                <h1>Facture de location de camions</h1>
+            <img
+                src="assets/images/logo.png"
+                alt="Terratransport"
+                class="logo"
+                onerror="this.style.display='none'"
+            >
 
-                <p class="header-subtitle">
-                    Génération de facture professionnelle
-                </p>
-            </div>
+            <span class="brand-fallback">
+                Terratransport
+            </span>
 
         </div>
-    </header>
 
+        <div class="header-title">
 
-    <!-- =========================
-         CONTENU PRINCIPAL
-    ========================== -->
-    <main class="container">
+            <h1>
+                Facture de location de camions
+            </h1>
 
-        <div class="form-wrapper">
+            <p class="header-subtitle">
+                Génération de facture professionnelle
+            </p>
 
-            <form id="invoiceForm" onsubmit="return false;">
+        </div>
 
-                <!-- =========================
-                     1. INFORMATIONS FACTURE
-                ========================== -->
-                <section class="form-section">
+    </div>
 
-                    <h2>1. Informations de la facture</h2>
+</header>
 
-                    <div class="form-grid">
 
-                        <div class="form-group">
-                            <label for="invoiceNumber">
-                                Numéro de facture
-                            </label>
+<main class="container">
 
-                            <input
-                                type="text"
-                                id="invoiceNumber"
-                                placeholder="FCT-2026-0001"
-                            >
-                        </div>
+    <div class="form-wrapper">
 
+        <form id="invoiceForm" onsubmit="return false;">
 
-                        <div class="form-group">
-                            <label for="invoiceDate">
-                                Date de facture
-                            </label>
+            <!-- =====================================================
+                 1. INFORMATIONS DE LA FACTURE
+                 ===================================================== -->
 
-                            <input
-                                type="date"
-                                id="invoiceDate"
-                            >
-                        </div>
+            <section class="form-section">
 
+                <h2>
+                    1. Informations de la facture
+                </h2>
 
-                        <div class="form-group">
-                            <label for="currency">
-                                Devise
-                            </label>
-
-                            <input
-                                type="text"
-                                id="currency"
-                                value="FCFA"
-                            >
-                        </div>
-
-                    </div>
-
-                </section>
-
-
-                <!-- =========================
-                     2. INFORMATIONS TERRATRANSPORT
-                ========================== -->
-                <section class="form-section">
-
-                    <h2>2. Informations de TerraTransport</h2>
-
-                    <div class="form-grid">
-
-                        <div class="form-group">
-                            <label for="companyName">
-                                Nom de l'entreprise
-                            </label>
-
-                            <input
-                                type="text"
-                                id="companyName"
-                                value="Terratransport"
-                            >
-                        </div>
-
-
-                        <div class="form-group">
-                            <label for="companyNinea">
-                                NINEA
-                            </label>
-
-                            <input
-                                type="text"
-                                id="companyNinea"
-                                value="005554789"
-                            >
-                        </div>
-
-
-                        <div class="form-group">
-                            <label for="companyRccm">
-                                RCCM
-                            </label>
-
-                            <input
-                                type="text"
-                                id="companyRccm"
-                                value="DKR 2015 B13085"
-                            >
-                        </div>
-
-
-                        <div class="form-group">
-                            <label for="companyAddress">
-                                Adresse
-                            </label>
-
-                            <input
-                                type="text"
-                                id="companyAddress"
-                                value="Ngor Almadies 11045, Sénégal"
-                            >
-                        </div>
-
-
-                        <div class="form-group">
-                            <label for="companyPhone">
-                                Téléphone
-                            </label>
-
-                            <input
-                                type="text"
-                                id="companyPhone"
-                                value="338971403 / 770720202 / 779398484"
-                            >
-                        </div>
-
-
-                        <div class="form-group">
-                            <label for="companyEmail">
-                                Email
-                            </label>
-
-                            <input
-                                type="email"
-                                id="companyEmail"
-                                placeholder="email@terratransport-sa.com"
-                            >
-                        </div>
-
-                    </div>
-
-                </section>
-
-
-                <!-- =========================
-                     3. CLIENT
-                ========================== -->
-                <section class="form-section">
-
-                    <h2>3. Client / entreprise locataire</h2>
-
-                    <div class="form-grid">
-
-                        <div class="form-group">
-                            <label for="clientName">
-                                Nom / raison sociale *
-                            </label>
-
-                            <input
-                                type="text"
-                                id="clientName"
-                                required
-                                placeholder="Ex. Société ABC SARL"
-                            >
-                        </div>
-
-
-                        <div class="form-group">
-                            <label for="clientContact">
-                                Responsable / contact
-                            </label>
-
-                            <input
-                                type="text"
-                                id="clientContact"
-                                placeholder="Ex. M. Abdoulaye DIOP"
-                            >
-                        </div>
-
-
-                        <div class="form-group">
-                            <label for="clientAddress">
-                                Adresse *
-                            </label>
-
-                            <input
-                                type="text"
-                                id="clientAddress"
-                                required
-                                placeholder="Adresse du client"
-                            >
-                        </div>
-
-
-                        <div class="form-group">
-                            <label for="clientPhone">
-                                Téléphone
-                            </label>
-
-                            <input
-                                type="text"
-                                id="clientPhone"
-                                placeholder="+221 ..."
-                            >
-                        </div>
-
-
-                        <div class="form-group">
-                            <label for="clientEmail">
-                                Email
-                            </label>
-
-                            <input
-                                type="email"
-                                id="clientEmail"
-                                placeholder="client@email.com"
-                            >
-                        </div>
-
-
-                        <div class="form-group">
-                            <label for="clientNinea">
-                                NINEA / RCCM
-                            </label>
-
-                            <input
-                                type="text"
-                                id="clientNinea"
-                                placeholder="Facultatif"
-                            >
-                        </div>
-
-
-                        <div class="form-group">
-                            <label for="clientCountry">
-                                Pays
-                            </label>
-
-                            <input
-                                type="text"
-                                id="clientCountry"
-                                value="Sénégal"
-                            >
-                        </div>
-
-                    </div>
-
-                </section>
-
-
-                <!-- =========================
-                     4. PÉRIODE LOCATION
-                ========================== -->
-                <section class="form-section">
-
-                    <h2>4. Période et conditions de location</h2>
-
-                    <div class="form-grid">
-
-                        <div class="form-group">
-                            <label for="startDate">
-                                Date de début
-                            </label>
-
-                            <input
-                                type="date"
-                                id="startDate"
-                            >
-                        </div>
-
-
-                        <div class="form-group">
-                            <label for="endDate">
-                                Date de fin
-                            </label>
-
-                            <input
-                                type="date"
-                                id="endDate"
-                            >
-                        </div>
-
-
-                        <div class="form-group">
-                            <label for="paymentTerms">
-                                Conditions de paiement
-                            </label>
-
-                            <input
-                                type="text"
-                                id="paymentTerms"
-                                value="Selon les conditions convenues avec le client"
-                            >
-                        </div>
-
-
-                        <div class="form-group">
-
-                            <label for="locationTerms">
-                                Conditions de location
-                            </label>
-
-                            <textarea
-                                id="locationTerms"
-                                rows="4"
-                            >Le véhicule est loué pour la période indiquée sur la présente facture. Les conditions particulières convenues avec le client restent applicables.</textarea>
-
-                        </div>
-
-                    </div>
-
-                </section>
-
-
-                <!-- =========================
-                     5. CAMIONS
-                ========================== -->
-                <section class="form-section">
-
-                    <h2>5. Camions loués</h2>
-
-                    <p class="section-help">
-                        Ajoutez autant de camions que nécessaire.
-                        Le montant est calculé automatiquement :
-                        quantité × nombre de jours × tarif journalier.
-                    </p>
-
-                    <div id="productsContainer">
-                        <!-- Les camions seront ajoutés automatiquement -->
-                    </div>
-
-
-                    <button
-                        type="button"
-                        class="btn-add"
-                        onclick="addProduct()"
-                    >
-                        + Ajouter un camion
-                    </button>
-
-                </section>
-
-
-                <!-- =========================
-                     6. RÈGLEMENT
-                ========================== -->
-                <section class="form-section">
-
-                    <h2>6. Taxes et règlement</h2>
-
-                    <div class="form-grid">
-
-                        <div class="form-group">
-                            <label for="vatRate">
-                                TVA (%)
-                            </label>
-
-                            <input
-                                type="number"
-                                id="vatRate"
-                                min="0"
-                                step="0.01"
-                                value="0"
-                            >
-                        </div>
-
-
-                        <div class="form-group">
-                            <label for="paymentMethod">
-                                Mode de paiement
-                            </label>
-
-                            <input
-                                type="text"
-                                id="paymentMethod"
-                                value="Virement bancaire"
-                            >
-                        </div>
-
-
-                        <div class="form-group">
-                            <label for="dueDate">
-                                Date d'échéance
-                            </label>
-
-                            <input
-                                type="date"
-                                id="dueDate"
-                            >
-                        </div>
-
-                    </div>
-
-                </section>
-
-
-                <!-- =========================
-                     7. BANQUE
-                ========================== -->
-                <section class="form-section">
-
-                    <h2>7. Informations bancaires</h2>
-
-                    <div class="form-grid">
-
-                        <div class="form-group">
-                            <label for="bankName">
-                                Banque
-                            </label>
-
-                            <input
-                                type="text"
-                                id="bankName"
-                                value="BIS Banque Sénégal"
-                            >
-                        </div>
-
-
-                        <div class="form-group">
-                            <label for="bankAgency">
-                                Agence
-                            </label>
-
-                            <input
-                                type="text"
-                                id="bankAgency"
-                                value="Ngor Almadies"
-                            >
-                        </div>
-
-
-                        <div class="form-group">
-                            <label for="bankRib">
-                                RIB
-                            </label>
-
-                            <input
-                                type="text"
-                                id="bankRib"
-                                value="SN0790111125105957700107"
-                            >
-                        </div>
-
-
-                        <div class="form-group">
-                            <label for="bankSwift">
-                                SWIFT
-                            </label>
-
-                            <input
-                                type="text"
-                                id="bankSwift"
-                                value="ISSNSNDA"
-                            >
-                        </div>
-
-
-                        <div class="form-group">
-                            <label for="bankAccount">
-                                Numéro de compte
-                            </label>
-
-                            <input
-                                type="text"
-                                id="bankAccount"
-                                value="251059577001"
-                            >
-                        </div>
-
-
-                        <div class="form-group">
-                            <label for="bankHolder">
-                                Titulaire du compte
-                            </label>
-
-                            <input
-                                type="text"
-                                id="bankHolder"
-                                value="Terratransport"
-                            >
-                        </div>
-
-                    </div>
-
-                </section>
-
-
-                <!-- =========================
-                     8. OBSERVATION
-                ========================== -->
-                <section class="form-section">
-
-                    <h2>8. Note / observation</h2>
+                <div class="form-grid">
 
                     <div class="form-group">
 
-                        <textarea
-                            id="invoiceNote"
-                            rows="4"
-                        >Merci d'indiquer le numéro de facture et le nom du client lors du règlement.</textarea>
+                        <label for="invoiceNumber">
+                            Numéro de facture
+                        </label>
+
+                        <input
+                            type="text"
+                            id="invoiceNumber"
+                            placeholder="FCT-2026-0001"
+                        >
 
                     </div>
 
-                </section>
+
+                    <div class="form-group">
+
+                        <label for="invoiceDate">
+                            Date de facture
+                        </label>
+
+                        <input
+                            type="date"
+                            id="invoiceDate"
+                        >
+
+                    </div>
 
 
-                <!-- =========================
-                     ACTIONS
-                ========================== -->
-                <div class="form-actions">
+                    <div class="form-group">
 
-                    <button
-                        type="button"
-                        class="btn-primary"
-                        onclick="generateInvoice()"
-                    >
-                        📄 Générer la facture
-                    </button>
+                        <label for="currency">
+                            Devise
+                        </label>
 
+                        <input
+                            type="text"
+                            id="currency"
+                            value="FCFA"
+                        >
 
-                    <button
-                        type="reset"
-                        class="btn-secondary"
-                        onclick="resetForm()"
-                    >
-                        Réinitialiser
-                    </button>
+                    </div>
 
                 </div>
 
-            </form>
-
-        </div>
+            </section>
 
 
-        <!-- =========================
-             APERÇU
-        ========================== -->
-        <div
-            id="previewSection"
-            class="preview-section"
-            style="display: none;"
-        >
+            <!-- =====================================================
+                 2. INFORMATIONS TERRATRANSPORT
+                 ===================================================== -->
 
-            <div class="preview-header">
+            <section class="form-section">
 
                 <h2>
-                    Aperçu de la facture
+                    2. Informations de TerraTransport
                 </h2>
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+
+                        <label for="companyName">
+                            Nom de l'entreprise
+                        </label>
+
+                        <input
+                            type="text"
+                            id="companyName"
+                            value="Terratransport"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="companyNinea">
+                            NINEA
+                        </label>
+
+                        <input
+                            type="text"
+                            id="companyNinea"
+                            value="005554789"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="companyRccm">
+                            RCCM
+                        </label>
+
+                        <input
+                            type="text"
+                            id="companyRccm"
+                            value="DKR 2015 B13085"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="companyAddress">
+                            Adresse
+                        </label>
+
+                        <input
+                            type="text"
+                            id="companyAddress"
+                            value="Ngor Almadies 11045, Sénégal"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="companyPhone">
+                            Téléphone
+                        </label>
+
+                        <input
+                            type="text"
+                            id="companyPhone"
+                            value="338971403 / 770720202 / 779398484"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="companyEmail">
+                            Email
+                        </label>
+
+                        <input
+                            type="email"
+                            id="companyEmail"
+                            placeholder="email@terratransport-sa.com"
+                        >
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =====================================================
+                 3. CLIENT
+                 ===================================================== -->
+
+            <section class="form-section">
+
+                <h2>
+                    3. Client / entreprise locataire
+                </h2>
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+
+                        <label for="clientName">
+                            Nom / raison sociale *
+                        </label>
+
+                        <input
+                            type="text"
+                            id="clientName"
+                            required
+                            placeholder="Ex. Société ABC SARL"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="clientContact">
+                            Responsable / contact
+                        </label>
+
+                        <input
+                            type="text"
+                            id="clientContact"
+                            placeholder="Ex. M. Abdoulaye DIOP"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="clientAddress">
+                            Adresse *
+                        </label>
+
+                        <input
+                            type="text"
+                            id="clientAddress"
+                            required
+                            placeholder="Adresse du client"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="clientPhone">
+                            Téléphone
+                        </label>
+
+                        <input
+                            type="text"
+                            id="clientPhone"
+                            placeholder="+221 ..."
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="clientEmail">
+                            Email
+                        </label>
+
+                        <input
+                            type="email"
+                            id="clientEmail"
+                            placeholder="client@email.com"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="clientNinea">
+                            NINEA / RCCM
+                        </label>
+
+                        <input
+                            type="text"
+                            id="clientNinea"
+                            placeholder="Facultatif"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="clientCountry">
+                            Pays
+                        </label>
+
+                        <input
+                            type="text"
+                            id="clientCountry"
+                            value="Sénégal"
+                        >
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =====================================================
+                 4. PÉRIODE DE LOCATION
+                 ===================================================== -->
+
+            <section class="form-section">
+
+                <h2>
+                    4. Période et conditions de location
+                </h2>
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+
+                        <label for="startDate">
+                            Date de début
+                        </label>
+
+                        <input
+                            type="date"
+                            id="startDate"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="endDate">
+                            Date de fin
+                        </label>
+
+                        <input
+                            type="date"
+                            id="endDate"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="paymentTerms">
+                            Conditions de paiement
+                        </label>
+
+                        <input
+                            type="text"
+                            id="paymentTerms"
+                            value="Selon les conditions convenues avec le client"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="locationTerms">
+                            Conditions de location
+                        </label>
+
+                        <textarea
+                            id="locationTerms"
+                            rows="4"
+                        >Le véhicule est loué pour la période indiquée sur la présente facture. Les conditions particulières convenues avec le client restent applicables.</textarea>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =====================================================
+                 5. CAMIONS
+                 ===================================================== -->
+
+            <section class="form-section">
+
+                <h2>
+                    5. Camions loués
+                </h2>
+
+                <p class="section-help">
+                    Ajoutez autant de camions que nécessaire.
+                    Le montant est calculé automatiquement :
+                    quantité × nombre de jours × tarif journalier.
+                </p>
+
+                <div id="productsContainer"></div>
 
                 <button
                     type="button"
-                    class="btn-download"
-                    onclick="downloadPDF()"
+                    class="btn-add"
+                    onclick="addProduct()"
                 >
-                    Imprimer / Enregistrer en PDF
+                    + Ajouter un camion
+                </button>
+
+            </section>
+
+
+            <!-- =====================================================
+                 6. TAXES ET RÈGLEMENT
+                 ===================================================== -->
+
+            <section class="form-section">
+
+                <h2>
+                    6. Taxes et règlement
+                </h2>
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+
+                        <label for="vatRate">
+                            TVA (%)
+                        </label>
+
+                        <input
+                            type="number"
+                            id="vatRate"
+                            min="0"
+                            step="0.01"
+                            value="0"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="paymentMethod">
+                            Mode de paiement
+                        </label>
+
+                        <select id="paymentMethod">
+
+                            <option value="Virement bancaire">
+                                Virement bancaire
+                            </option>
+
+                            <option value="Orange Money">
+                                Orange Money
+                            </option>
+
+                            <option value="Wave">
+                                Wave
+                            </option>
+
+                            <option value="Western Union">
+                                Western Union
+                            </option>
+
+                            <option value="RIA">
+                                RIA
+                            </option>
+
+                            <option value="MoneyGram">
+                                MoneyGram
+                            </option>
+
+                            <option value="Autre">
+                                Autre
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="dueDate">
+                            Date d'échéance
+                        </label>
+
+                        <input
+                            type="date"
+                            id="dueDate"
+                        >
+
+                    </div>
+
+
+                    <div
+                        class="form-group payment-number-group"
+                        id="paymentNumberGroup"
+                        style="display: none;"
+                    >
+
+                        <label for="paymentNumber">
+                            Numéro de dépôt / paiement
+                        </label>
+
+                        <input
+                            type="text"
+                            id="paymentNumber"
+                            value="77 072 02 02"
+                            placeholder="Ex. 77 072 02 02"
+                        >
+
+                        <small class="field-help">
+                            Ce numéro est modifiable et sera affiché
+                            sur la facture pour Orange Money ou Wave.
+                        </small>
+
+                    </div>
+
+
+                    <div
+                        class="form-group"
+                        id="otherPaymentGroup"
+                        style="display: none;"
+                    >
+
+                        <label for="otherPayment">
+                            Autre mode de paiement
+                        </label>
+
+                        <input
+                            type="text"
+                            id="otherPayment"
+                            placeholder="Précisez le mode de paiement"
+                        >
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =====================================================
+                 7. INFORMATIONS BANCAIRES
+                 ===================================================== -->
+
+            <section class="form-section">
+
+                <h2>
+                    7. Informations bancaires
+                </h2>
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+
+                        <label for="bankName">
+                            Banque
+                        </label>
+
+                        <input
+                            type="text"
+                            id="bankName"
+                            value="BIS Banque Sénégal"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="bankAgency">
+                            Agence
+                        </label>
+
+                        <input
+                            type="text"
+                            id="bankAgency"
+                            value="Ngor Almadies"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="bankRib">
+                            RIB
+                        </label>
+
+                        <input
+                            type="text"
+                            id="bankRib"
+                            value="SN0790111125105957700107"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="bankSwift">
+                            SWIFT
+                        </label>
+
+                        <input
+                            type="text"
+                            id="bankSwift"
+                            value="ISSNSNDA"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="bankAccount">
+                            Numéro de compte
+                        </label>
+
+                        <input
+                            type="text"
+                            id="bankAccount"
+                            value="251059577001"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="bankHolder">
+                            Titulaire du compte
+                        </label>
+
+                        <input
+                            type="text"
+                            id="bankHolder"
+                            value="Terratransport"
+                        >
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =====================================================
+                 8. NOTE
+                 ===================================================== -->
+
+            <section class="form-section">
+
+                <h2>
+                    8. Note / observation
+                </h2>
+
+                <div class="form-group">
+
+                    <textarea
+                        id="invoiceNote"
+                        rows="4"
+                    >Merci d'indiquer le numéro de facture et le nom du client lors du règlement.</textarea>
+
+                </div>
+
+            </section>
+
+
+            <!-- =====================================================
+                 ACTIONS
+                 ===================================================== -->
+
+            <div class="form-actions">
+
+                <button
+                    type="button"
+                    class="btn-primary"
+                    onclick="generateInvoice()"
+                >
+                    📄 Générer la facture
+                </button>
+
+
+                <button
+                    type="reset"
+                    class="btn-secondary"
+                    onclick="resetForm()"
+                >
+                    Réinitialiser
                 </button>
 
             </div>
 
+        </form>
 
-            <div id="invoicePreview">
-                <!-- La facture sera générée ici -->
-            </div>
+    </div>
+
+
+    <!-- =========================================================
+         APERÇU
+         ========================================================= -->
+
+    <div
+        id="previewSection"
+        class="preview-section"
+        style="display: none;"
+    >
+
+        <div class="preview-header">
+
+            <h2>
+                Aperçu de la facture
+            </h2>
+
+            <button
+                type="button"
+                class="btn-download"
+                onclick="downloadPDF()"
+            >
+                Imprimer / Enregistrer en PDF
+            </button>
 
         </div>
 
-    </main>
+
+        <div id="invoicePreview"></div>
+
+    </div>
+
+</main>
 
 
-    <!-- =========================
-         JAVASCRIPT
-    ========================== -->
-    <script src="script.js"></script>
+<script src="script.js"></script>
 
 </body>
 </html>
