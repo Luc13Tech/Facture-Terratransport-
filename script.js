@@ -1,422 +1,1933 @@
-// ============================================================
-// VARIABLES GLOBALES
-// ============================================================
-let productCount = 0;
-let invoiceData = null;
-let currentInvoiceId = null;
+/* =========================================================
+   TERRATRANSPORT
+   GÉNÉRATEUR DE FACTURE DE LOCATION DE CAMIONS
+   ========================================================= */
 
-// ============================================================
-// IMAGES DE L'ENTREPRISE (assets/images/)
-// Utilisation directe de balises <img> : fonctionne aussi bien à
-// l'écran qu'à l'impression, y compris en ouverture locale du
-// fichier (file://). En cas d'image manquante, un repli visuel
-// (texte ou emoji) s'affiche automatiquement via l'attribut onerror,
-// sans jamais casser la mise en page.
-// ============================================================
+let productCount = 0;
+
+
+/* =========================================================
+   CHEMINS DES IMAGES EXISTANTES
+   ========================================================= */
 
 const IMAGE_PATHS = {
-    logo: 'assets/images/logo.png',
-    camion: 'assets/images/camion.jpg',
-    signature: 'assets/images/signature.png'
+    logo: "assets/images/logo.png",
+    camion: "assets/images/camion.jpg",
+    signature: "assets/images/signature.png"
 };
 
-function getLogoHTML(sizeStyle) {
-    return `<img src="${IMAGE_PATHS.logo}" alt="Terratransport" class="logo-invoice" style="${sizeStyle}"
-                 onerror="this.outerHTML='<div class=&quot;logo-text&quot; style=&quot;font-size:32px;font-weight:700;color:#0a1628;letter-spacing:2px;&quot;>Terratransport</div>'">`;
+
+/* =========================================================
+   SÉCURITÉ
+   Évite l'injection de HTML dans la facture
+   ========================================================= */
+
+function escapeHTML(value) {
+    if (value === null || value === undefined) {
+        return "";
+    }
+
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
 }
+
+
+/* =========================================================
+   FORMATAGE
+   ========================================================= */
+
+function formatMoney(value, currency = "FCFA") {
+    const amount = Number(value) || 0;
+
+    return `${new Intl.NumberFormat("fr-FR", {
+        maximumFractionDigits: 0
+    }).format(amount)} ${escapeHTML(currency)}`;
+}
+
+
+function formatDate(dateValue) {
+    if (!dateValue) {
+        return "";
+    }
+
+    const date = new Date(`${dateValue}T00:00:00`);
+
+    if (Number.isNaN(date.getTime())) {
+        return "";
+    }
+
+    return new Intl.DateTimeFormat("fr-FR", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric"
+    }).format(date);
+}
+
+
+/* =========================================================
+   CALCUL DU NOMBRE DE JOURS
+   ========================================================= */
+
+function getDays(startDate, endDate) {
+    if (!startDate || !endDate) {
+        return 1;
+    }
+
+    const start = new Date(`${startDate}T00:00:00`);
+    const end = new Date(`${endDate}T00:00:00`);
+
+    if (
+        Number.isNaN(start.getTime()) ||
+        Number.isNaN(end.getTime())
+    ) {
+        return 1;
+    }
+
+    const difference = end.getTime() - start.getTime();
+
+    const days = Math.floor(
+        difference / (1000 * 60 * 60 * 24)
+    ) + 1;
+
+    return days > 0 ? days : 1;
+}
+
+
+/* =========================================================
+   IMAGE LOGO
+   ========================================================= */
+
+function getLogoHTML() {
+    return `
+        <img
+            src="${IMAGE_PATHS.logo}"
+            alt="Terratransport"
+            class="invoice-logo"
+            onerror="this.style.display='none'"
+        >
+    `;
+}
+
+
+/* =========================================================
+   IMAGE CAMION
+   ========================================================= */
 
 function getCamionHTML() {
-    return `<img src="${IMAGE_PATHS.camion}" alt="Camion Terratransport" class="product-img"
-                 onerror="this.outerHTML='<span class=&quot;img-placeholder&quot; style=&quot;display:flex;margin:0 auto;&quot;>🚛</span>'">`;
+    return `
+        <img
+            src="${IMAGE_PATHS.camion}"
+            alt="Camion"
+            class="invoice-truck-image"
+            onerror="this.style.display='none'"
+        >
+    `;
 }
+
+
+/* =========================================================
+   IMAGE SIGNATURE
+   ========================================================= */
 
 function getSignatureHTML() {
-    return `<img src="${IMAGE_PATHS.signature}" alt="Cachet et signature" class="signature-img"
-                 onerror="this.outerHTML='<div class=&quot;sig-text&quot; style=&quot;font-size:20px;font-weight:700;color:#0a1628;letter-spacing:1px;&quot;>Terratransport</div>'">`;
+    return `
+        <img
+            src="${IMAGE_PATHS.signature}"
+            alt="Signature"
+            class="invoice-signature-image"
+            onerror="this.style.display='none'"
+        >
+    `;
 }
 
-// ============================================================
-// AJOUTER UN PRODUIT
-// ============================================================
+
+/* =========================================================
+   AJOUT D'UN CAMION
+   ========================================================= */
+
 function addProduct(productData = null) {
+
     productCount++;
-    const container = document.getElementById('productsContainer');
-    const div = document.createElement('div');
-    div.className = 'product-item';
-    div.id = `product-${productCount}`;
-    
-    let name = productData?.name || '';
-    let specs = productData?.specs || '';
-    let qty = productData?.qty || 1;
-    let price = productData?.price || 0;
-    
-    div.innerHTML = `
-        <button type="button" class="btn-remove" onclick="removeProduct(${productCount})">×</button>
-        <div class="product-grid">
+
+    const container = document.getElementById("productsContainer");
+
+    if (!container) {
+        return;
+    }
+
+    const productId = `product-${productCount}`;
+
+    const product = productData || {
+        name: "",
+        registration: "",
+        specs: "",
+        quantity: 1,
+        price: 0,
+        days: 1
+    };
+
+    const productElement = document.createElement("div");
+
+    productElement.className = "product-item";
+
+    productElement.dataset.productId = productId;
+
+    productElement.innerHTML = `
+        <div class="product-item-header">
+
+            <h3>
+                Camion ${productCount}
+            </h3>
+
+            <button
+                type="button"
+                class="btn-remove"
+                onclick="removeProduct('${productId}')"
+                title="Supprimer ce camion"
+            >
+                × Supprimer
+            </button>
+
+        </div>
+
+
+        <div class="form-grid">
+
             <div class="form-group">
-                <label>Nom du produit / Camion *</label>
-                <input type="text" class="product-name" value="${name}" required placeholder="Ex: Camion Mercedes Actros">
+
+                <label>
+                    Désignation du camion *
+                </label>
+
+                <input
+                    type="text"
+                    class="product-name"
+                    value="${escapeHTML(product.name)}"
+                    placeholder="Ex. Mercedes Actros"
+                >
+
             </div>
+
+
             <div class="form-group">
-                <label>Spécifications</label>
-                <textarea class="product-specs" rows="3" placeholder="Ex: Réf: X123, Moteur: V8, 500ch, Clim, ABS">${specs}</textarea>
+
+                <label>
+                    Immatriculation
+                </label>
+
+                <input
+                    type="text"
+                    class="product-registration"
+                    value="${escapeHTML(product.registration)}"
+                    placeholder="Ex. DK-1234-AB"
+                >
+
             </div>
+
+
             <div class="form-group">
-                <label>Quantité *</label>
-                <input type="number" class="product-qty" value="${qty}" min="1" required>
+
+                <label>
+                    Caractéristiques
+                </label>
+
+                <input
+                    type="text"
+                    class="product-specs"
+                    value="${escapeHTML(product.specs)}"
+                    placeholder="Ex. Porteur 19 tonnes"
+                >
+
             </div>
+
+
             <div class="form-group">
-                <label>Prix unitaire (FCFA) *</label>
-                <input type="number" class="product-price" value="${price}" min="0" step="1000" required>
+
+                <label>
+                    Quantité
+                </label>
+
+                <input
+                    type="number"
+                    class="product-qty"
+                    min="1"
+                    step="1"
+                    value="${Number(product.quantity) || 1}"
+                >
+
             </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Tarif journalier
+                </label>
+
+                <input
+                    type="number"
+                    class="product-price"
+                    min="0"
+                    step="1"
+                    value="${Number(product.price) || 0}"
+                    placeholder="0"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Nombre de jours
+                </label>
+
+                <input
+                    type="number"
+                    class="product-days"
+                    min="1"
+                    step="1"
+                    value="${Number(product.days) || 1}"
+                >
+
+            </div>
+
+        </div>
+
+
+        <div class="product-calculation">
+
+            <span>
+                Montant de la location :
+            </span>
+
+            <strong class="product-total">
+                0 FCFA
+            </strong>
+
         </div>
     `;
-    
-    container.appendChild(div);
-}
 
-// ============================================================
-// SUPPRIMER UN PRODUIT
-// ============================================================
-function removeProduct(id) {
-    const el = document.getElementById(`product-${id}`);
-    if (el) {
-        el.remove();
-        document.querySelectorAll('.product-item').forEach((item, index) => {
-            item.id = `product-${index + 1}`;
-            const btn = item.querySelector('.btn-remove');
-            btn.onclick = function() { removeProduct(index + 1); };
-        });
-        productCount = document.querySelectorAll('.product-item').length;
-    }
-}
+    container.appendChild(productElement);
 
-// ============================================================
-// RÉINITIALISER LE FORMULAIRE
-// ============================================================
-function resetForm() {
-    document.getElementById('clientName').value = '';
-    document.getElementById('clientAddress').value = '';
-    document.getElementById('clientBP').value = '';
-    document.getElementById('clientCountry').value = '';
-    document.getElementById('productsContainer').innerHTML = '';
-    document.getElementById('previewSection').style.display = 'none';
-    productCount = 0;
-    addProduct();
-}
-
-// ============================================================
-// RÉCUPÉRER LES DONNÉES DU FORMULAIRE
-// ============================================================
-function getFormData() {
-    const clientName = document.getElementById('clientName').value.trim();
-    const clientAddress = document.getElementById('clientAddress').value.trim();
-    const clientBP = document.getElementById('clientBP').value.trim();
-    const clientCountry = document.getElementById('clientCountry').value.trim();
-    
-    if (!clientName || !clientAddress || !clientCountry) {
-        alert('Veuillez remplir tous les champs obligatoires du client.');
-        return null;
-    }
-    
-    const productItems = document.querySelectorAll('.product-item');
-    if (productItems.length === 0) {
-        alert('Veuillez ajouter au moins un produit.');
-        return null;
-    }
-    
-    const products = [];
-    let total = 0;
-    
-    try {
-        productItems.forEach(item => {
-            const name = item.querySelector('.product-name').value.trim();
-            const specs = item.querySelector('.product-specs').value.trim();
-            const qty = parseInt(item.querySelector('.product-qty').value) || 0;
-            const price = parseFloat(item.querySelector('.product-price').value) || 0;
-            
-            if (!name || qty <= 0 || price <= 0) {
-                alert('Veuillez remplir correctement tous les champs produits.');
-                throw new Error('Produit invalide');
-            }
-            
-            const lineTotal = qty * price;
-            total += lineTotal;
-            
-            products.push({ name, specs, qty, price, lineTotal });
-        });
-    } catch (error) {
-        return null;
-    }
-    
-    return {
-        client: { name: clientName, address: clientAddress, bp: clientBP, country: clientCountry },
-        products: products,
-        total: total
-    };
-}
-
-// ============================================================
-// CONVERSION NOMBRE EN LETTRES
-// ============================================================
-function numberToLetters(n) {
-    if (n === 0) return 'ZÉRO';
-    
-    const units = ['', 'UN', 'DEUX', 'TROIS', 'QUATRE', 'CINQ', 'SIX', 'SEPT', 'HUIT', 'NEUF', 'DIX', 'ONZE', 'DOUZE', 'TREIZE', 'QUATORZE', 'QUINZE', 'SEIZE', 'DIX-SEPT', 'DIX-HUIT', 'DIX-NEUF'];
-    const tens = ['', 'DIX', 'VINGT', 'TRENTE', 'QUARANTE', 'CINQUANTE', 'SOIXANTE', 'SOIXANTE-DIX', 'QUATRE-VINGT', 'QUATRE-VINGT-DIX'];
-    
-    function convertHundreds(num) {
-        let result = '';
-        if (num >= 100) {
-            const h = Math.floor(num / 100);
-            result += (h === 1 ? 'CENT' : units[h] + ' CENT');
-            num %= 100;
-            if (num > 0) result += ' ';
-        }
-        if (num >= 20) {
-            const t = Math.floor(num / 10);
-            const u = num % 10;
-            if (t === 7 || t === 9) {
-                result += tens[t - 1] + (t === 7 ? ' ' : '-') + units[u + 10];
-            } else {
-                result += tens[t];
-                if (u === 1 && t !== 8) result += ' ET UN';
-                else if (u > 0) result += '-' + units[u];
-                if (u === 0 && t === 8) result += 'S';
-            }
-        } else if (num > 0) {
-            result += units[num];
-        }
-        return result.trim();
-    }
-    
-    const parts = [];
-    let num = Math.floor(n);
-    
-    if (num >= 1000000) {
-        const millions = Math.floor(num / 1000000);
-        parts.push(convertHundreds(millions) + (millions > 1 ? ' MILLIONS' : ' MILLION'));
-        num %= 1000000;
-    }
-    if (num >= 1000) {
-        const milliers = Math.floor(num / 1000);
-        if (milliers === 1) parts.push('MILLE');
-        else parts.push(convertHundreds(milliers) + ' MILLE');
-        num %= 1000;
-    }
-    if (num > 0) {
-        parts.push(convertHundreds(num));
-    }
-    
-    return parts.join(' ').trim();
-}
-
-// ============================================================
-// GÉNÉRER LE NUMÉRO DE FACTURE UNIQUE
-// ============================================================
-function generateInvoiceNumber() {
-    const now = new Date();
-    const year = now.getFullYear();
-    const random = String(Math.floor(Math.random() * 10000)).padStart(4, '0');
-    return `FCT-${year}-${random}`;
-}
-
-// ============================================================
-// GÉNÉRER LA FACTURE (APERÇU)
-// ============================================================
-function generateInvoice() {
-    try {
-        const data = getFormData();
-        if (!data) return;
-        
-        invoiceData = data;
-        currentInvoiceId = generateInvoiceNumber();
-        const date = new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' });
-        const totalLetters = numberToLetters(data.total);
-        
-        let html = `
-            <div class="invoice-container" id="invoiceContent">
-                <!-- EN-TÊTE : GAUCHE = ENTREPRISE, DROITE = FACTURE -->
-                <div class="invoice-header">
-                    <div class="invoice-left">
-                        ${getLogoHTML('height:70px; margin-bottom:10px;')}
-                        <div class="company-info">
-                            <strong>Terratransport</strong><br>
-                            NINEA : 005554789<br>
-                            RCSN DKR 2015 B13085<br>
-                            Adresse : Ngor Sénégal 11045
-                        </div>
-                    </div>
-                    <div class="invoice-right">
-                        <div class="invoice-number">Facture N° ${currentInvoiceId}</div>
-                        <div class="invoice-date">Date : ${date}</div>
-                    </div>
-                </div>
-                
-                <!-- CLIENT : À GAUCHE -->
-                <div class="invoice-client">
-                    <h3>À l'attention de :</h3>
-                    <p><strong>${data.client.name}</strong></p>
-                    <p>${data.client.address}</p>
-                    ${data.client.bp ? `<p>BP : ${data.client.bp}</p>` : ''}
-                    <p>${data.client.country}</p>
-                </div>
-                
-                <!-- TABLEAU -->
-                <table class="invoice-table">
-                    <thead>
-                        <tr>
-                            <th style="width:10%; text-align:center;">Image</th>
-                            <th style="width:22%;">Produit</th>
-                            <th style="width:30%;">Spécifications</th>
-                            <th style="width:10%; text-align:center;">Qté</th>
-                            <th style="width:14%; text-align:right;">Prix Unitaire</th>
-                            <th style="width:14%; text-align:right;">Total</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-        `;
-        
-        data.products.forEach((p) => {
-            html += `
-                <tr>
-                    <td style="text-align:center;">${getCamionHTML()}</td>
-                    <td><strong>${p.name}</strong></td>
-                    <td>${p.specs || '—'}</td>
-                    <td style="text-align:center;">${p.qty}</td>
-                    <td style="text-align:right;">${p.price.toLocaleString('fr-FR')} FCFA</td>
-                    <td style="text-align:right;">${p.lineTotal.toLocaleString('fr-FR')} FCFA</td>
-                </tr>
-            `;
-        });
-        
-        html += `
-                    <tr class="total-row">
-                        <td colspan="5" style="text-align:right; font-weight:700; font-size:16px;">TOTAL NET</td>
-                        <td style="font-weight:700; color:#c9a84c; font-size:18px; text-align:right;">${data.total.toLocaleString('fr-FR')} FCFA</td>
-                    </tr>
-                </tbody>
-            </table>
-            
-            <!-- NOTE -->
-            <div class="invoice-note">
-                <strong>Note :</strong> Cette facture Terratransport s'élève sur une somme de <strong>${totalLetters}</strong> FCFA SOUS DOUANE.<br>
-                À compte de 10% avant la livraison des camions et 90% à l'expédition port de Dakar.
-            </div>
-            
-            <!-- DÉTAILS : 2 COLONNES -->
-            <div class="invoice-details">
-                <div class="detail-block">
-                    <h4>Détails de la commande</h4>
-                    <p><strong>Délai de la commande :</strong> 60 jours ouvrables</p>
-                    <p><strong>Port de destination :</strong> CIF port de Dakar</p>
-                    <p><strong>Véhicules :</strong> Tous neufs - 00km/h - Provenance Chine</p>
-                    <p><strong>Type de camion :</strong> ${data.products[0].name}</p>
-                </div>
-                <div class="detail-block">
-                    <h4>Conditions commerciales</h4>
-                    <p><strong>Délai de livraison :</strong> 60 jours ouvrables après réception du paiement</p>
-                    <p><strong>Emballage :</strong> Emballage standard pour exportation</p>
-                </div>
-            </div>
-            
-            <!-- BANQUE -->
-            <div class="bank-info">
-                <h4>Informations bancaires</h4>
-                <p><strong>RIB :</strong> SN0790111125105957700107</p>
-                <p><strong>CODE SWIFT :</strong> ISSNSNDA</p>
-                <p><strong>N° du compte :</strong> 251059577001</p>
-                <p><strong>Nom du compte :</strong> Terratransport</p>
-                <p><strong>Banque :</strong> BIS Banque Sénégal</p>
-                <p><strong>Agence :</strong> Ngor Almadies</p>
-                <p><strong>Adresse banque :</strong> Dakar - zone 12 Almadies, immeuble BIS en face Route du King Fahd (Sénégal) - SG</p>
-                <p><strong>Type de compte :</strong> Compte professionnel</p>
-            </div>
-            
-            <!-- REMARQUE -->
-            <div class="remark">
-                <strong> Remarque :</strong><br>
-                Paiement par virement bancaire.<br>
-                Veuillez indiquer le nom de l'acheteur, le numéro de la facture/contrat et le nom du produit dans le libellé du paiement.
-            </div>
-            
-            <!-- FOOTER : GAUCHE = SIGNATURE, DROITE = CONTACT -->
-            <div class="invoice-footer">
-                <div class="signature-area">
-                    ${getSignatureHTML()}
-                    <p>Cachet et signature</p>
-                </div>
-                <div class="contact-info">
-                    <strong>Terratransport</strong><br>
-                    B13085 - Adresse : Ngor Almadies 11045<br>
-                    Tel : 338971403 / 770720202 / 779398484
-                </div>
-            </div>
-        </div>
-        `;
-        
-        document.getElementById('invoicePreview').innerHTML = html;
-        document.getElementById('previewSection').style.display = 'block';
-        document.getElementById('previewSection').scrollIntoView({ behavior: 'smooth' });
-        
-    } catch (error) {
-        console.error(error);
-        alert('Une erreur est survenue. Veuillez vérifier vos données.');
-    }
+    updateProductTotal(productElement);
 }
 
 
+/* =========================================================
+   SUPPRIMER UN CAMION
+   ========================================================= */
 
-// ============================================================
-// TÉLÉCHARGER LE PDF
-// Méthode : impression native du navigateur, déclenchée sur la page
-// elle-même (aucune nouvelle fenêtre, aucun canvas). L'aperçu affiché
-// contient déjà les vraies images correctement chargées et la bonne
-// disposition CSS (@media print ci-dessus force l'en-tête et le pied
-// de page à rester sur une seule ligne gauche/droite). L'utilisateur
-// choisit "Enregistrer en PDF" comme destination dans la boîte de
-// dialogue d'impression : le rendu est alors garanti identique à
-// l'aperçu à l'écran, sans dépendre d'une librairie externe.
-// ============================================================
-function downloadPDF() {
-    if (!invoiceData) {
-        alert('Veuillez d\'abord générer la facture.');
+function removeProduct(productId) {
+
+    const product = document.querySelector(
+        `[data-product-id="${productId}"]`
+    );
+
+    if (!product) {
         return;
     }
 
-    const invoiceContent = document.getElementById('invoiceContent');
-    if (!invoiceContent) {
-        alert('Veuillez d\'abord générer la facture.');
-        return;
+    product.remove();
+
+    renumberProducts();
+
+    const remainingProducts = document.querySelectorAll(
+        ".product-item"
+    );
+
+    if (remainingProducts.length === 0) {
+        addProduct();
     }
+}
 
-    const btn = document.querySelector('.btn-download');
-    const originalText = btn.innerHTML;
-    btn.innerHTML = '⏳ Préparation...';
-    btn.disabled = true;
 
-    // S'assurer que toutes les images sont chargées avant d'imprimer,
-    // pour qu'elles apparaissent bien dans le PDF dès le premier essai.
-    const imgs = Array.from(invoiceContent.querySelectorAll('img'));
-    const waitForImages = Promise.all(imgs.map(img => {
-        if (img.complete) return Promise.resolve();
-        return new Promise(resolve => {
-            img.addEventListener('load', resolve, { once: true });
-            img.addEventListener('error', resolve, { once: true });
-        });
-    }));
+/* =========================================================
+   RENUMÉROTATION DES CAMIONS
+   ========================================================= */
 
-    waitForImages.then(() => {
-        window.print();
-    }).finally(() => {
-        btn.innerHTML = originalText;
-        btn.disabled = false;
+function renumberProducts() {
+
+    const products = document.querySelectorAll(
+        ".product-item"
+    );
+
+    products.forEach((product, index) => {
+
+        const title = product.querySelector(
+            ".product-item-header h3"
+        );
+
+        if (title) {
+            title.textContent = `Camion ${index + 1}`;
+        }
     });
 }
 
-// ============================================================
-// INITIALISATION
-// ============================================================
-document.addEventListener('DOMContentLoaded', function() {
-    addProduct();
-});
+
+/* =========================================================
+   CALCUL DU TOTAL D'UN CAMION
+   ========================================================= */
+
+function updateProductTotal(productElement) {
+
+    if (!productElement) {
+        return;
+    }
+
+    const quantityInput =
+        productElement.querySelector(".product-qty");
+
+    const priceInput =
+        productElement.querySelector(".product-price");
+
+    const daysInput =
+        productElement.querySelector(".product-days");
+
+    const totalElement =
+        productElement.querySelector(".product-total");
+
+    const quantity =
+        Math.max(1, Number(quantityInput?.value) || 1);
+
+    const price =
+        Math.max(0, Number(priceInput?.value) || 0);
+
+    const days =
+        Math.max(1, Number(daysInput?.value) || 1);
+
+    const total = quantity * price * days;
+
+    if (totalElement) {
+        totalElement.textContent = formatMoney(total);
+    }
+}
+
+
+/* =========================================================
+   INITIALISATION DES ÉVÉNEMENTS DES CAMIONS
+   ========================================================= */
+
+function attachProductListeners() {
+
+    const container =
+        document.getElementById("productsContainer");
+
+    if (!container) {
+        return;
+    }
+
+    container.addEventListener("input", function(event) {
+
+        if (
+            event.target.classList.contains("product-qty") ||
+            event.target.classList.contains("product-price") ||
+            event.target.classList.contains("product-days")
+        ) {
+
+            const product =
+                event.target.closest(".product-item");
+
+            updateProductTotal(product);
+        }
+    });
+}
+
+
+/* =========================================================
+   VALEURS PAR DÉFAUT
+   ========================================================= */
+
+function setDefaults() {
+
+    const today = new Date();
+
+    const localDate =
+        new Date(
+            today.getTime() -
+            today.getTimezoneOffset() * 60000
+        )
+        .toISOString()
+        .split("T")[0];
+
+
+    const invoiceDate =
+        document.getElementById("invoiceDate");
+
+    if (invoiceDate && !invoiceDate.value) {
+        invoiceDate.value = localDate;
+    }
+
+
+    const dueDate =
+        document.getElementById("dueDate");
+
+    if (dueDate && !dueDate.value) {
+        dueDate.value = localDate;
+    }
+
+
+    const invoiceNumber =
+        document.getElementById("invoiceNumber");
+
+    if (
+        invoiceNumber &&
+        !invoiceNumber.value.trim()
+    ) {
+        invoiceNumber.value =
+            generateInvoiceNumber();
+    }
+}
+
+
+/* =========================================================
+   NUMÉRO DE FACTURE
+   ========================================================= */
+
+function generateInvoiceNumber() {
+
+    const year =
+        new Date().getFullYear();
+
+    const randomNumber =
+        Math.floor(
+            1000 + Math.random() * 9000
+        );
+
+    return `FCT-${year}-${randomNumber}`;
+}
+
+
+/* =========================================================
+   RÉCUPÉRATION DES DONNÉES DU FORMULAIRE
+   ========================================================= */
+
+function getFormData() {
+
+    const getValue = (id) => {
+
+        const element =
+            document.getElementById(id);
+
+        return element
+            ? element.value.trim()
+            : "";
+    };
+
+
+    const clientName =
+        getValue("clientName");
+
+    const clientAddress =
+        getValue("clientAddress");
+
+
+    if (!clientName) {
+        alert(
+            "Veuillez renseigner le nom ou la raison sociale du client."
+        );
+
+        return null;
+    }
+
+
+    if (!clientAddress) {
+        alert(
+            "Veuillez renseigner l'adresse du client."
+        );
+
+        return null;
+    }
+
+
+    const productElements =
+        document.querySelectorAll(
+            ".product-item"
+        );
+
+
+    if (productElements.length === 0) {
+
+        alert(
+            "Veuillez ajouter au moins un camion."
+        );
+
+        return null;
+    }
+
+
+    const products = [];
+
+    let subtotal = 0;
+
+
+    productElements.forEach((element, index) => {
+
+        const name =
+            element.querySelector(
+                ".product-name"
+            )?.value.trim() || "";
+
+
+        const registration =
+            element.querySelector(
+                ".product-registration"
+            )?.value.trim() || "";
+
+
+        const specs =
+            element.querySelector(
+                ".product-specs"
+            )?.value.trim() || "";
+
+
+        const quantity =
+            Math.max(
+                1,
+                Number(
+                    element.querySelector(
+                        ".product-qty"
+                    )?.value
+                ) || 1
+            );
+
+
+        const price =
+            Math.max(
+                0,
+                Number(
+                    element.querySelector(
+                        ".product-price"
+                    )?.value
+                ) || 0
+            );
+
+
+        const days =
+            Math.max(
+                1,
+                Number(
+                    element.querySelector(
+                        ".product-days"
+                    )?.value
+                ) || 1
+            );
+
+
+        if (!name) {
+
+            alert(
+                `Veuillez renseigner la désignation du camion ${index + 1}.`
+            );
+
+            throw new Error(
+                "Camion incomplet"
+            );
+        }
+
+
+        const lineTotal =
+            quantity *
+            price *
+            days;
+
+
+        subtotal += lineTotal;
+
+
+        products.push({
+            name,
+            registration,
+            specs,
+            quantity,
+            price,
+            days,
+            lineTotal
+        });
+    });
+
+
+    const vatRate =
+        Math.max(
+            0,
+            Number(
+                getValue("vatRate")
+            ) || 0
+        );
+
+
+    const vatAmount =
+        subtotal * vatRate / 100;
+
+
+    const total =
+        subtotal + vatAmount;
+
+
+    return {
+
+        invoiceNumber:
+            getValue("invoiceNumber") ||
+            generateInvoiceNumber(),
+
+        invoiceDate:
+            getValue("invoiceDate"),
+
+        currency:
+            getValue("currency") ||
+            "FCFA",
+
+
+        company: {
+
+            name:
+                getValue("companyName"),
+
+            ninea:
+                getValue("companyNinea"),
+
+            rccm:
+                getValue("companyRccm"),
+
+            address:
+                getValue("companyAddress"),
+
+            phone:
+                getValue("companyPhone"),
+
+            email:
+                getValue("companyEmail")
+        },
+
+
+        client: {
+
+            name:
+                clientName,
+
+            contact:
+                getValue("clientContact"),
+
+            address:
+                clientAddress,
+
+            phone:
+                getValue("clientPhone"),
+
+            email:
+                getValue("clientEmail"),
+
+            ninea:
+                getValue("clientNinea"),
+
+            country:
+                getValue("clientCountry")
+        },
+
+
+        rental: {
+
+            startDate:
+                getValue("startDate"),
+
+            endDate:
+                getValue("endDate"),
+
+            paymentTerms:
+                getValue("paymentTerms"),
+
+            locationTerms:
+                getValue("locationTerms")
+        },
+
+
+        products,
+
+
+        vatRate,
+
+        vatAmount,
+
+        subtotal,
+
+        total,
+
+
+        payment: {
+
+            method:
+                getValue("paymentMethod"),
+
+            dueDate:
+                getValue("dueDate")
+        },
+
+
+        bank: {
+
+            name:
+                getValue("bankName"),
+
+            agency:
+                getValue("bankAgency"),
+
+            rib:
+                getValue("bankRib"),
+
+            swift:
+                getValue("bankSwift"),
+
+            account:
+                getValue("bankAccount"),
+
+            holder:
+                getValue("bankHolder")
+        },
+
+
+        note:
+            getValue("invoiceNote")
+    };
+}
+
+
+/* =========================================================
+   MONTANT EN LETTRES
+   ========================================================= */
+
+function numberToLetters(number) {
+
+    number = Math.floor(
+        Math.abs(Number(number) || 0)
+    );
+
+
+    const units = [
+        "",
+        "un",
+        "deux",
+        "trois",
+        "quatre",
+        "cinq",
+        "six",
+        "sept",
+        "huit",
+        "neuf",
+        "dix",
+        "onze",
+        "douze",
+        "treize",
+        "quatorze",
+        "quinze",
+        "seize"
+    ];
+
+
+    const tens = [
+        "",
+        "",
+        "vingt",
+        "trente",
+        "quarante",
+        "cinquante",
+        "soixante",
+        "soixante",
+        "quatre-vingt",
+        "quatre-vingt"
+    ];
+
+
+    function convertBelow100(n) {
+
+        if (n < 17) {
+            return units[n];
+        }
+
+
+        if (n < 20) {
+            return "dix-" + units[n - 10];
+        }
+
+
+        if (n < 70) {
+
+            const ten =
+                Math.floor(n / 10);
+
+            const unit =
+                n % 10;
+
+
+            if (unit === 0) {
+                return tens[ten];
+            }
+
+
+            if (unit === 1) {
+                return `${tens[ten]} et un`;
+            }
+
+
+            return `${tens[ten]}-${units[unit]}`;
+        }
+
+
+        if (n < 80) {
+
+            if (n === 71) {
+                return "soixante et onze";
+            }
+
+            return `soixante-${convertBelow100(n - 60)}`;
+        }
+
+
+        if (n < 100) {
+
+            if (n === 80) {
+                return "quatre-vingts";
+            }
+
+            return `quatre-vingt-${convertBelow100(n - 80)}`;
+        }
+
+
+        return "";
+    }
+
+
+    function convert(n) {
+
+        if (n === 0) {
+            return "zéro";
+        }
+
+
+        if (n < 100) {
+            return convertBelow100(n);
+        }
+
+
+        if (n < 1000) {
+
+            const hundreds =
+                Math.floor(n / 100);
+
+            const remainder =
+                n % 100;
+
+
+            let result =
+                hundreds === 1
+                    ? "cent"
+                    : `${units[hundreds]} cent`;
+
+
+            if (remainder > 0) {
+                result += ` ${convert(remainder)}`;
+            }
+
+
+            return result;
+        }
+
+
+        if (n < 1000000) {
+
+            const thousands =
+                Math.floor(n / 1000);
+
+            const remainder =
+                n % 1000;
+
+
+            let result =
+                thousands === 1
+                    ? "mille"
+                    : `${convert(thousands)} mille`;
+
+
+            if (remainder > 0) {
+                result += ` ${convert(remainder)}`;
+            }
+
+
+            return result;
+        }
+
+
+        if (n < 1000000000) {
+
+            const millions =
+                Math.floor(n / 1000000);
+
+            const remainder =
+                n % 1000000;
+
+
+            let result =
+                millions === 1
+                    ? "un million"
+                    : `${convert(millions)} millions`;
+
+
+            if (remainder > 0) {
+                result += ` ${convert(remainder)}`;
+            }
+
+
+            return result;
+        }
+
+
+        const milliards =
+            Math.floor(n / 1000000000);
+
+        const remainder =
+            n % 1000000000;
+
+
+        let result =
+            milliards === 1
+                ? "un milliard"
+                : `${convert(milliards)} milliards`;
+
+
+        if (remainder > 0) {
+            result += ` ${convert(remainder)}`;
+        }
+
+
+        return result;
+    }
+
+
+    return convert(number);
+}
+
+
+/* =========================================================
+   GÉNÉRATION DE LA FACTURE
+   ========================================================= */
+
+function generateInvoice() {
+
+    let data;
+
+    try {
+
+        data = getFormData();
+
+    } catch (error) {
+
+        return;
+    }
+
+
+    if (!data) {
+        return;
+    }
+
+
+    const preview =
+        document.getElementById("invoicePreview");
+
+    const previewSection =
+        document.getElementById("previewSection");
+
+
+    if (!preview || !previewSection) {
+        return;
+    }
+
+
+    const productsRows =
+        data.products
+            .map((product, index) => {
+
+                return `
+                    <tr>
+
+                        <td class="invoice-number-cell">
+                            ${index + 1}
+                        </td>
+
+
+                        <td class="invoice-truck-cell">
+
+                            <div class="truck-mini">
+
+                                ${getCamionHTML()}
+
+                                <div>
+                                    <strong>
+                                        ${escapeHTML(product.name)}
+                                    </strong>
+
+                                    ${
+                                        product.registration
+                                            ? `<small>
+                                                Immatriculation :
+                                                ${escapeHTML(product.registration)}
+                                            </small>`
+                                            : ""
+                                    }
+
+                                </div>
+
+                            </div>
+
+                        </td>
+
+
+                        <td>
+                            ${
+                                escapeHTML(
+                                    product.specs
+                                ) || "—"
+                            }
+                        </td>
+
+
+                        <td class="text-center">
+                            ${product.quantity}
+                        </td>
+
+
+                        <td class="text-center">
+                            ${product.days}
+                        </td>
+
+
+                        <td class="text-right">
+                            ${formatMoney(
+                                product.price,
+                                data.currency
+                            )}
+                        </td>
+
+
+                        <td class="text-right total-cell">
+                            ${formatMoney(
+                                product.lineTotal,
+                                data.currency
+                            )}
+                        </td>
+
+                    </tr>
+                `;
+            })
+            .join("");
+
+
+    preview.innerHTML = `
+
+        <div class="invoice-document">
+
+
+            <!-- =========================
+                 EN-TÊTE FACTURE
+            ========================== -->
+
+            <div class="invoice-header">
+
+                <div class="invoice-company">
+
+                    <div class="invoice-logo-wrapper">
+                        ${getLogoHTML()}
+                    </div>
+
+                    <div class="company-details">
+
+                        <h1>
+                            ${escapeHTML(
+                                data.company.name ||
+                                "Terratransport"
+                            )}
+                        </h1>
+
+                        ${
+                            data.company.ninea
+                                ? `
+                                    <p>
+                                        <strong>NINEA :</strong>
+                                        ${escapeHTML(
+                                            data.company.ninea
+                                        )}
+                                    </p>
+                                `
+                                : ""
+                        }
+
+                        ${
+                            data.company.rccm
+                                ? `
+                                    <p>
+                                        <strong>RCCM :</strong>
+                                        ${escapeHTML(
+                                            data.company.rccm
+                                        )}
+                                    </p>
+                                `
+                                : ""
+                        }
+
+                        ${
+                            data.company.address
+                                ? `
+                                    <p>
+                                        ${escapeHTML(
+                                            data.company.address
+                                        )}
+                                    </p>
+                                `
+                                : ""
+                        }
+
+                        ${
+                            data.company.phone
+                                ? `
+                                    <p>
+                                        Tél. :
+                                        ${escapeHTML(
+                                            data.company.phone
+                                        )}
+                                    </p>
+                                `
+                                : ""
+                        }
+
+                        ${
+                            data.company.email
+                                ? `
+                                    <p>
+                                        Email :
+                                        ${escapeHTML(
+                                            data.company.email
+                                        )}
+                                    </p>
+                                `
+                                : ""
+                        }
+
+                    </div>
+
+                </div>
+
+
+                <div class="invoice-title-box">
+
+                    <h2>
+                        FACTURE
+                    </h2>
+
+                    <h3>
+                        DE LOCATION DE CAMIONS
+                    </h3>
+
+                    <div class="invoice-meta">
+
+                        <p>
+                            <strong>N° :</strong>
+                            ${escapeHTML(
+                                data.invoiceNumber
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>Date :</strong>
+                            ${formatDate(
+                                data.invoiceDate
+                            )}
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =========================
+                 INFORMATIONS CLIENT
+            ========================== -->
+
+            <div class="invoice-parties">
+
+                <div class="invoice-party">
+
+                    <div class="party-title">
+                        CLIENT / LOCATAIRE
+                    </div>
+
+                    <div class="party-content">
+
+                        <strong>
+                            ${escapeHTML(
+                                data.client.name
+                            )}
+                        </strong>
+
+
+                        ${
+                            data.client.contact
+                                ? `
+                                    <span>
+                                        Responsable :
+                                        ${escapeHTML(
+                                            data.client.contact
+                                        )}
+                                    </span>
+                                `
+                                : ""
+                        }
+
+
+                        <span>
+                            ${escapeHTML(
+                                data.client.address
+                            )}
+                        </span>
+
+
+                        ${
+                            data.client.country
+                                ? `
+                                    <span>
+                                        ${escapeHTML(
+                                            data.client.country
+                                        )}
+                                    </span>
+                                `
+                                : ""
+                        }
+
+
+                        ${
+                            data.client.phone
+                                ? `
+                                    <span>
+                                        Tél. :
+                                        ${escapeHTML(
+                                            data.client.phone
+                                        )}
+                                    </span>
+                                `
+                                : ""
+                        }
+
+
+                        ${
+                            data.client.email
+                                ? `
+                                    <span>
+                                        Email :
+                                        ${escapeHTML(
+                                            data.client.email
+                                        )}
+                                    </span>
+                                `
+                                : ""
+                        }
+
+
+                        ${
+                            data.client.ninea
+                                ? `
+                                    <span>
+                                        NINEA / RCCM :
+                                        ${escapeHTML(
+                                            data.client.ninea
+                                        )}
+                                    </span>
+                                `
+                                : ""
+                        }
+
+                    </div>
+
+                </div>
+
+
+                <div class="invoice-party">
+
+                    <div class="party-title">
+                        PÉRIODE DE LOCATION
+                    </div>
+
+                    <div class="party-content">
+
+                        <span>
+                            <strong>Début :</strong>
+                            ${
+                                formatDate(
+                                    data.rental.startDate
+                                ) || "—"
+                            }
+                        </span>
+
+
+                        <span>
+                            <strong>Fin :</strong>
+                            ${
+                                formatDate(
+                                    data.rental.endDate
+                                ) || "—"
+                            }
+                        </span>
+
+
+                        <span>
+                            <strong>Durée :</strong>
+                            ${
+                                getDays(
+                                    data.rental.startDate,
+                                    data.rental.endDate
+                                )
+                            } jour(s)
+                        </span>
+
+
+                        ${
+                            data.payment.dueDate
+                                ? `
+                                    <span>
+                                        <strong>Échéance :</strong>
+                                        ${formatDate(
+                                            data.payment.dueDate
+                                        )}
+                                    </span>
+                                `
+                                : ""
+                        }
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =========================
+                 TABLE DES CAMIONS
+            ========================== -->
+
+            <div class="invoice-table-wrapper">
+
+                <table class="invoice-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                N°
+                            </th>
+
+                            <th>
+                                CAMION
+                            </th>
+
+                            <th>
+                                CARACTÉRISTIQUES
+                            </th>
+
+                            <th>
+                                QTÉ
+                            </th>
+
+                            <th>
+                                JOURS
+                            </th>
+
+                            <th>
+                                TARIF / JOUR
+                            </th>
+
+                            <th>
+                                TOTAL
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        ${productsRows}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            <!-- =========================
+                 TOTAUX
+            ========================== -->
+
+            <div class="invoice-summary">
+
+                <div class="summary-spacer"></div>
+
+
+                <div class="summary-box">
+
+                    <div class="summary-line">
+
+                        <span>
+                            Sous-total
+                        </span>
+
+                        <strong>
+                            ${formatMoney(
+                                data.subtotal,
+                                data.currency
+                            )}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="summary-line">
+
+                        <span>
+                            TVA
+                            (${data.vatRate}%)
+                        </span>
+
+                        <strong>
+                            ${formatMoney(
+                                data.vatAmount,
+                                data.currency
+                            )}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="summary-total">
+
+                        <span>
+                            TOTAL À PAYER
+                        </span>
+
+                        <strong>
+                            ${formatMoney(
+                                data.total,
+                                data.currency
+                            )}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =========================
+                 TOTAL EN LETTRES
+            ========================== -->
+
+            <div class="amount-words">
+
+                <strong>
+                    Arrêté la présente facture à la somme de :
+                </strong>
+
+                <span>
+                    ${escapeHTML(
+                        numberToLetters(data.total)
+                    )} ${
+                        escapeHTML(
+                            data.currency
+                        )
+                    }
+                </span>
+
+            </div>
+
+
+            <!-- =========================
+                 CONDITIONS
+            ========================== -->
+
+            <div class="invoice-information-grid">
+
+
+                <div class="invoice-info-box">
+
+                    <h3>
+                        CONDITIONS DE LOCATION
+                    </h3>
+
+                    <p>
+                        ${
+                            escapeHTML(
+                                data.rental.locationTerms
+                            ) || "Aucune condition particulière."
+                        }
+                    </p>
+
+
+                    ${
+                        data.rental.paymentTerms
+                            ? `
+                                <p>
+                                    <strong>
+                                        Conditions de paiement :
+                                    </strong>
+
+                                    ${escapeHTML(
+                                        data.rental.paymentTerms
+                                    )}
+                                </p>
+                            `
+                            : ""
+                    }
+
+
+                    ${
+                        data.payment.method
+                            ? `
+                                <p>
+                                    <strong>
+                                        Mode de paiement :
+                                    </strong>
+
+                                    ${escapeHTML(
+                                        data.payment.method
+                                    )}
+                                </p>
+                            `
+                            : ""
+                    }
+
+                </div>
+
+
+                <div class="invoice-info-box">
+
+                    <h3>
+                        INFORMATIONS BANCAIRES
+                    </h3>
+
+
+                    ${
+                        data.bank.name
+                            ? `
+                                <p>
+                                    <strong>Banque :</strong>
+                                    ${escapeHTML(
+                                        data.bank.name
+                                    )}
+                                </p>
+                            `
+                            : ""
+                    }
+
+
+                    ${
+                        data.bank.agency
+                            ? `
+                                <p>
+                                    <strong>Agence :</strong>
+                                    ${escapeHTML(
+                                        data.bank.agency
+                                    )}
+                                </p>
+                            `
+                            : ""
+                    }
+
+
+                    ${
+                        data.bank.rib
+                            ? `
+                                <p>
+                                    <strong>RIB :</strong>
+                                    ${escapeHTML(
+                                        data.bank.rib
+                                    )}
+                                </p>
+                            `
+                            : ""
+                    }
+
+
+                    ${
+                        data.bank.swift
+                            ? `
+                                <p>
+                                    <strong>SWIFT :</strong>
+                                    ${escapeHTML(
+                                        data.bank.swift
+                                    )}
+                                </p>
+                            `
+                            : ""
+                    }
+
+
+                    ${
+                        data.bank.account
+                            ? `
+                                <p>
+                                    <strong>Compte :</strong>
+                                    ${escapeHTML(
+                                        data.bank.account
+                                    )}
+                                </p>
+                            `
+                            : ""
+                    }
+
+
+                    ${
+                        data.bank.holder
+                            ? `
+                                <p>
+                                    <strong>Titulaire :</strong>
+                                    ${escapeHTML(
+                                        data.bank.holder
+                                    )}
+                                </p>
+                            `
+                            : ""
+                    }
+
+                </div>
+
+            </div>
+
+
+            <!-- =========================
+                 NOTE
+            ========================== -->
+
+            ${
+                data.note
+                    ? `
+                        <div class="invoice-note">
+
+                            <strong>
+                                NOTE :
+                            </strong>
+
+                            <span>
+                                ${escapeHTML(
+                                    data.note
+                                )}
+                            </span>
+
+                        </div>
+                    `
+                    : ""
+            }
+
+
+            <!-- =========================
+                 SIGNATURE
+            ========================== -->
+
+            <div class="invoice-signature-section">
+
+                <div class="signature-block">
+
+                    <strong>
+                        Pour TerraTransport
+                    </strong>
+
+                    <div class="signature-space">
+
+                        ${getSignatureHTML()}
+
+                    </div>
+
+                    <div class="signature-line">
+                        Signature / Cachet
+                    </div>
+
+                </div>
+
+
+                <div class="signature-block">
+
+                    <strong>
+                        Le client / locataire
+                    </strong>
+
+                    <div class="signature-space">
+                    </div>
+
+                    <div class="signature-line">
+                        Signature / Cachet
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =========================
+                 PIED DE PAGE
+            ========================== -->
+
+            <div class="invoice-footer">
+
+                <strong>
+                    ${escapeHTML(
+                        data.company.name ||
+                        "Terratransport"
+                    )}
+                </strong>
+
+                <span>
+                    Votre transport, notre engagement
+                </span>
+
+            </div>
+
+        </div>
+    `;
+
+
+    previewSection.style.display = "block";
+
+
+    previewSection.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
+}
+
+
+/* =========================================================
+   IMPRESSION / PDF
+   ========================================================= */
+
+function downloadPDF() {
+
+    const invoice =
+        document.getElementById(
+            "invoicePreview"
+        );
+
+
+    if (!invoice || !invoice.innerHTML.trim()) {
+
+        alert(
+            "Veuillez d'abord générer la facture."
+        );
+
+        return;
+    }
+
+
+    const images =
+        invoice.querySelectorAll("img");
+
+
+    const imagePromises =
+        Array.from(images).map((image) => {
+
+            if (image.complete) {
+                return Promise.resolve();
+            }
+
+            return new Promise((resolve) => {
+
+                image.addEventListener(
+                    "load",
+                    resolve,
+                    { once: true }
+                );
+
+                image.addEventListener(
+                    "error",
+                    resolve,
+                    { once: true }
+                );
+            });
+        });
+
+
+    Promise.all(imagePromises)
+        .then(() => {
+
+            window.print();
+
+        })
+        .catch(() => {
+
+            window.print();
+
+        });
+}
+
+
+/* =========================================================
+   RÉINITIALISATION
+   ========================================================= */
+
+function resetForm() {
+
+    setTimeout(() => {
+
+        const container =
+            document.getElementById(
+                "productsContainer"
+            );
+
+
+        const preview =
+            document.getElementById(
+                "previewSection"
+            );
+
+
+        if (container) {
+            container.innerHTML = "";
+        }
+
+
+        productCount = 0;
+
+
+        if (preview) {
+            preview.style.display = "none";
+        }
+
+
+        setDefaults();
+
+
+        addProduct();
+
+    }, 0);
+}
+
+
+/* =========================================================
+   INITIALISATION
+   ========================================================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        setDefaults();
+
+        attachProductListeners();
+
+        addProduct();
+
+    }
+);
