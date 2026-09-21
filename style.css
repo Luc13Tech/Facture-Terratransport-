@@ -1,1409 +1,693 @@
 /* =========================================================
-   TERRATRANSPORT
-   FACTURE DE LOCATION DE CAMIONS
-   STYLE GLOBAL + IMPRESSION A4
+   TERRATRANSPORT — GÉNÉRATEUR DE FACTURE
+   Style principal + impression A4
    ========================================================= */
 
 :root {
-    --primary: #0b1f33;
-    --primary-light: #173a59;
-    --gold: #c9a227;
-    --gold-light: #e2c45d;
-
-    --white: #ffffff;
-    --black: #111111;
-
-    --gray-50: #f8f9fb;
-    --gray-100: #f1f3f5;
-    --gray-200: #e2e6ea;
-    --gray-300: #cbd1d8;
-    --gray-500: #6c757d;
-    --gray-700: #343a40;
-
-    --danger: #b42318;
-
-    --radius: 10px;
-
-    --shadow:
-        0 8px 25px rgba(11, 31, 51, 0.08);
+  --primary: #0b1f3a;
+  --primary-light: #16385f;
+  --gold: #c9a227;
+  --gold-light: #e0c45c;
+  --white: #ffffff;
+  --black: #111111;
+  --gray-50: #f8fafc;
+  --gray-100: #f1f5f9;
+  --gray-200: #e2e8f0;
+  --gray-300: #cbd5e1;
+  --gray-500: #64748b;
+  --gray-700: #334155;
+  --danger: #dc2626;
+  --success: #15803d;
+  --radius: 8px;
+  --shadow: 0 4px 18px rgba(11, 31, 58, 0.08);
 }
-
 
 /* =========================================================
    RESET
    ========================================================= */
 
 * {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
-
 
 html {
-    scroll-behavior: smooth;
+  margin: 0;
+  padding: 0;
+  scroll-behavior: smooth;
 }
-
 
 body {
-    margin: 0;
-    padding: 0;
-
-    background:
-        linear-gradient(
-            135deg,
-            #f5f7fa 0%,
-            #eef2f6 100%
-        );
-
-    color: var(--gray-700);
-
-    font-family:
-        "Montserrat",
-        Arial,
-        sans-serif;
-
-    font-size: 14px;
-
-    line-height: 1.6;
+  margin: 0;
+  padding: 0;
+  background: var(--gray-100);
+  color: var(--black);
+  font-family: "Montserrat", Arial, sans-serif;
+  line-height: 1.5;
 }
-
 
 button,
 input,
-textarea,
-select {
-    font-family: inherit;
+select,
+textarea {
+  font: inherit;
 }
-
 
 button {
-    cursor: pointer;
+  cursor: pointer;
 }
-
 
 img {
-    max-width: 100%;
+  max-width: 100%;
+  display: block;
 }
-
-
-.container {
-    width:
-        min(
-            1200px,
-            calc(100% - 32px)
-        );
-
-    margin: 0 auto;
-}
-
 
 /* =========================================================
-   HEADER
+   HEADER APPLICATION
    ========================================================= */
 
 .header {
-    background:
-        linear-gradient(
-            135deg,
-            var(--primary),
-            var(--primary-light)
-        );
-
-    color: var(--white);
-
-    padding: 22px 0;
-
-    box-shadow:
-        0 5px 20px
-        rgba(0, 0, 0, 0.12);
+  background: var(--primary);
+  color: var(--white);
+  padding: 18px 24px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12);
 }
 
-
-.header-content {
-    display: flex;
-
-    align-items: center;
-
-    justify-content: space-between;
-
-    gap: 30px;
+.header-inner {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
 }
 
-
-.logo-container {
-    display: flex;
-
-    align-items: center;
-
-    gap: 15px;
-
-    min-width: 190px;
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
 }
 
-
-.logo {
-    width: 130px;
-
-    height: auto;
-
-    object-fit: contain;
+.header-logo {
+  width: 62px;
+  height: 62px;
+  object-fit: contain;
+  background: var(--white);
+  border-radius: 8px;
+  padding: 5px;
 }
 
-
-.brand-fallback {
-    display: none;
-
-    font-family:
-        "Playfair Display",
-        Georgia,
-        serif;
-
-    font-size: 26px;
-
-    font-weight: 700;
-}
-
-
+.header h1,
 .header-title {
-    text-align: right;
+  margin: 0;
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 25px;
+  line-height: 1.2;
 }
 
-
-.header-title h1 {
-    margin: 0;
-
-    color: var(--white);
-
-    font-family:
-        "Playfair Display",
-        Georgia,
-        serif;
-
-    font-size: 28px;
-
-    line-height: 1.2;
-}
-
-
+.header p,
 .header-subtitle {
-    margin: 7px 0 0;
-
-    color: #d9e2ec;
-
-    font-size: 13px;
+  margin: 4px 0 0;
+  font-size: 13px;
+  opacity: 0.82;
 }
 
+/* =========================================================
+   CONTENEUR PRINCIPAL
+   ========================================================= */
+
+.container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 25px;
+}
+
+.main-container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 25px;
+}
 
 /* =========================================================
    FORMULAIRE
    ========================================================= */
 
 .form-wrapper {
-    margin: 35px auto;
+  background: var(--white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 25px;
+  margin-bottom: 30px;
 }
-
 
 .form-section {
-    margin-bottom: 25px;
-
-    padding: 25px;
-
-    background: var(--white);
-
-    border:
-        1px solid
-        var(--gray-200);
-
-    border-radius: var(--radius);
-
-    box-shadow: var(--shadow);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 20px;
+  background: var(--white);
 }
 
-
-.form-section h2 {
-    margin: 0 0 22px;
-
-    color: var(--primary);
-
-    font-family:
-        "Playfair Display",
-        Georgia,
-        serif;
-
-    font-size: 21px;
-
-    padding-bottom: 12px;
-
-    border-bottom:
-        2px solid
-        var(--gold);
+.form-section h2,
+.form-section h3 {
+  margin: 0 0 18px;
+  color: var(--primary);
+  font-family: "Playfair Display", Georgia, serif;
 }
-
-
-.section-help {
-    margin: -8px 0 20px;
-
-    color: var(--gray-500);
-
-    font-size: 13px;
-}
-
 
 .form-grid {
-    display: grid;
-
-    grid-template-columns:
-        repeat(
-            2,
-            minmax(0, 1fr)
-        );
-
-    gap: 18px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
 }
 
+.form-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
 
 .form-group {
-    display: flex;
-
-    flex-direction: column;
-
-    gap: 7px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
+.form-group.full-width {
+  grid-column: 1 / -1;
+}
 
 .form-group label {
-    color: var(--primary);
-
-    font-size: 13px;
-
-    font-weight: 600;
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--gray-700);
 }
-
 
 .form-group input,
-.form-group textarea,
-.form-group select {
-    width: 100%;
-
-    padding: 12px 14px;
-
-    background: var(--white);
-
-    color: var(--gray-700);
-
-    border:
-        1px solid
-        var(--gray-300);
-
-    border-radius: 7px;
-
-    outline: none;
-
-    font-size: 14px;
-
-    transition:
-        border-color 0.2s ease,
-        box-shadow 0.2s ease,
-        background 0.2s ease;
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  border: 1px solid var(--gray-300);
+  border-radius: 6px;
+  background: var(--white);
+  color: var(--black);
+  padding: 11px 12px;
+  outline: none;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
-
 
 .form-group textarea {
-    resize: vertical;
-
-    min-height: 100px;
+  min-height: 100px;
+  resize: vertical;
 }
-
 
 .form-group input:focus,
-.form-group textarea:focus,
-.form-group select:focus {
-    border-color: var(--gold);
-
-    box-shadow:
-        0 0 0 3px
-        rgba(201, 162, 39, 0.14);
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(201, 162, 39, 0.12);
 }
-
-
-.form-group input::placeholder,
-.form-group textarea::placeholder {
-    color: #9aa1a8;
-}
-
-
-.field-help {
-    color: var(--gray-500);
-
-    font-size: 11px;
-
-    line-height: 1.4;
-}
-
 
 /* =========================================================
-   PAIEMENT
+   PRODUITS / CAMIONS
    ========================================================= */
 
-.payment-number-group {
-    border-left:
-        3px solid
-        var(--gold);
-
-    padding-left: 12px;
+.products-container {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
 }
 
-
-#paymentMethod {
-    background-color: var(--white);
+.product-card {
+  border: 1px solid var(--gray-200);
+  border-left: 4px solid var(--gold);
+  border-radius: var(--radius);
+  padding: 18px;
+  background: var(--gray-50);
+  position: relative;
 }
 
-
-#paymentMethod option {
-    color: var(--black);
+.product-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 15px;
 }
 
-
-/* =========================================================
-   CAMIONS
-   ========================================================= */
-
-.product-item {
-    position: relative;
-
-    margin-bottom: 20px;
-
-    padding: 20px;
-
-    background:
-        linear-gradient(
-            145deg,
-            #ffffff,
-            #f8fafc
-        );
-
-    border:
-        1px solid
-        var(--gray-200);
-
-    border-left:
-        4px solid
-        var(--gold);
-
-    border-radius: 9px;
+.product-card-title {
+  margin: 0;
+  color: var(--primary);
+  font-size: 16px;
+  font-weight: 700;
 }
 
-
-.product-item-header {
-    display: flex;
-
-    align-items: center;
-
-    justify-content: space-between;
-
-    gap: 15px;
-
-    margin-bottom: 18px;
+.product-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1.5fr 0.6fr 0.7fr 1fr;
+  gap: 12px;
 }
-
-
-.product-item-header h3 {
-    margin: 0;
-
-    color: var(--primary);
-
-    font-size: 17px;
-}
-
-
-.btn-remove {
-    border: 0;
-
-    background: transparent;
-
-    color: var(--danger);
-
-    font-size: 12px;
-
-    font-weight: 600;
-
-    padding: 6px 10px;
-
-    border-radius: 5px;
-
-    transition:
-        background 0.2s ease;
-}
-
-
-.btn-remove:hover {
-    background:
-        rgba(180, 35, 24, 0.08);
-}
-
-
-.product-calculation {
-    display: flex;
-
-    justify-content: space-between;
-
-    align-items: center;
-
-    margin-top: 18px;
-
-    padding-top: 14px;
-
-    border-top:
-        1px dashed
-        var(--gray-300);
-
-    color: var(--gray-500);
-}
-
-
-.product-calculation strong {
-    color: var(--primary);
-
-    font-size: 16px;
-}
-
 
 /* =========================================================
    BOUTONS
    ========================================================= */
 
-.btn-add {
-    display: inline-flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    padding: 12px 20px;
-
-    background: var(--primary);
-
-    color: var(--white);
-
-    border: 0;
-
-    border-radius: 7px;
-
-    font-weight: 600;
-
-    transition:
-        transform 0.2s ease,
-        background 0.2s ease;
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 20px;
 }
 
-
-.btn-add:hover {
-    background: var(--primary-light);
-
-    transform:
-        translateY(-1px);
+.btn {
+  border: none;
+  border-radius: 7px;
+  padding: 12px 18px;
+  font-weight: 700;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    opacity 0.15s ease;
 }
 
-
-.form-actions {
-    display: flex;
-
-    justify-content: center;
-
-    gap: 15px;
-
-    margin:
-        30px 0
-        45px;
+.btn:hover {
+  transform: translateY(-1px);
 }
 
-
-.btn-primary,
-.btn-secondary,
-.btn-download {
-    border: 0;
-
-    border-radius: 7px;
-
-    padding: 13px 24px;
-
-    font-size: 14px;
-
-    font-weight: 700;
-
-    transition:
-        transform 0.2s ease,
-        box-shadow 0.2s ease,
-        background 0.2s ease;
+.btn:active {
+  transform: translateY(0);
 }
-
 
 .btn-primary {
-    background: var(--gold);
-
-    color: var(--black);
-
-    box-shadow:
-        0 5px 15px
-        rgba(201, 162, 39, 0.2);
+  background: var(--primary);
+  color: var(--white);
+  box-shadow: 0 4px 10px rgba(11, 31, 58, 0.18);
 }
-
 
 .btn-primary:hover {
-    background: var(--gold-light);
-
-    transform:
-        translateY(-1px);
+  background: var(--primary-light);
 }
 
+.btn-gold {
+  background: var(--gold);
+  color: var(--white);
+  box-shadow: 0 4px 10px rgba(201, 162, 39, 0.2);
+}
+
+.btn-gold:hover {
+  background: var(--gold-light);
+}
+
+.btn-danger {
+  background: var(--danger);
+  color: var(--white);
+}
 
 .btn-secondary {
-    background: var(--gray-200);
-
-    color: var(--gray-700);
+  background: var(--gray-200);
+  color: var(--gray-700);
 }
-
-
-.btn-secondary:hover {
-    background: var(--gray-300);
-}
-
-
-.btn-download {
-    background: var(--primary);
-
-    color: var(--white);
-}
-
-
-.btn-download:hover {
-    background: var(--primary-light);
-
-    transform:
-        translateY(-1px);
-}
-
 
 /* =========================================================
    APERÇU
    ========================================================= */
 
-.preview-section {
-    margin-bottom: 60px;
+.preview-wrapper {
+  width: 100%;
 }
-
 
 .preview-header {
-    display: flex;
-
-    align-items: center;
-
-    justify-content: space-between;
-
-    gap: 20px;
-
-    margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 15px;
 }
-
 
 .preview-header h2 {
-    margin: 0;
-
-    color: var(--primary);
-
-    font-family:
-        "Playfair Display",
-        Georgia,
-        serif;
-
-    font-size: 24px;
+  margin: 0;
+  color: var(--primary);
+  font-family: "Playfair Display", Georgia, serif;
 }
 
-
 /* =========================================================
-   DOCUMENT FACTURE
+   FACTURE
    ========================================================= */
 
-.invoice-document {
-    width: 100%;
-
-    max-width: 1000px;
-
-    margin: 0 auto;
-
-    padding: 35px;
-
-    background: var(--white);
-
-    color: var(--black);
-
-    box-shadow:
-        0 12px 40px
-        rgba(0, 0, 0, 0.12);
-
-    border-top:
-        6px solid
-        var(--gold);
-
-    overflow: hidden;
+.invoice {
+  width: 190mm;
+  max-width: 100%;
+  margin: 0 auto;
+  background: var(--white);
+  padding: 10mm;
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.12);
+  color: var(--black);
 }
 
-
 /* =========================================================
-   EN-TÊTE FACTURE
+   EN-TÊTE DE FACTURE
    ========================================================= */
 
 .invoice-header {
-    display: flex;
-
-    justify-content: space-between;
-
-    align-items: flex-start;
-
-    gap: 30px;
-
-    padding-bottom: 25px;
-
-    border-bottom:
-        2px solid
-        var(--primary);
-
-    page-break-inside: avoid;
-
-    break-inside: avoid;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8mm;
+  width: 100%;
+  margin-bottom: 8mm;
+  flex-wrap: nowrap;
 }
 
-
-.invoice-company {
-    display: flex;
-
-    align-items: flex-start;
-
-    gap: 18px;
-
-    flex: 1;
-
-    min-width: 0;
+.invoice-header-left,
+.invoice-header-right,
+.company-info,
+.company-details,
+.invoice-info,
+.invoice-details,
+.header-left,
+.header-right {
+  min-width: 0;
 }
 
-
-.invoice-logo-wrapper {
-    width: 130px;
-
-    flex:
-        0 0 130px;
+.invoice-header-left,
+.company-info,
+.company-details,
+.header-left {
+  flex: 1 1 50%;
+  width: 50%;
 }
 
+.invoice-header-right,
+.invoice-info,
+.invoice-details,
+.header-right {
+  flex: 1 1 50%;
+  width: 50%;
+  text-align: right;
+}
 
 .invoice-logo {
-    display: block;
-
-    width: 100%;
-
-    max-height: 100px;
-
-    object-fit: contain;
+  width: 70px;
+  height: 70px;
+  object-fit: contain;
+  margin-bottom: 8px;
 }
 
-
-.company-details {
-    min-width: 0;
+.invoice-company-name,
+.company-name {
+  margin: 0 0 6px;
+  color: var(--primary);
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 25px;
+  font-weight: 700;
+  line-height: 1.15;
 }
 
-
-.company-details h1 {
-    margin:
-        0 0 8px;
-
-    color: var(--primary);
-
-    font-family:
-        "Playfair Display",
-        Georgia,
-        serif;
-
-    font-size: 24px;
+.company-info p,
+.invoice-header-left p,
+.header-left p {
+  margin: 2px 0;
+  font-size: 10.5px;
+  line-height: 1.4;
 }
 
-
-.company-details p {
-    margin: 2px 0;
-
-    color: #4b5560;
-
-    font-size: 10.5px;
-
-    overflow-wrap: anywhere;
+.invoice-title,
+.invoice-header-right h1,
+.invoice-header-right h2,
+.invoice-info h1,
+.invoice-info h2,
+.header-right h1,
+.header-right h2 {
+  margin: 0 0 4px;
+  color: var(--primary);
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.1;
 }
 
-
-.invoice-title-box {
-    min-width: 245px;
-
-    flex:
-        0 0 245px;
-
-    text-align: right;
+.invoice-subtitle {
+  margin: 0 0 8px;
+  color: var(--gray-700);
+  font-size: 13px;
+  font-weight: 600;
 }
 
-
-.invoice-title-box h2 {
-    margin: 0;
-
-    color: var(--primary);
-
-    font-family:
-        "Playfair Display",
-        Georgia,
-        serif;
-
-    font-size: 34px;
-
-    letter-spacing: 1px;
+.invoice-number,
+.invoice-date {
+  margin: 3px 0;
+  font-size: 11px;
+  line-height: 1.4;
 }
 
-
-.invoice-title-box h3 {
-    margin:
-        0 0 14px;
-
-    color: var(--gold);
-
-    font-size: 13px;
-
-    letter-spacing: 1px;
+.invoice-number strong,
+.invoice-date strong {
+  color: var(--primary);
 }
-
-
-.invoice-meta {
-    padding: 10px 14px;
-
-    background: var(--gray-50);
-
-    border:
-        1px solid
-        var(--gray-200);
-
-    border-radius: 6px;
-
-    text-align: left;
-}
-
-
-.invoice-meta p {
-    margin: 3px 0;
-
-    font-size: 11px;
-}
-
 
 /* =========================================================
-   CLIENT / PÉRIODE
+   BLOCS CLIENT / LOCATION
    ========================================================= */
 
-.invoice-parties {
-    display: grid;
-
-    grid-template-columns:
-        repeat(
-            2,
-            minmax(0, 1fr)
-        );
-
-    gap: 18px;
-
-    margin: 25px 0;
-
-    page-break-inside: avoid;
-
-    break-inside: avoid;
+.invoice-meta {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5mm;
+  margin-bottom: 6mm;
 }
 
-
-.invoice-party {
-    border:
-        1px solid
-        var(--gray-200);
-
-    border-radius: 6px;
-
-    overflow: hidden;
+.invoice-box {
+  border: 1px solid var(--gray-300);
+  border-radius: 5px;
+  padding: 10px;
 }
 
-
-.party-title {
-    padding: 9px 12px;
-
-    background: var(--primary);
-
-    color: var(--white);
-
-    font-size: 10px;
-
-    font-weight: 700;
-
-    letter-spacing: 0.5px;
+.invoice-box-title {
+  margin: 0 0 6px;
+  color: var(--primary);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
 }
 
-
-.party-content {
-    display: flex;
-
-    flex-direction: column;
-
-    gap: 3px;
-
-    padding: 12px;
-
-    font-size: 10.5px;
+.invoice-box p {
+  margin: 2px 0;
+  font-size: 10px;
+  line-height: 1.4;
 }
-
-
-.party-content strong {
-    color: var(--primary);
-
-    font-size: 12px;
-}
-
 
 /* =========================================================
    TABLEAU
    ========================================================= */
 
 .invoice-table-wrapper {
-    width: 100%;
-
-    overflow: visible;
-
-    page-break-inside: auto;
-
-    break-inside: auto;
+  width: 100%;
+  overflow-x: auto;
+  margin: 6mm 0;
 }
-
 
 .invoice-table {
-    width: 100%;
-
-    border-collapse: collapse;
-
-    margin-top: 10px;
-
-    font-size: 10px;
-
-    table-layout: fixed;
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
 }
-
 
 .invoice-table th {
-    padding: 10px 7px;
-
-    background: var(--primary);
-
-    color: var(--white);
-
-    border:
-        1px solid
-        var(--primary);
-
-    font-size: 9px;
-
-    text-transform: uppercase;
-
-    vertical-align: middle;
-
-    page-break-after: avoid;
+  background: var(--primary);
+  color: var(--white);
+  padding: 8px 5px;
+  border: 1px solid var(--primary);
+  font-size: 9px;
+  text-align: center;
+  vertical-align: middle;
 }
-
 
 .invoice-table td {
-    padding: 9px 7px;
-
-    border:
-        1px solid
-        var(--gray-300);
-
-    vertical-align: middle;
-
-    overflow-wrap: anywhere;
+  border: 1px solid var(--gray-300);
+  padding: 7px 5px;
+  font-size: 9px;
+  vertical-align: middle;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
-
-
-.invoice-table tbody tr {
-    page-break-inside: avoid;
-
-    break-inside: avoid;
-}
-
 
 .invoice-table tbody tr:nth-child(even) {
-    background: #fafafa;
+  background: #fafafa;
 }
 
-
-/*
-   Largeurs fixes :
-   elles empêchent les colonnes
-   de bouger lors de l'impression.
-*/
-
-.invoice-table th:nth-child(1),
-.invoice-table td:nth-child(1) {
-    width: 5%;
+.invoice-table .truck-image,
+.invoice-table img {
+  width: 55px;
+  height: 40px;
+  object-fit: cover;
+  margin: 0 auto;
+  border-radius: 3px;
 }
 
-
-.invoice-table th:nth-child(2),
-.invoice-table td:nth-child(2) {
-    width: 23%;
+.invoice-table .text-center {
+  text-align: center;
 }
 
-
-.invoice-table th:nth-child(3),
-.invoice-table td:nth-child(3) {
-    width: 21%;
+.invoice-table .text-right {
+  text-align: right;
 }
-
-
-.invoice-table th:nth-child(4),
-.invoice-table td:nth-child(4) {
-    width: 7%;
-}
-
-
-.invoice-table th:nth-child(5),
-.invoice-table td:nth-child(5) {
-    width: 8%;
-}
-
-
-.invoice-table th:nth-child(6),
-.invoice-table td:nth-child(6) {
-    width: 17%;
-}
-
-
-.invoice-table th:nth-child(7),
-.invoice-table td:nth-child(7) {
-    width: 19%;
-}
-
-
-.invoice-number-cell {
-    text-align: center;
-
-    font-weight: 700;
-}
-
-
-.invoice-truck-cell {
-    min-width: 0;
-}
-
-
-.truck-mini {
-    display: flex;
-
-    align-items: center;
-
-    gap: 8px;
-
-    min-width: 0;
-}
-
-
-.truck-mini img {
-    width: 48px;
-
-    height: 35px;
-
-    flex:
-        0 0 48px;
-
-    object-fit: cover;
-
-    border-radius: 4px;
-
-    border:
-        1px solid
-        var(--gray-200);
-}
-
-
-.truck-mini strong {
-    display: block;
-
-    color: var(--primary);
-
-    font-size: 10px;
-
-    overflow-wrap: anywhere;
-}
-
-
-.truck-mini small {
-    display: block;
-
-    margin-top: 2px;
-
-    color: var(--gray-500);
-
-    font-size: 8px;
-
-    overflow-wrap: anywhere;
-}
-
-
-.text-center {
-    text-align: center;
-}
-
-
-.text-right {
-    text-align: right;
-}
-
-
-.total-cell {
-    color: var(--primary);
-
-    font-weight: 700;
-
-    white-space: nowrap;
-}
-
 
 /* =========================================================
-   RÉSUMÉ
+   TOTAUX
    ========================================================= */
 
-.invoice-summary {
-    display: grid;
-
-    grid-template-columns:
-        1fr
-        minmax(
-            280px,
-            380px
-        );
-
-    gap: 20px;
-
-    margin-top: 20px;
-
-    page-break-inside: avoid;
-
-    break-inside: avoid;
+.invoice-totals {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 5mm;
 }
 
-
-.summary-box {
-    border:
-        1px solid
-        var(--gray-300);
-
-    border-radius: 6px;
-
-    overflow: hidden;
+.totals-box {
+  width: 75mm;
 }
 
-
-.summary-line {
-    display: flex;
-
-    justify-content: space-between;
-
-    gap: 20px;
-
-    padding: 9px 13px;
-
-    border-bottom:
-        1px solid
-        var(--gray-200);
-
-    font-size: 10px;
+.total-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 5px 0;
+  border-bottom: 1px solid var(--gray-200);
+  font-size: 10px;
 }
 
-
-.summary-total {
-    display: flex;
-
-    justify-content: space-between;
-
-    gap: 20px;
-
-    padding: 13px;
-
-    background: var(--primary);
-
-    color: var(--white);
-
-    font-size: 12px;
-
-    font-weight: 700;
+.total-row:last-child {
+  border-bottom: none;
 }
 
-
-.summary-total strong {
-    color: var(--gold-light);
-
-    font-size: 14px;
-
-    white-space: nowrap;
+.total-row.grand-total {
+  margin-top: 4px;
+  padding: 8px 0;
+  border-top: 2px solid var(--primary);
+  color: var(--primary);
+  font-size: 13px;
+  font-weight: 800;
 }
-
 
 /* =========================================================
    MONTANT EN LETTRES
    ========================================================= */
 
 .amount-words {
-    display: flex;
-
-    flex-direction: column;
-
-    gap: 5px;
-
-    margin-top: 20px;
-
-    padding: 12px 14px;
-
-    background: #fffdf3;
-
-    border:
-        1px solid
-        #eadb9d;
-
-    border-radius: 6px;
-
-    font-size: 10px;
-
-    page-break-inside: avoid;
-
-    break-inside: avoid;
+  margin-top: 5mm;
+  padding: 9px;
+  border: 1px solid var(--gray-300);
+  border-radius: 4px;
+  font-size: 10px;
 }
-
 
 .amount-words strong {
-    color: var(--primary);
+  color: var(--primary);
 }
-
-
-.amount-words span {
-    font-style: italic;
-
-    text-transform: capitalize;
-
-    overflow-wrap: anywhere;
-}
-
 
 /* =========================================================
-   INFORMATIONS
+   CONDITIONS / PAIEMENT
    ========================================================= */
 
-.invoice-information-grid {
-    display: grid;
-
-    grid-template-columns:
-        repeat(
-            2,
-            minmax(0, 1fr)
-        );
-
-    gap: 18px;
-
-    margin-top: 20px;
-
-    page-break-inside: avoid;
-
-    break-inside: avoid;
+.invoice-bottom-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5mm;
+  margin-top: 6mm;
 }
 
-
-.invoice-info-box {
-    padding: 14px;
-
-    border:
-        1px solid
-        var(--gray-200);
-
-    border-radius: 6px;
-
-    background: var(--gray-50);
-
-    min-width: 0;
+.conditions-box,
+.payment-box,
+.bank-box,
+.note-box {
+  border: 1px solid var(--gray-300);
+  border-radius: 5px;
+  padding: 9px;
 }
 
-
-.invoice-info-box h3 {
-    margin:
-        0 0 10px;
-
-    color: var(--primary);
-
-    font-size: 11px;
-
-    border-bottom:
-        1px solid
-        var(--gray-300);
-
-    padding-bottom: 7px;
+.conditions-box h3,
+.payment-box h3,
+.bank-box h3,
+.note-box h3 {
+  margin: 0 0 6px;
+  color: var(--primary);
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
 }
 
-
-.invoice-info-box p {
-    margin: 4px 0;
-
-    font-size: 9.5px;
-
-    line-height: 1.5;
-
-    overflow-wrap: anywhere;
+.conditions-box p,
+.payment-box p,
+.bank-box p,
+.note-box p {
+  margin: 2px 0;
+  font-size: 9.5px;
+  line-height: 1.45;
 }
-
 
 /* =========================================================
-   NOTE
+   SIGNATURE
    ========================================================= */
 
-.invoice-note {
-    display: flex;
-
-    gap: 8px;
-
-    margin-top: 18px;
-
-    padding: 12px;
-
-    background: #fafafa;
-
-    border-left:
-        3px solid
-        var(--gold);
-
-    font-size: 9.5px;
-
-    page-break-inside: avoid;
-
-    break-inside: avoid;
+.signature-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15mm;
+  margin-top: 10mm;
+  page-break-inside: avoid;
+  break-inside: avoid;
 }
 
-
-.invoice-note strong {
-    color: var(--primary);
-
-    flex-shrink: 0;
+.signature-box {
+  min-height: 35mm;
+  text-align: center;
 }
 
-
-/* =========================================================
-   SIGNATURES
-   ========================================================= */
-
-.invoice-signature-section {
-    display: grid;
-
-    grid-template-columns:
-        repeat(
-            2,
-            minmax(0, 1fr)
-        );
-
-    gap: 80px;
-
-    margin-top: 45px;
-
-    padding-top: 20px;
-
-    page-break-inside: avoid;
-
-    break-inside: avoid;
+.signature-title {
+  margin-bottom: 5px;
+  color: var(--primary);
+  font-size: 10px;
+  font-weight: 700;
 }
 
-
-.signature-block {
-    min-height: 155px;
-
-    text-align: center;
-
-    font-size: 10px;
+.signature-image {
+  width: 70px;
+  height: 45px;
+  object-fit: contain;
+  margin: 5px auto;
 }
-
-
-.signature-block > strong {
-    display: block;
-
-    color: var(--primary);
-
-    margin-bottom: 8px;
-}
-
-
-.signature-space {
-    display: flex;
-
-    align-items: flex-end;
-
-    justify-content: center;
-
-    height: 90px;
-}
-
-
-.invoice-signature-image {
-    max-width: 150px;
-
-    max-height: 80px;
-
-    object-fit: contain;
-}
-
 
 .signature-line {
-    padding-top: 8px;
-
-    border-top:
-        1px solid
-        var(--black);
-
-    font-size: 9px;
+  width: 80%;
+  margin: 25px auto 0;
+  border-top: 1px solid var(--black);
 }
 
-
 /* =========================================================
-   PIED DE PAGE
+   FOOTER FACTURE
    ========================================================= */
 
 .invoice-footer {
-    display: flex;
-
-    justify-content: space-between;
-
-    align-items: center;
-
-    gap: 20px;
-
-    margin-top: 30px;
-
-    padding-top: 12px;
-
-    border-top:
-        1px solid
-        var(--gray-300);
-
-    color: var(--gray-500);
-
-    font-size: 8.5px;
-
-    page-break-inside: avoid;
-
-    break-inside: avoid;
+  margin-top: 8mm;
+  padding-top: 5px;
+  border-top: 1px solid var(--gray-300);
+  text-align: center;
+  color: var(--gray-500);
+  font-size: 8.5px;
 }
 
+/* =========================================================
+   ÉLÉMENTS CACHÉS
+   ========================================================= */
 
-.invoice-footer strong {
-    color: var(--primary);
+.hidden {
+  display: none !important;
 }
-
 
 /* =========================================================
    RESPONSIVE
@@ -1411,939 +695,717 @@ img {
 
 @media (max-width: 900px) {
 
-    .header-content {
-        align-items: flex-start;
+  .container,
+  .main-container {
+    padding: 15px;
+  }
 
-        flex-direction: column;
-    }
+  .form-grid,
+  .form-grid-3 {
+    grid-template-columns: 1fr;
+  }
 
+  .product-grid {
+    grid-template-columns: 1fr 1fr;
+  }
 
-    .header-title {
-        text-align: left;
-    }
-
-
-    .header-title h1 {
-        font-size: 24px;
-    }
-
-
-    .invoice-header {
-        flex-direction: column;
-    }
-
-
-    .invoice-title-box {
-        width: 100%;
-
-        min-width: 0;
-
-        flex: none;
-
-        text-align: left;
-    }
-
-
-    .invoice-meta {
-        max-width: 300px;
-    }
-
-
-    .invoice-summary {
-        grid-template-columns: 1fr;
-    }
-
-
-    .summary-spacer {
-        display: none;
-    }
-
+  .invoice {
+    width: 100%;
+    padding: 20px;
+  }
 }
-
 
 @media (max-width: 700px) {
 
-    .container {
-        width:
-            min(
-                100% - 20px,
-                1200px
-            );
-    }
+  .header {
+    padding: 15px;
+  }
 
+  .header-inner {
+    align-items: flex-start;
+  }
 
-    .header {
-        padding: 18px 0;
-    }
+  .header-brand {
+    gap: 10px;
+  }
 
+  .header-logo {
+    width: 48px;
+    height: 48px;
+  }
 
-    .logo {
-        width: 105px;
-    }
+  .header h1,
+  .header-title {
+    font-size: 20px;
+  }
 
+  .form-wrapper {
+    padding: 15px;
+  }
 
-    .header-title h1 {
-        font-size: 21px;
-    }
+  .form-section {
+    padding: 15px;
+  }
 
+  .product-grid {
+    grid-template-columns: 1fr;
+  }
 
-    .form-section {
-        padding: 18px;
-    }
+  .preview-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
 
+  .invoice-meta,
+  .invoice-bottom-grid,
+  .signature-section {
+    grid-template-columns: 1fr;
+  }
 
-    .form-grid {
-        grid-template-columns: 1fr;
-    }
+  /*
+   * Aperçu écran sur petit écran.
+   * L'impression reste indépendante et A4.
+   */
+  .invoice-header {
+    flex-direction: row;
+    flex-wrap: nowrap;
+  }
 
+  .invoice-header-left,
+  .invoice-header-right,
+  .company-info,
+  .company-details,
+  .invoice-info,
+  .invoice-details,
+  .header-left,
+  .header-right {
+    width: 50%;
+    flex: 0 0 50%;
+  }
 
-    .form-actions {
-        flex-direction: column;
-    }
+  .invoice-header-right,
+  .invoice-info,
+  .invoice-details,
+  .header-right {
+    text-align: right;
+  }
 
+  .invoice-company-name,
+  .company-name {
+    font-size: 18px;
+  }
 
-    .form-actions button {
-        width: 100%;
-    }
+  .invoice-title,
+  .invoice-header-right h1,
+  .invoice-header-right h2,
+  .invoice-info h1,
+  .invoice-info h2,
+  .header-right h1,
+  .header-right h2 {
+    font-size: 17px;
+  }
 
-
-    .preview-header {
-        flex-direction: column;
-
-        align-items: stretch;
-    }
-
-
-    .preview-header h2 {
-        font-size: 21px;
-    }
-
-
-    .btn-download {
-        width: 100%;
-    }
-
-
-    .invoice-document {
-        padding: 20px;
-
-        border-top-width: 4px;
-    }
-
-
-    .invoice-company {
-        flex-direction: column;
-    }
-
-
-    .invoice-logo-wrapper {
-        width: 110px;
-
-        flex-basis: auto;
-    }
-
-
-    .invoice-title-box h2 {
-        font-size: 28px;
-    }
-
-
-    .invoice-parties {
-        grid-template-columns: 1fr;
-    }
-
-
-    .invoice-information-grid {
-        grid-template-columns: 1fr;
-    }
-
-
-    .invoice-signature-section {
-        grid-template-columns: 1fr;
-
-        gap: 35px;
-    }
-
-
-    .invoice-footer {
-        flex-direction: column;
-
-        align-items: flex-start;
-    }
-
+  .company-info p,
+  .invoice-header-left p,
+  .header-left p,
+  .invoice-number,
+  .invoice-date {
+    font-size: 8px;
+  }
 }
 
-
 /* =========================================================
-   IMPRESSION A4
+   IMPRESSION / PDF — A4
    ========================================================= */
+
+@page {
+  size: A4 portrait;
+  margin: 10mm;
+}
 
 @media print {
 
-    /*
-     * FORMAT PHYSIQUE
-     *
-     * A4 :
-     * 210 mm × 297 mm
-     */
+  /* -------------------------------------------------------
+     BASE
+     ------------------------------------------------------- */
 
-    @page {
-        size: A4 portrait;
+  html,
+  body {
+    width: 210mm !important;
+    min-width: 210mm !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+  }
 
-        margin: 10mm;
-    }
+  body {
+    color: #111111 !important;
+    font-family: "Montserrat", Arial, sans-serif !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
 
+  /* -------------------------------------------------------
+     MASQUER L'INTERFACE
+     ------------------------------------------------------- */
 
-    /*
-     * On désactive le comportement
-     * responsive pendant l'impression.
-     */
+  .header,
+  .form-wrapper,
+  .preview-header,
+  .actions,
+  .no-print,
+  button {
+    display: none !important;
+  }
+
+  /* -------------------------------------------------------
+     CONTENEUR A4
+     ------------------------------------------------------- */
+
+  .container,
+  .main-container,
+  .preview-wrapper {
+    display: block !important;
+    width: 190mm !important;
+    min-width: 190mm !important;
+    max-width: 190mm !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+  }
+
+  /* -------------------------------------------------------
+     FACTURE
+     ------------------------------------------------------- */
+
+  .invoice {
+    display: block !important;
+    width: 190mm !important;
+    min-width: 190mm !important;
+    max-width: 190mm !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+    box-shadow: none !important;
+    overflow: visible !important;
+  }
+
+  /* =======================================================
+     CORRECTION PRINCIPALE :
+     EN-TÊTE SUR UNE SEULE LIGNE
+     TerraTransport à gauche
+     FACTURE à droite
+     ======================================================= */
+
+  .invoice-header {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    justify-content: space-between !important;
+    align-items: flex-start !important;
+
+    width: 190mm !important;
+    min-width: 190mm !important;
+    max-width: 190mm !important;
+
+    margin: 0 0 7mm 0 !important;
+    padding: 0 !important;
+
+    gap: 8mm !important;
+
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  /*
+   * BLOC TERRATRANSPORT — GAUCHE
+   */
+
+  .invoice-header-left,
+  .company-info,
+  .company-details,
+  .header-left {
+    display: block !important;
+
+    flex: 0 0 calc(50% - 4mm) !important;
+    width: calc(50% - 4mm) !important;
+    min-width: 0 !important;
+    max-width: calc(50% - 4mm) !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    text-align: left !important;
+
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  /*
+   * BLOC FACTURE — DROITE
+   */
+
+  .invoice-header-right,
+  .invoice-info,
+  .invoice-details,
+  .header-right {
+    display: block !important;
+
+    flex: 0 0 calc(50% - 4mm) !important;
+    width: calc(50% - 4mm) !important;
+    min-width: 0 !important;
+    max-width: calc(50% - 4mm) !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    text-align: right !important;
+
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  /*
+   * Empêche les marges automatiques des titres
+   * de faire descendre le bloc FACTURE.
+   */
+
+  .invoice-header h1,
+  .invoice-header h2,
+  .invoice-header h3,
+  .invoice-header p {
+    margin-top: 0 !important;
+  }
+
+  /*
+   * TITRE FACTURE
+   */
+
+  .invoice-title,
+  .invoice-header-right h1,
+  .invoice-header-right h2,
+  .invoice-info h1,
+  .invoice-info h2,
+  .header-right h1,
+  .header-right h2 {
+    display: block !important;
+
+    margin: 0 0 3px 0 !important;
+    padding: 0 !important;
+
+    text-align: right !important;
+
+    white-space: normal !important;
+    word-break: normal !important;
+
+    color: #0b1f3a !important;
+
+    font-family: "Playfair Display", Georgia, serif !important;
+
+    font-size: 20px !important;
+    line-height: 1.08 !important;
+  }
+
+  /*
+   * N° FACTURE
+   */
+
+  .invoice-number,
+  .invoice-date {
+    display: block !important;
+
+    width: 100% !important;
+
+    margin: 2px 0 !important;
+    padding: 0 !important;
+
+    text-align: right !important;
+
+    font-size: 10px !important;
+    line-height: 1.35 !important;
+  }
+
+  /*
+   * LOGO
+   */
+
+  .invoice-logo {
+    width: 60px !important;
+    height: 60px !important;
+    object-fit: contain !important;
+    margin: 0 0 5px 0 !important;
+  }
+
+  /*
+   * NOM TERRATRANSPORT
+   */
+
+  .invoice-company-name,
+  .company-name {
+    margin: 0 0 4px 0 !important;
+    padding: 0 !important;
+
+    color: #0b1f3a !important;
+
+    font-family: "Playfair Display", Georgia, serif !important;
+
+    font-size: 21px !important;
+    line-height: 1.1 !important;
+  }
+
+  /*
+   * INFORMATIONS TERRATRANSPORT
+   */
+
+  .company-info p,
+  .invoice-header-left p,
+  .header-left p {
+    margin: 1px 0 !important;
+    padding: 0 !important;
+
+    font-size: 9px !important;
+    line-height: 1.3 !important;
+  }
+
+  /* -------------------------------------------------------
+     BLOCS CLIENT / LOCATION
+     ------------------------------------------------------- */
+
+  .invoice-meta {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 5mm !important;
+
+    width: 190mm !important;
+
+    margin-bottom: 5mm !important;
+
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  .invoice-box {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  /* -------------------------------------------------------
+     TABLE
+     ------------------------------------------------------- */
+
+  .invoice-table-wrapper {
+    width: 190mm !important;
+    max-width: 190mm !important;
+
+    margin: 5mm 0 !important;
+
+    overflow: visible !important;
+
+    page-break-inside: auto !important;
+  }
+
+  .invoice-table {
+    width: 190mm !important;
+    min-width: 190mm !important;
+    max-width: 190mm !important;
+
+    table-layout: fixed !important;
+    border-collapse: collapse !important;
+  }
+
+  /*
+   * Largeurs fixes des colonnes :
+   *
+   * N°                  5%
+   * Camion             23%
+   * Caractéristiques   21%
+   * Qté                 7%
+   * Jours               8%
+   * Tarif/jour          17%
+   * Total               19%
+   */
+
+  .invoice-table th:nth-child(1),
+  .invoice-table td:nth-child(1) {
+    width: 5% !important;
+  }
+
+  .invoice-table th:nth-child(2),
+  .invoice-table td:nth-child(2) {
+    width: 23% !important;
+  }
+
+  .invoice-table th:nth-child(3),
+  .invoice-table td:nth-child(3) {
+    width: 21% !important;
+  }
+
+  .invoice-table th:nth-child(4),
+  .invoice-table td:nth-child(4) {
+    width: 7% !important;
+  }
+
+  .invoice-table th:nth-child(5),
+  .invoice-table td:nth-child(5) {
+    width: 8% !important;
+  }
+
+  .invoice-table th:nth-child(6),
+  .invoice-table td:nth-child(6) {
+    width: 17% !important;
+  }
+
+  .invoice-table th:nth-child(7),
+  .invoice-table td:nth-child(7) {
+    width: 19% !important;
+  }
+
+  .invoice-table th {
+    padding: 6px 4px !important;
+    font-size: 8px !important;
+    line-height: 1.2 !important;
+
+    background: #0b1f3a !important;
+    color: #ffffff !important;
+
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+
+    break-inside: avoid !important;
+  }
+
+  .invoice-table td {
+    padding: 5px 4px !important;
+    font-size: 8px !important;
+    line-height: 1.25 !important;
+
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+  }
+
+  .invoice-table thead {
+    display: table-header-group !important;
+  }
+
+  .invoice-table tr {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  .invoice-table .truck-image,
+  .invoice-table img {
+    width: 48px !important;
+    height: 35px !important;
+    object-fit: cover !important;
+  }
+
+  /* -------------------------------------------------------
+     TOTAUX
+     ------------------------------------------------------- */
+
+  .invoice-totals {
+    width: 190mm !important;
+    display: flex !important;
+    justify-content: flex-end !important;
+
+    margin-top: 4mm !important;
+
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  .totals-box {
+    width: 70mm !important;
+  }
+
+  .total-row {
+    padding: 4px 0 !important;
+    font-size: 9px !important;
+  }
+
+  .total-row.grand-total {
+    padding: 6px 0 !important;
+    font-size: 11px !important;
+  }
+
+  /* -------------------------------------------------------
+     MONTANT EN LETTRES
+     ------------------------------------------------------- */
+
+  .amount-words {
+    margin-top: 4mm !important;
+    padding: 7px !important;
+
+    font-size: 9px !important;
+
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  /* -------------------------------------------------------
+     CONDITIONS / PAIEMENT / BANQUE
+     ------------------------------------------------------- */
+
+  .invoice-bottom-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+
+    width: 190mm !important;
+
+    gap: 5mm !important;
+    margin-top: 5mm !important;
+
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  .conditions-box,
+  .payment-box,
+  .bank-box,
+  .note-box {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  .conditions-box h3,
+  .payment-box h3,
+  .bank-box h3,
+  .note-box h3 {
+    font-size: 9px !important;
+  }
+
+  .conditions-box p,
+  .payment-box p,
+  .bank-box p,
+  .note-box p {
+    font-size: 8px !important;
+    line-height: 1.35 !important;
+  }
+
+  /* -------------------------------------------------------
+     SIGNATURE
+     ------------------------------------------------------- */
+
+  .signature-section {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+
+    width: 190mm !important;
+
+    gap: 15mm !important;
+    margin-top: 8mm !important;
+
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  .signature-box {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  .signature-image {
+    width: 65px !important;
+    height: 40px !important;
+    object-fit: contain !important;
+  }
+
+  /* -------------------------------------------------------
+     FOOTER
+     ------------------------------------------------------- */
+
+  .invoice-footer {
+    width: 190mm !important;
+
+    margin-top: 6mm !important;
+    padding-top: 4px !important;
+
+    font-size: 7.5px !important;
+
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  /* -------------------------------------------------------
+     EMPÊCHER LES BLOCS IMPORTANTS DE SE DÉPLACER
+     ------------------------------------------------------- */
+
+  .invoice-header,
+  .invoice-meta,
+  .invoice-totals,
+  .amount-words,
+  .invoice-bottom-grid,
+  .signature-section,
+  .invoice-footer {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  /* -------------------------------------------------------
+     IMPORTANT SUR TABLETTE / MOBILE
+     Même si la fenêtre fait moins de 700px,
+     l'impression doit toujours rester en A4.
+     ------------------------------------------------------- */
+
+  @media (max-width: 700px) {
 
     html,
     body {
-        width: 190mm !important;
-
-        min-width: 190mm !important;
-
-        max-width: 190mm !important;
-
-        margin: 0 !important;
-
-        padding: 0 !important;
-
-        background: #ffffff !important;
+      width: 210mm !important;
+      min-width: 210mm !important;
     }
 
-
-    body {
-        color: #000000 !important;
-
-        font-family:
-            Arial,
-            Helvetica,
-            sans-serif;
-
-        font-size: 10px;
-
-        line-height: 1.35;
-
-        overflow: visible !important;
+    .container,
+    .main-container,
+    .preview-wrapper,
+    .invoice {
+      width: 190mm !important;
+      min-width: 190mm !important;
+      max-width: 190mm !important;
     }
-
-
-    /*
-     * Tout ce qui sert uniquement
-     * à l'interface disparaît.
-     */
-
-    .header,
-    .form-wrapper,
-    .preview-header {
-        display: none !important;
-    }
-
-
-    .container {
-        width: 190mm !important;
-
-        min-width: 190mm !important;
-
-        max-width: 190mm !important;
-
-        margin: 0 !important;
-
-        padding: 0 !important;
-    }
-
-
-    .preview-section {
-        display: block !important;
-
-        width: 190mm !important;
-
-        margin: 0 !important;
-
-        padding: 0 !important;
-    }
-
-
-    #invoicePreview {
-        display: block !important;
-
-        width: 190mm !important;
-
-        min-width: 190mm !important;
-
-        max-width: 190mm !important;
-
-        margin: 0 !important;
-
-        padding: 0 !important;
-    }
-
-
-    /*
-     * DIMENSION FIXE DU DOCUMENT
-     *
-     * Cela empêche le navigateur
-     * de recalculer la facture
-     * comme une page mobile.
-     */
-
-    .invoice-document {
-        display: block !important;
-
-        width: 190mm !important;
-
-        min-width: 190mm !important;
-
-        max-width: 190mm !important;
-
-        margin: 0 !important;
-
-        padding: 0 !important;
-
-        background: #ffffff !important;
-
-        box-shadow: none !important;
-
-        border-top:
-            3px solid
-            var(--gold) !important;
-
-        overflow: visible !important;
-    }
-
-
-    /*
-     * On conserve exactement
-     * la structure de l'en-tête.
-     */
 
     .invoice-header {
-        display: flex !important;
-
-        flex-direction: row !important;
-
-        align-items: flex-start !important;
-
-        justify-content: space-between !important;
-
-        width: 190mm !important;
-
-        gap: 8mm !important;
-
-        padding-bottom: 5mm !important;
-
-        page-break-inside: avoid !important;
-
-        break-inside: avoid !important;
+      display: flex !important;
+      flex-direction: row !important;
+      flex-wrap: nowrap !important;
+      width: 190mm !important;
+      min-width: 190mm !important;
+      max-width: 190mm !important;
     }
 
-
-    .invoice-company {
-        display: flex !important;
-
-        flex-direction: row !important;
-
-        align-items: flex-start !important;
-
-        flex: 1 1 auto !important;
-
-        min-width: 0 !important;
-
-        gap: 4mm !important;
+    .invoice-header-left,
+    .company-info,
+    .company-details,
+    .header-left {
+      flex: 0 0 calc(50% - 4mm) !important;
+      width: calc(50% - 4mm) !important;
+      max-width: calc(50% - 4mm) !important;
     }
 
-
-    .invoice-logo-wrapper {
-        width: 30mm !important;
-
-        min-width: 30mm !important;
-
-        flex:
-            0 0 30mm !important;
+    .invoice-header-right,
+    .invoice-info,
+    .invoice-details,
+    .header-right {
+      flex: 0 0 calc(50% - 4mm) !important;
+      width: calc(50% - 4mm) !important;
+      max-width: calc(50% - 4mm) !important;
+      text-align: right !important;
     }
 
-
-    .invoice-logo {
-        width: 30mm !important;
-
-        max-width: 30mm !important;
-
-        max-height: 25mm !important;
-
-        object-fit: contain !important;
+    .invoice-title,
+    .invoice-header-right h1,
+    .invoice-header-right h2,
+    .invoice-info h1,
+    .invoice-info h2,
+    .header-right h1,
+    .header-right h2 {
+      text-align: right !important;
     }
-
-
-    .company-details h1 {
-        font-size: 15pt !important;
-
-        margin-bottom: 2mm !important;
-    }
-
-
-    .company-details p {
-        margin: 0.7mm 0 !important;
-
-        font-size: 7.5pt !important;
-
-        line-height: 1.25 !important;
-    }
-
-
-    .invoice-title-box {
-        display: block !important;
-
-        width: 48mm !important;
-
-        min-width: 48mm !important;
-
-        max-width: 48mm !important;
-
-        flex:
-            0 0 48mm !important;
-
-        text-align: right !important;
-    }
-
-
-    .invoice-title-box h2 {
-        font-size: 21pt !important;
-
-        line-height: 1 !important;
-    }
-
-
-    .invoice-title-box h3 {
-        font-size: 7pt !important;
-
-        margin-bottom: 3mm !important;
-
-        line-height: 1.2 !important;
-    }
-
-
-    .invoice-meta {
-        width: 48mm !important;
-
-        padding: 2mm 2.5mm !important;
-    }
-
-
-    .invoice-meta p {
-        font-size: 7.5pt !important;
-
-        margin: 0.8mm 0 !important;
-    }
-
-
-    /*
-     * CLIENT + PÉRIODE
-     */
-
-    .invoice-parties {
-        display: grid !important;
-
-        grid-template-columns:
-            1fr
-            1fr !important;
-
-        width: 190mm !important;
-
-        gap: 4mm !important;
-
-        margin: 5mm 0 !important;
-
-        page-break-inside: avoid !important;
-
-        break-inside: avoid !important;
-    }
-
-
-    .party-title {
-        padding: 2mm 2.5mm !important;
-
-        font-size: 7pt !important;
-    }
-
-
-    .party-content {
-        padding: 2.5mm !important;
-
-        font-size: 7.5pt !important;
-
-        gap: 0.8mm !important;
-    }
-
-
-    .party-content strong {
-        font-size: 8pt !important;
-    }
-
-
-    /*
-     * TABLEAU
-     */
-
-    .invoice-table-wrapper {
-        width: 190mm !important;
-
-        min-width: 190mm !important;
-
-        max-width: 190mm !important;
-
-        overflow: visible !important;
-    }
-
 
     .invoice-table {
-        width: 190mm !important;
-
-        min-width: 190mm !important;
-
-        max-width: 190mm !important;
-
-        margin-top: 2mm !important;
-
-        font-size: 7pt !important;
-
-        table-layout: fixed !important;
-
-        border-collapse: collapse !important;
+      width: 190mm !important;
+      min-width: 190mm !important;
+      max-width: 190mm !important;
     }
-
-
-    .invoice-table th {
-        padding:
-            2.2mm
-            1.5mm !important;
-
-        font-size: 6.5pt !important;
-
-        line-height: 1.15 !important;
-
-        white-space: normal !important;
-    }
-
-
-    .invoice-table td {
-        padding:
-            2mm
-            1.5mm !important;
-
-        font-size: 7pt !important;
-
-        line-height: 1.25 !important;
-
-        overflow-wrap: anywhere !important;
-
-        word-break: normal !important;
-    }
-
-
-    .invoice-table th:nth-child(1),
-    .invoice-table td:nth-child(1) {
-        width: 5% !important;
-    }
-
-
-    .invoice-table th:nth-child(2),
-    .invoice-table td:nth-child(2) {
-        width: 23% !important;
-    }
-
-
-    .invoice-table th:nth-child(3),
-    .invoice-table td:nth-child(3) {
-        width: 21% !important;
-    }
-
-
-    .invoice-table th:nth-child(4),
-    .invoice-table td:nth-child(4) {
-        width: 7% !important;
-    }
-
-
-    .invoice-table th:nth-child(5),
-    .invoice-table td:nth-child(5) {
-        width: 8% !important;
-    }
-
-
-    .invoice-table th:nth-child(6),
-    .invoice-table td:nth-child(6) {
-        width: 17% !important;
-    }
-
-
-    .invoice-table th:nth-child(7),
-    .invoice-table td:nth-child(7) {
-        width: 19% !important;
-    }
-
-
-    .truck-mini {
-        gap: 2mm !important;
-    }
-
-
-    .truck-mini img {
-        width: 13mm !important;
-
-        height: 9mm !important;
-
-        flex:
-            0 0 13mm !important;
-    }
-
-
-    .truck-mini strong {
-        font-size: 7pt !important;
-    }
-
-
-    .truck-mini small {
-        font-size: 5.5pt !important;
-    }
-
-
-    /*
-     * RÉSUMÉ
-     */
-
-    .invoice-summary {
-        display: grid !important;
-
-        grid-template-columns:
-            1fr
-            70mm !important;
-
-        width: 190mm !important;
-
-        gap: 5mm !important;
-
-        margin-top: 4mm !important;
-
-        page-break-inside: avoid !important;
-
-        break-inside: avoid !important;
-    }
-
-
-    .summary-box {
-        width: 70mm !important;
-
-        margin-left: auto !important;
-    }
-
-
-    .summary-line {
-        padding:
-            2mm
-            2.5mm !important;
-
-        font-size: 7pt !important;
-    }
-
-
-    .summary-total {
-        padding:
-            2.5mm !important;
-
-        font-size: 8pt !important;
-    }
-
-
-    .summary-total strong {
-        font-size: 9pt !important;
-    }
-
-
-    /*
-     * MONTANT EN LETTRES
-     */
-
-    .amount-words {
-        width: 190mm !important;
-
-        margin-top: 4mm !important;
-
-        padding:
-            2.5mm
-            3mm !important;
-
-        font-size: 7pt !important;
-
-        page-break-inside: avoid !important;
-
-        break-inside: avoid !important;
-    }
-
-
-    /*
-     * CONDITIONS + BANQUE
-     */
-
-    .invoice-information-grid {
-        display: grid !important;
-
-        grid-template-columns:
-            1fr
-            1fr !important;
-
-        width: 190mm !important;
-
-        gap: 4mm !important;
-
-        margin-top: 4mm !important;
-
-        page-break-inside: avoid !important;
-
-        break-inside: avoid !important;
-    }
-
-
-    .invoice-info-box {
-        padding: 3mm !important;
-
-        min-width: 0 !important;
-    }
-
-
-    .invoice-info-box h3 {
-        font-size: 7pt !important;
-
-        margin-bottom: 2mm !important;
-
-        padding-bottom: 1.5mm !important;
-    }
-
-
-    .invoice-info-box p {
-        margin: 1mm 0 !important;
-
-        font-size: 6.8pt !important;
-
-        line-height: 1.3 !important;
-    }
-
-
-    /*
-     * NOTE
-     */
-
-    .invoice-note {
-        width: 190mm !important;
-
-        margin-top: 3mm !important;
-
-        padding: 2.5mm !important;
-
-        font-size: 6.8pt !important;
-
-        page-break-inside: avoid !important;
-
-        break-inside: avoid !important;
-    }
-
-
-    /*
-     * SIGNATURES
-     */
-
-    .invoice-signature-section {
-        display: grid !important;
-
-        grid-template-columns:
-            1fr
-            1fr !important;
-
-        width: 190mm !important;
-
-        gap: 35mm !important;
-
-        margin-top: 7mm !important;
-
-        padding-top: 3mm !important;
-
-        page-break-inside: avoid !important;
-
-        break-inside: avoid !important;
-    }
-
-
-    .signature-block {
-        min-height: 35mm !important;
-
-        font-size: 7pt !important;
-    }
-
-
-    .signature-space {
-        height: 22mm !important;
-    }
-
-
-    .invoice-signature-image {
-        max-width: 38mm !important;
-
-        max-height: 18mm !important;
-    }
-
-
-    .signature-line {
-        padding-top: 2mm !important;
-
-        font-size: 6.5pt !important;
-    }
-
-
-    /*
-     * FOOTER
-     */
-
-    .invoice-footer {
-        display: flex !important;
-
-        flex-direction: row !important;
-
-        justify-content: space-between !important;
-
-        align-items: center !important;
-
-        width: 190mm !important;
-
-        margin-top: 4mm !important;
-
-        padding-top: 2mm !important;
-
-        font-size: 6pt !important;
-
-        page-break-inside: avoid !important;
-
-        break-inside: avoid !important;
-    }
-
-
-    /*
-     * EMPÊCHER LE NAVIGATEUR
-     * DE CHANGER LES COULEURS
-     */
-
-    .invoice-document,
-    .invoice-document * {
-        -webkit-print-color-adjust:
-            exact !important;
-
-        print-color-adjust:
-            exact !important;
-    }
-
-
-    /*
-     * Évite les marges automatiques
-     * du navigateur sur les éléments.
-     */
-
-    h1,
-    h2,
-    h3,
-    p,
-    table,
-    tr,
-    td,
-    th {
-        margin-block-start: 0;
-    }
-
-
-    /*
-     * Les lignes du tableau
-     * ne doivent pas être coupées.
-     */
-
-    .invoice-table tr {
-        page-break-inside: avoid !important;
-
-        break-inside: avoid !important;
-    }
-
-
-    /*
-     * Le titre du tableau peut
-     * se répéter sur une deuxième page
-     * si la facture devient longue.
-     */
-
-    .invoice-table thead {
-        display: table-header-group;
-    }
-
-
-    .invoice-table tfoot {
-        display: table-footer-group;
-    }
-
-}
-
-
-/* =========================================================
-   PETITS ÉCRANS EN IMPRESSION
-   ========================================================= */
-
-@media print and (max-width: 700px) {
-
-    /*
-     * IMPORTANT :
-     *
-     * Même si l'utilisateur imprime
-     * depuis une tablette ou un téléphone,
-     * on garde le format A4.
-     *
-     * Le responsive mobile ne doit donc
-     * PAS modifier la facture imprimée.
-     */
-
-    html,
-    body,
-    .container,
-    .preview-section,
-    #invoicePreview,
-    .invoice-document {
-        width: 190mm !important;
-
-        min-width: 190mm !important;
-
-        max-width: 190mm !important;
-    }
-
-
-    .invoice-header {
-        flex-direction: row !important;
-    }
-
-
-    .invoice-parties {
-        grid-template-columns:
-            1fr
-            1fr !important;
-    }
-
-
-    .invoice-information-grid {
-        grid-template-columns:
-            1fr
-            1fr !important;
-    }
-
-
-    .invoice-signature-section {
-        grid-template-columns:
-            1fr
-            1fr !important;
-    }
-
+  }
 }
