@@ -2,6 +2,7 @@
 <html lang="fr">
 
 <head>
+
     <meta charset="UTF-8">
 
     <meta
@@ -17,554 +18,75 @@
         rel="stylesheet"
         href="style.css"
     >
+
 </head>
 
 
 <body>
 
-    <main class="container">
+<main class="container">
 
-        <div class="invoice-document">
-
-
-            <!-- =====================================================
-                 EN-TÊTE
-            ====================================================== -->
-
-            <div class="invoice-header">
-
-                <div class="invoice-company">
-
-                    <div class="invoice-logo-wrapper">
-
-                        <img
-                            src="assets/images/logo.png"
-                            alt="TerraTransport"
-                            class="invoice-logo"
-                            onerror="this.style.display='none'"
-                        >
-
-                    </div>
+    <div class="invoice-document">
 
 
-                    <div class="company-details">
+        <!-- =====================================================
+             EN-TÊTE
+             ===================================================== -->
 
-                        <h1>
-                            TerraTransport
-                        </h1>
+        <div class="invoice-header">
 
-                        <p>
-                            <strong>NINEA :</strong>
-                            005554789
-                        </p>
+            <div class="invoice-company">
 
-                        <p>
-                            <strong>RCCM :</strong>
-                            DKR 2015 B13085
-                        </p>
+                <div class="invoice-logo-wrapper">
 
-                        <p>
-                            Ngor Almadies 11045, Sénégal
-                        </p>
-
-                        <p>
-                            <strong>Tél. :</strong>
-                            338971403 / 770720202 / 779398484
-                        </p>
-
-                    </div>
+                    <img
+                        src="assets/images/logo.png"
+                        alt="TerraTransport"
+                        class="invoice-logo"
+                        onerror="this.style.display='none'"
+                    >
 
                 </div>
 
 
-                <div class="invoice-title-box">
+                <div class="company-details">
 
-                    <h2>
-                        FACTURE
-                    </h2>
-
-                    <h3>
-                        DE LOCATION DE CAMIONS
-                    </h3>
-
-
-                    <div class="invoice-meta">
-
-                        <p>
-                            <strong>N° :</strong>
-                            FCT-2026-0001
-                        </p>
-
-                        <p>
-                            <strong>Date :</strong>
-                            21/09/2026
-                        </p>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <!-- =====================================================
-                 CLIENT ET PÉRIODE
-            ====================================================== -->
-
-            <div class="invoice-parties">
-
-
-                <div class="invoice-party">
-
-                    <div class="party-title">
-                        CLIENT / LOCATAIRE
-                    </div>
-
-
-                    <div class="party-content">
-
-                        <strong>
-                            Nom de l'entreprise cliente
-                        </strong>
-
-                        <span>
-                            Responsable : Nom du responsable
-                        </span>
-
-                        <span>
-                            Adresse du client
-                        </span>
-
-                        <span>
-                            Sénégal
-                        </span>
-
-                        <span>
-                            Tél. : +221 XX XXX XX XX
-                        </span>
-
-                        <span>
-                            Email : client@email.com
-                        </span>
-
-                        <span>
-                            NINEA / RCCM : À renseigner
-                        </span>
-
-                    </div>
-
-                </div>
-
-
-                <div class="invoice-party">
-
-                    <div class="party-title">
-                        PÉRIODE DE LOCATION
-                    </div>
-
-
-                    <div class="party-content">
-
-                        <span>
-                            <strong>
-                                Début :
-                            </strong>
-
-                            21/09/2026
-                        </span>
-
-
-                        <span>
-                            <strong>
-                                Fin :
-                            </strong>
-
-                            30/09/2026
-                        </span>
-
-
-                        <span>
-                            <strong>
-                                Durée :
-                            </strong>
-
-                            10 jour(s)
-                        </span>
-
-
-                        <span>
-                            <strong>
-                                Échéance :
-                            </strong>
-
-                            30/09/2026
-                        </span>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <!-- =====================================================
-                 CAMIONS LOUÉS
-            ====================================================== -->
-
-            <div class="invoice-table-wrapper">
-
-                <table class="invoice-table">
-
-                    <thead>
-
-                        <tr>
-
-                            <th>
-                                N°
-                            </th>
-
-                            <th>
-                                CAMION
-                            </th>
-
-                            <th>
-                                CARACTÉRISTIQUES
-                            </th>
-
-                            <th>
-                                QTÉ
-                            </th>
-
-                            <th>
-                                JOURS
-                            </th>
-
-                            <th>
-                                TARIF / JOUR
-                            </th>
-
-                            <th>
-                                TOTAL
-                            </th>
-
-                        </tr>
-
-                    </thead>
-
-
-                    <tbody>
-
-
-                        <!-- CAMION 1 -->
-
-                        <tr>
-
-                            <td class="invoice-number-cell">
-                                1
-                            </td>
-
-
-                            <td class="invoice-truck-cell">
-
-                                <div class="truck-mini">
-
-                                    <img
-                                        src="assets/images/camion.jpg"
-                                        alt="Camion"
-                                    >
-
-                                    <div>
-
-                                        <strong>
-                                            Mercedes Actros
-                                        </strong>
-
-                                        <small>
-                                            Immatriculation :
-                                            DK-0000-AA
-                                        </small>
-
-                                    </div>
-
-                                </div>
-
-                            </td>
-
-
-                            <td>
-                                Porteur / poids lourd
-                            </td>
-
-
-                            <td class="text-center">
-                                1
-                            </td>
-
-
-                            <td class="text-center">
-                                10
-                            </td>
-
-
-                            <td class="text-right">
-                                150 000 FCFA
-                            </td>
-
-
-                            <td class="text-right total-cell">
-                                1 500 000 FCFA
-                            </td>
-
-                        </tr>
-
-
-                        <!-- CAMION 2 -->
-
-                        <tr>
-
-                            <td class="invoice-number-cell">
-                                2
-                            </td>
-
-
-                            <td class="invoice-truck-cell">
-
-                                <div class="truck-mini">
-
-                                    <img
-                                        src="assets/images/camion.jpg"
-                                        alt="Camion"
-                                    >
-
-                                    <div>
-
-                                        <strong>
-                                            Volvo FH
-                                        </strong>
-
-                                        <small>
-                                            Immatriculation :
-                                            DK-0000-BB
-                                        </small>
-
-                                    </div>
-
-                                </div>
-
-                            </td>
-
-
-                            <td>
-                                Tracteur routier
-                            </td>
-
-
-                            <td class="text-center">
-                                1
-                            </td>
-
-
-                            <td class="text-center">
-                                10
-                            </td>
-
-
-                            <td class="text-right">
-                                175 000 FCFA
-                            </td>
-
-
-                            <td class="text-right total-cell">
-                                1 750 000 FCFA
-                            </td>
-
-                        </tr>
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
-
-            <!-- =====================================================
-                 TOTAL
-            ====================================================== -->
-
-            <div class="invoice-summary">
-
-                <div class="summary-spacer">
-                </div>
-
-
-                <div class="summary-box">
-
-                    <div class="summary-line">
-
-                        <span>
-                            Sous-total
-                        </span>
-
-                        <strong>
-                            3 250 000 FCFA
-                        </strong>
-
-                    </div>
-
-
-                    <div class="summary-line">
-
-                        <span>
-                            TVA (0%)
-                        </span>
-
-                        <strong>
-                            0 FCFA
-                        </strong>
-
-                    </div>
-
-
-                    <div class="summary-total">
-
-                        <span>
-                            TOTAL À PAYER
-                        </span>
-
-                        <strong>
-                            3 250 000 FCFA
-                        </strong>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <!-- =====================================================
-                 MONTANT EN LETTRES
-            ====================================================== -->
-
-            <div class="amount-words">
-
-                <strong>
-                    Arrêté la présente facture à la somme de :
-                </strong>
-
-                <span>
-                    Trois millions deux cent cinquante mille FCFA
-                </span>
-
-            </div>
-
-
-            <!-- =====================================================
-                 CONDITIONS
-            ====================================================== -->
-
-            <div class="invoice-information-grid">
-
-
-                <div class="invoice-info-box">
-
-                    <h3>
-                        CONDITIONS DE LOCATION
-                    </h3>
-
-
-                    <p>
-                        Le véhicule est loué pour la période
-                        indiquée sur la présente facture.
-                    </p>
-
-
-                    <p>
-                        Les conditions particulières convenues
-                        entre TerraTransport et le client
-                        restent applicables.
-                    </p>
-
-
-                    <p>
-                        <strong>
-                            Conditions de paiement :
-                        </strong>
-
-                        Selon les conditions convenues
-                        avec le client.
-                    </p>
-
-
-                    <p>
-                        <strong>
-                            Mode de paiement :
-                        </strong>
-
-                        Virement bancaire.
-                    </p>
-
-                </div>
-
-
-                <div class="invoice-info-box">
-
-                    <h3>
-                        INFORMATIONS BANCAIRES
-                    </h3>
-
-
-                    <p>
-                        <strong>
-                            Banque :
-                        </strong>
-
-                        BIS Banque Sénégal
-                    </p>
-
-
-                    <p>
-                        <strong>
-                            Agence :
-                        </strong>
-
-                        Ngor Almadies
-                    </p>
-
-
-                    <p>
-                        <strong>
-                            RIB :
-                        </strong>
-
-                        SN0790111125105957700107
-                    </p>
-
-
-                    <p>
-                        <strong>
-                            SWIFT :
-                        </strong>
-
-                        ISSNSNDA
-                    </p>
-
-
-                    <p>
-                        <strong>
-                            Compte :
-                        </strong>
-
-                        251059577001
-                    </p>
-
-
-                    <p>
-                        <strong>
-                            Titulaire :
-                        </strong>
-
+                    <h1>
                         TerraTransport
+                    </h1>
+
+
+                    <p>
+                        <strong>
+                            NINEA :
+                        </strong>
+
+                        005554789
+                    </p>
+
+
+                    <p>
+                        <strong>
+                            RCCM :
+                        </strong>
+
+                        DKR 2015 B13085
+                    </p>
+
+
+                    <p>
+                        Ngor Almadies 11045, Sénégal
+                    </p>
+
+
+                    <p>
+                        <strong>
+                            Tél. :
+                        </strong>
+
+                        338971403 /
+                        770720202 /
+                        779398484
                     </p>
 
                 </div>
@@ -572,96 +94,669 @@
             </div>
 
 
-            <!-- =====================================================
-                 NOTE
-            ====================================================== -->
+            <div class="invoice-title-box">
 
-            <div class="invoice-note">
-
-                <strong>
-                    NOTE :
-                </strong>
-
-                <span>
-                    Merci d'indiquer le numéro de facture
-                    et le nom du client lors du règlement.
-                </span>
-
-            </div>
+                <h2>
+                    FACTURE
+                </h2>
 
 
-            <!-- =====================================================
-                 SIGNATURES
-            ====================================================== -->
-
-            <div class="invoice-signature-section">
+                <h3>
+                    DE LOCATION DE CAMIONS
+                </h3>
 
 
-                <div class="signature-block">
+                <div class="invoice-meta">
 
-                    <strong>
-                        Pour TerraTransport
-                    </strong>
+                    <p>
 
+                        <strong>
+                            N° :
+                        </strong>
 
-                    <div class="signature-space">
+                        FCT-2026-0001
 
-                        <img
-                            src="assets/images/signature.png"
-                            alt="Signature TerraTransport"
-                            class="invoice-signature-image"
-                            onerror="this.style.display='none'"
-                        >
-
-                    </div>
+                    </p>
 
 
-                    <div class="signature-line">
-                        Signature / Cachet
-                    </div>
+                    <p>
+
+                        <strong>
+                            Date :
+                        </strong>
+
+                        21/09/2026
+
+                    </p>
 
                 </div>
-
-
-                <div class="signature-block">
-
-                    <strong>
-                        Le client / locataire
-                    </strong>
-
-
-                    <div class="signature-space">
-                    </div>
-
-
-                    <div class="signature-line">
-                        Signature / Cachet
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <!-- =====================================================
-                 PIED DE PAGE
-            ====================================================== -->
-
-            <div class="invoice-footer">
-
-                <strong>
-                    TerraTransport
-                </strong>
-
-                <span>
-                    Votre transport, notre engagement
-                </span>
 
             </div>
 
         </div>
 
-    </main>
+
+        <!-- =====================================================
+             CLIENT + PÉRIODE
+             ===================================================== -->
+
+        <div class="invoice-parties">
+
+
+            <div class="invoice-party">
+
+                <div class="party-title">
+                    CLIENT / LOCATAIRE
+                </div>
+
+
+                <div class="party-content">
+
+                    <strong>
+                        Nom de l'entreprise cliente
+                    </strong>
+
+
+                    <span>
+                        Responsable :
+                        Nom du responsable
+                    </span>
+
+
+                    <span>
+                        Adresse du client
+                    </span>
+
+
+                    <span>
+                        Sénégal
+                    </span>
+
+
+                    <span>
+                        Tél. :
+                        +221 XX XXX XX XX
+                    </span>
+
+
+                    <span>
+                        Email :
+                        client@email.com
+                    </span>
+
+
+                    <span>
+                        NINEA / RCCM :
+                        À renseigner
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="invoice-party">
+
+                <div class="party-title">
+                    PÉRIODE DE LOCATION
+                </div>
+
+
+                <div class="party-content">
+
+                    <span>
+
+                        <strong>
+                            Début :
+                        </strong>
+
+                        21/09/2026
+
+                    </span>
+
+
+                    <span>
+
+                        <strong>
+                            Fin :
+                        </strong>
+
+                        30/09/2026
+
+                    </span>
+
+
+                    <span>
+
+                        <strong>
+                            Durée :
+                        </strong>
+
+                        10 jour(s)
+
+                    </span>
+
+
+                    <span>
+
+                        <strong>
+                            Échéance :
+                        </strong>
+
+                        30/09/2026
+
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             CAMIONS
+             ===================================================== -->
+
+        <div class="invoice-table-wrapper">
+
+            <table class="invoice-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            N°
+                        </th>
+
+                        <th>
+                            CAMION
+                        </th>
+
+                        <th>
+                            CARACTÉRISTIQUES
+                        </th>
+
+                        <th>
+                            QTÉ
+                        </th>
+
+                        <th>
+                            JOURS
+                        </th>
+
+                        <th>
+                            TARIF / JOUR
+                        </th>
+
+                        <th>
+                            TOTAL
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+
+                    <tr>
+
+                        <td
+                            class="invoice-number-cell"
+                        >
+                            1
+                        </td>
+
+
+                        <td
+                            class="invoice-truck-cell"
+                        >
+
+                            <div class="truck-mini">
+
+                                <img
+                                    src="assets/images/camion.jpg"
+                                    alt="Camion"
+                                >
+
+
+                                <div>
+
+                                    <strong>
+                                        Mercedes Actros
+                                    </strong>
+
+
+                                    <small>
+                                        Immatriculation :
+                                        DK-0000-AA
+                                    </small>
+
+                                </div>
+
+                            </div>
+
+                        </td>
+
+
+                        <td>
+                            Porteur / poids lourd
+                        </td>
+
+
+                        <td class="text-center">
+                            1
+                        </td>
+
+
+                        <td class="text-center">
+                            10
+                        </td>
+
+
+                        <td class="text-right">
+                            150 000 FCFA
+                        </td>
+
+
+                        <td
+                            class="text-right total-cell"
+                        >
+                            1 500 000 FCFA
+                        </td>
+
+                    </tr>
+
+
+                    <tr>
+
+                        <td
+                            class="invoice-number-cell"
+                        >
+                            2
+                        </td>
+
+
+                        <td
+                            class="invoice-truck-cell"
+                        >
+
+                            <div class="truck-mini">
+
+                                <img
+                                    src="assets/images/camion.jpg"
+                                    alt="Camion"
+                                >
+
+
+                                <div>
+
+                                    <strong>
+                                        Volvo FH
+                                    </strong>
+
+
+                                    <small>
+                                        Immatriculation :
+                                        DK-0000-BB
+                                    </small>
+
+                                </div>
+
+                            </div>
+
+                        </td>
+
+
+                        <td>
+                            Tracteur routier
+                        </td>
+
+
+                        <td class="text-center">
+                            1
+                        </td>
+
+
+                        <td class="text-center">
+                            10
+                        </td>
+
+
+                        <td class="text-right">
+                            175 000 FCFA
+                        </td>
+
+
+                        <td
+                            class="text-right total-cell"
+                        >
+                            1 750 000 FCFA
+                        </td>
+
+                    </tr>
+
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <!-- =====================================================
+             TOTAL
+             ===================================================== -->
+
+        <div class="invoice-summary">
+
+            <div class="summary-spacer">
+            </div>
+
+
+            <div class="summary-box">
+
+                <div class="summary-line">
+
+                    <span>
+                        Sous-total
+                    </span>
+
+
+                    <strong>
+                        3 250 000 FCFA
+                    </strong>
+
+                </div>
+
+
+                <div class="summary-line">
+
+                    <span>
+                        TVA (0%)
+                    </span>
+
+
+                    <strong>
+                        0 FCFA
+                    </strong>
+
+                </div>
+
+
+                <div class="summary-total">
+
+                    <span>
+                        TOTAL À PAYER
+                    </span>
+
+
+                    <strong>
+                        3 250 000 FCFA
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             MONTANT EN LETTRES
+             ===================================================== -->
+
+        <div class="amount-words">
+
+            <strong>
+                Arrêté la présente facture à la somme de :
+            </strong>
+
+
+            <span>
+                Trois millions deux cent cinquante mille FCFA
+            </span>
+
+        </div>
+
+
+        <!-- =====================================================
+             CONDITIONS + PAIEMENT
+             ===================================================== -->
+
+        <div class="invoice-information-grid">
+
+
+            <div class="invoice-info-box">
+
+                <h3>
+                    CONDITIONS DE LOCATION
+                </h3>
+
+
+                <p>
+                    Le véhicule est loué pour la période
+                    indiquée sur la présente facture.
+                </p>
+
+
+                <p>
+                    Les conditions particulières convenues
+                    entre TerraTransport et le client
+                    restent applicables.
+                </p>
+
+
+                <p>
+
+                    <strong>
+                        Conditions de paiement :
+                    </strong>
+
+                    Selon les conditions convenues
+                    avec le client.
+
+                </p>
+
+
+                <p>
+
+                    <strong>
+                        Mode de paiement :
+                    </strong>
+
+                    Wave
+
+                </p>
+
+
+                <p>
+
+                    <strong>
+                        Numéro de dépôt :
+                    </strong>
+
+                    77 072 02 02
+
+                </p>
+
+            </div>
+
+
+            <div class="invoice-info-box">
+
+                <h3>
+                    INFORMATIONS BANCAIRES
+                </h3>
+
+
+                <p>
+
+                    <strong>
+                        Banque :
+                    </strong>
+
+                    BIS Banque Sénégal
+
+                </p>
+
+
+                <p>
+
+                    <strong>
+                        Agence :
+                    </strong>
+
+                    Ngor Almadies
+
+                </p>
+
+
+                <p>
+
+                    <strong>
+                        RIB :
+                    </strong>
+
+                    SN0790111125105957700107
+
+                </p>
+
+
+                <p>
+
+                    <strong>
+                        SWIFT :
+                    </strong>
+
+                    ISSNSNDA
+
+                </p>
+
+
+                <p>
+
+                    <strong>
+                        Compte :
+                    </strong>
+
+                    251059577001
+
+                </p>
+
+
+                <p>
+
+                    <strong>
+                        Titulaire :
+                    </strong>
+
+                    TerraTransport
+
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             NOTE
+             ===================================================== -->
+
+        <div class="invoice-note">
+
+            <strong>
+                NOTE :
+            </strong>
+
+
+            <span>
+                Merci d'indiquer le numéro de facture
+                et le nom du client lors du règlement.
+            </span>
+
+        </div>
+
+
+        <!-- =====================================================
+             SIGNATURES
+             ===================================================== -->
+
+        <div class="invoice-signature-section">
+
+
+            <div class="signature-block">
+
+                <strong>
+                    Pour TerraTransport
+                </strong>
+
+
+                <div class="signature-space">
+
+                    <img
+                        src="assets/images/signature.png"
+                        alt="Signature TerraTransport"
+                        class="invoice-signature-image"
+                        onerror="this.style.display='none'"
+                    >
+
+                </div>
+
+
+                <div class="signature-line">
+                    Signature / Cachet
+                </div>
+
+            </div>
+
+
+            <div class="signature-block">
+
+                <strong>
+                    Le client / locataire
+                </strong>
+
+
+                <div class="signature-space">
+                </div>
+
+
+                <div class="signature-line">
+                    Signature / Cachet
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- =====================================================
+             PIED DE PAGE
+             ===================================================== -->
+
+        <div class="invoice-footer">
+
+            <strong>
+                TerraTransport
+            </strong>
+
+
+            <span>
+                Votre transport, notre engagement
+            </span>
+
+        </div>
+
+
+    </div>
+
+</main>
 
 </body>
 
