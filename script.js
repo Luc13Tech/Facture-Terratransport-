@@ -5,11 +5,6 @@
 
 let productCount = 0;
 
-
-/* =========================================================
-   CHEMINS DES IMAGES EXISTANTES
-   ========================================================= */
-
 const IMAGE_PATHS = {
     logo: "assets/images/logo.png",
     camion: "assets/images/camion.jpg",
@@ -18,14 +13,11 @@ const IMAGE_PATHS = {
 
 
 /* =========================================================
-   SÉCURITÉ
-   Évite l'injection de HTML dans la facture
+   UTILITAIRES
    ========================================================= */
 
 function escapeHTML(value) {
-    if (value === null || value === undefined) {
-        return "";
-    }
+    if (value === null || value === undefined) return "";
 
     return String(value)
         .replace(/&/g, "&amp;")
@@ -35,10 +27,6 @@ function escapeHTML(value) {
         .replace(/'/g, "&#039;");
 }
 
-
-/* =========================================================
-   FORMATAGE
-   ========================================================= */
 
 function formatMoney(value, currency = "FCFA") {
     const amount = Number(value) || 0;
@@ -50,9 +38,7 @@ function formatMoney(value, currency = "FCFA") {
 
 
 function formatDate(dateValue) {
-    if (!dateValue) {
-        return "";
-    }
+    if (!dateValue) return "";
 
     const date = new Date(`${dateValue}T00:00:00`);
 
@@ -68,11 +54,8 @@ function formatDate(dateValue) {
 }
 
 
-/* =========================================================
-   CALCUL DU NOMBRE DE JOURS
-   ========================================================= */
-
 function getDays(startDate, endDate) {
+
     if (!startDate || !endDate) {
         return 1;
     }
@@ -87,21 +70,25 @@ function getDays(startDate, endDate) {
         return 1;
     }
 
-    const difference = end.getTime() - start.getTime();
+    const difference =
+        end.getTime() - start.getTime();
 
-    const days = Math.floor(
-        difference / (1000 * 60 * 60 * 24)
-    ) + 1;
+    const days =
+        Math.floor(
+            difference /
+            (1000 * 60 * 60 * 24)
+        ) + 1;
 
     return days > 0 ? days : 1;
 }
 
 
 /* =========================================================
-   IMAGE LOGO
+   IMAGES
    ========================================================= */
 
 function getLogoHTML() {
+
     return `
         <img
             src="${IMAGE_PATHS.logo}"
@@ -113,11 +100,8 @@ function getLogoHTML() {
 }
 
 
-/* =========================================================
-   IMAGE CAMION
-   ========================================================= */
-
 function getCamionHTML() {
+
     return `
         <img
             src="${IMAGE_PATHS.camion}"
@@ -129,11 +113,8 @@ function getCamionHTML() {
 }
 
 
-/* =========================================================
-   IMAGE SIGNATURE
-   ========================================================= */
-
 function getSignatureHTML() {
+
     return `
         <img
             src="${IMAGE_PATHS.signature}"
@@ -146,20 +127,20 @@ function getSignatureHTML() {
 
 
 /* =========================================================
-   AJOUT D'UN CAMION
+   PRODUITS / CAMIONS
    ========================================================= */
 
 function addProduct(productData = null) {
 
     productCount++;
 
-    const container = document.getElementById("productsContainer");
+    const container =
+        document.getElementById("productsContainer");
 
-    if (!container) {
-        return;
-    }
+    if (!container) return;
 
-    const productId = `product-${productCount}`;
+    const productId =
+        `product-${productCount}`;
 
     const product = productData || {
         name: "",
@@ -170,11 +151,14 @@ function addProduct(productData = null) {
         days: 1
     };
 
-    const productElement = document.createElement("div");
+    const productElement =
+        document.createElement("div");
 
-    productElement.className = "product-item";
+    productElement.className =
+        "product-item";
 
-    productElement.dataset.productId = productId;
+    productElement.dataset.productId =
+        productId;
 
     productElement.innerHTML = `
         <div class="product-item-header">
@@ -318,27 +302,21 @@ function addProduct(productData = null) {
 }
 
 
-/* =========================================================
-   SUPPRIMER UN CAMION
-   ========================================================= */
-
 function removeProduct(productId) {
 
-    const product = document.querySelector(
-        `[data-product-id="${productId}"]`
-    );
+    const product =
+        document.querySelector(
+            `[data-product-id="${productId}"]`
+        );
 
-    if (!product) {
-        return;
-    }
+    if (!product) return;
 
     product.remove();
 
     renumberProducts();
 
-    const remainingProducts = document.querySelectorAll(
-        ".product-item"
-    );
+    const remainingProducts =
+        document.querySelectorAll(".product-item");
 
     if (remainingProducts.length === 0) {
         addProduct();
@@ -346,38 +324,30 @@ function removeProduct(productId) {
 }
 
 
-/* =========================================================
-   RENUMÉROTATION DES CAMIONS
-   ========================================================= */
-
 function renumberProducts() {
 
-    const products = document.querySelectorAll(
-        ".product-item"
-    );
+    const products =
+        document.querySelectorAll(".product-item");
 
     products.forEach((product, index) => {
 
-        const title = product.querySelector(
-            ".product-item-header h3"
-        );
+        const title =
+            product.querySelector(
+                ".product-item-header h3"
+            );
 
         if (title) {
-            title.textContent = `Camion ${index + 1}`;
+            title.textContent =
+                `Camion ${index + 1}`;
         }
+
     });
 }
 
 
-/* =========================================================
-   CALCUL DU TOTAL D'UN CAMION
-   ========================================================= */
-
 function updateProductTotal(productElement) {
 
-    if (!productElement) {
-        return;
-    }
+    if (!productElement) return;
 
     const quantityInput =
         productElement.querySelector(".product-qty");
@@ -392,49 +362,204 @@ function updateProductTotal(productElement) {
         productElement.querySelector(".product-total");
 
     const quantity =
-        Math.max(1, Number(quantityInput?.value) || 1);
+        Math.max(
+            1,
+            Number(quantityInput?.value) || 1
+        );
 
     const price =
-        Math.max(0, Number(priceInput?.value) || 0);
+        Math.max(
+            0,
+            Number(priceInput?.value) || 0
+        );
 
     const days =
-        Math.max(1, Number(daysInput?.value) || 1);
+        Math.max(
+            1,
+            Number(daysInput?.value) || 1
+        );
 
-    const total = quantity * price * days;
+    const total =
+        quantity * price * days;
 
     if (totalElement) {
-        totalElement.textContent = formatMoney(total);
+        totalElement.textContent =
+            formatMoney(total);
     }
 }
 
 
-/* =========================================================
-   INITIALISATION DES ÉVÉNEMENTS DES CAMIONS
-   ========================================================= */
-
 function attachProductListeners() {
 
     const container =
-        document.getElementById("productsContainer");
+        document.getElementById(
+            "productsContainer"
+        );
 
-    if (!container) {
+    if (!container) return;
+
+    container.addEventListener(
+        "input",
+        function (event) {
+
+            if (
+                event.target.classList.contains(
+                    "product-qty"
+                ) ||
+                event.target.classList.contains(
+                    "product-price"
+                ) ||
+                event.target.classList.contains(
+                    "product-days"
+                )
+            ) {
+
+                const product =
+                    event.target.closest(
+                        ".product-item"
+                    );
+
+                updateProductTotal(product);
+            }
+
+        }
+    );
+}
+
+
+/* =========================================================
+   PAIEMENT
+   ========================================================= */
+
+function updatePaymentFields() {
+
+    const paymentMethod =
+        document.getElementById(
+            "paymentMethod"
+        );
+
+    const paymentNumberGroup =
+        document.getElementById(
+            "paymentNumberGroup"
+        );
+
+    const otherPaymentGroup =
+        document.getElementById(
+            "otherPaymentGroup"
+        );
+
+    const paymentNumber =
+        document.getElementById(
+            "paymentNumber"
+        );
+
+    if (
+        !paymentMethod ||
+        !paymentNumberGroup ||
+        !otherPaymentGroup
+    ) {
         return;
     }
 
-    container.addEventListener("input", function(event) {
+    const method =
+        paymentMethod.value;
 
-        if (
-            event.target.classList.contains("product-qty") ||
-            event.target.classList.contains("product-price") ||
-            event.target.classList.contains("product-days")
-        ) {
+    const isMobileMoney =
+        method === "Orange Money" ||
+        method === "Wave";
 
-            const product =
-                event.target.closest(".product-item");
+    paymentNumberGroup.style.display =
+        isMobileMoney ? "flex" : "none";
 
-            updateProductTotal(product);
-        }
-    });
+    otherPaymentGroup.style.display =
+        method === "Autre" ? "flex" : "none";
+
+    if (
+        isMobileMoney &&
+        paymentNumber &&
+        !paymentNumber.value.trim()
+    ) {
+        paymentNumber.value =
+            "77 072 02 02";
+    }
+}
+
+
+function getPaymentDisplay(data) {
+
+    const method =
+        data.payment.method;
+
+    if (method === "Orange Money") {
+
+        return `
+            <p>
+                <strong>
+                    Mode de paiement :
+                </strong>
+                Orange Money
+            </p>
+
+            <p>
+                <strong>
+                    Numéro de dépôt :
+                </strong>
+                ${escapeHTML(
+                    data.payment.number ||
+                    "77 072 02 02"
+                )}
+            </p>
+        `;
+    }
+
+
+    if (method === "Wave") {
+
+        return `
+            <p>
+                <strong>
+                    Mode de paiement :
+                </strong>
+                Wave
+            </p>
+
+            <p>
+                <strong>
+                    Numéro de dépôt :
+                </strong>
+                ${escapeHTML(
+                    data.payment.number ||
+                    "77 072 02 02"
+                )}
+            </p>
+        `;
+    }
+
+
+    if (method === "Autre") {
+
+        return `
+            <p>
+                <strong>
+                    Mode de paiement :
+                </strong>
+                ${escapeHTML(
+                    data.payment.other ||
+                    "Autre"
+                )}
+            </p>
+        `;
+    }
+
+
+    return `
+        <p>
+            <strong>
+                Mode de paiement :
+            </strong>
+            ${escapeHTML(method)}
+        </p>
+    `;
 }
 
 
@@ -444,35 +569,51 @@ function attachProductListeners() {
 
 function setDefaults() {
 
-    const today = new Date();
+    const today =
+        new Date();
 
     const localDate =
         new Date(
             today.getTime() -
-            today.getTimezoneOffset() * 60000
+            today.getTimezoneOffset() *
+            60000
         )
         .toISOString()
         .split("T")[0];
 
 
     const invoiceDate =
-        document.getElementById("invoiceDate");
+        document.getElementById(
+            "invoiceDate"
+        );
 
-    if (invoiceDate && !invoiceDate.value) {
-        invoiceDate.value = localDate;
+    if (
+        invoiceDate &&
+        !invoiceDate.value
+    ) {
+        invoiceDate.value =
+            localDate;
     }
 
 
     const dueDate =
-        document.getElementById("dueDate");
+        document.getElementById(
+            "dueDate"
+        );
 
-    if (dueDate && !dueDate.value) {
-        dueDate.value = localDate;
+    if (
+        dueDate &&
+        !dueDate.value
+    ) {
+        dueDate.value =
+            localDate;
     }
 
 
     const invoiceNumber =
-        document.getElementById("invoiceNumber");
+        document.getElementById(
+            "invoiceNumber"
+        );
 
     if (
         invoiceNumber &&
@@ -481,12 +622,11 @@ function setDefaults() {
         invoiceNumber.value =
             generateInvoiceNumber();
     }
+
+
+    updatePaymentFields();
 }
 
-
-/* =========================================================
-   NUMÉRO DE FACTURE
-   ========================================================= */
 
 function generateInvoiceNumber() {
 
@@ -495,7 +635,8 @@ function generateInvoiceNumber() {
 
     const randomNumber =
         Math.floor(
-            1000 + Math.random() * 9000
+            1000 +
+            Math.random() * 9000
         );
 
     return `FCT-${year}-${randomNumber}`;
@@ -503,20 +644,21 @@ function generateInvoiceNumber() {
 
 
 /* =========================================================
-   RÉCUPÉRATION DES DONNÉES DU FORMULAIRE
+   DONNÉES DU FORMULAIRE
    ========================================================= */
 
 function getFormData() {
 
-    const getValue = (id) => {
+    const getValue =
+        (id) => {
 
-        const element =
-            document.getElementById(id);
+            const element =
+                document.getElementById(id);
 
-        return element
-            ? element.value.trim()
-            : "";
-    };
+            return element
+                ? element.value.trim()
+                : "";
+        };
 
 
     const clientName =
@@ -527,6 +669,7 @@ function getFormData() {
 
 
     if (!clientName) {
+
         alert(
             "Veuillez renseigner le nom ou la raison sociale du client."
         );
@@ -536,6 +679,7 @@ function getFormData() {
 
 
     if (!clientAddress) {
+
         alert(
             "Veuillez renseigner l'adresse du client."
         );
@@ -550,7 +694,9 @@ function getFormData() {
         );
 
 
-    if (productElements.length === 0) {
+    if (
+        productElements.length === 0
+    ) {
 
         alert(
             "Veuillez ajouter au moins un camion."
@@ -565,33 +711,52 @@ function getFormData() {
     let subtotal = 0;
 
 
-    productElements.forEach((element, index) => {
+    for (
+        let index = 0;
+        index < productElements.length;
+        index++
+    ) {
+
+        const element =
+            productElements[index];
+
 
         const name =
-            element.querySelector(
-                ".product-name"
-            )?.value.trim() || "";
+            element
+                .querySelector(
+                    ".product-name"
+                )
+                ?.value
+                .trim() || "";
 
 
         const registration =
-            element.querySelector(
-                ".product-registration"
-            )?.value.trim() || "";
+            element
+                .querySelector(
+                    ".product-registration"
+                )
+                ?.value
+                .trim() || "";
 
 
         const specs =
-            element.querySelector(
-                ".product-specs"
-            )?.value.trim() || "";
+            element
+                .querySelector(
+                    ".product-specs"
+                )
+                ?.value
+                .trim() || "";
 
 
         const quantity =
             Math.max(
                 1,
                 Number(
-                    element.querySelector(
-                        ".product-qty"
-                    )?.value
+                    element
+                        .querySelector(
+                            ".product-qty"
+                        )
+                        ?.value
                 ) || 1
             );
 
@@ -600,9 +765,11 @@ function getFormData() {
             Math.max(
                 0,
                 Number(
-                    element.querySelector(
-                        ".product-price"
-                    )?.value
+                    element
+                        .querySelector(
+                            ".product-price"
+                        )
+                        ?.value
                 ) || 0
             );
 
@@ -611,9 +778,11 @@ function getFormData() {
             Math.max(
                 1,
                 Number(
-                    element.querySelector(
-                        ".product-days"
-                    )?.value
+                    element
+                        .querySelector(
+                            ".product-days"
+                        )
+                        ?.value
                 ) || 1
             );
 
@@ -624,9 +793,7 @@ function getFormData() {
                 `Veuillez renseigner la désignation du camion ${index + 1}.`
             );
 
-            throw new Error(
-                "Camion incomplet"
-            );
+            return null;
         }
 
 
@@ -636,19 +803,28 @@ function getFormData() {
             days;
 
 
-        subtotal += lineTotal;
+        subtotal +=
+            lineTotal;
 
 
         products.push({
+
             name,
+
             registration,
+
             specs,
+
             quantity,
+
             price,
+
             days,
+
             lineTotal
+
         });
-    });
+    }
 
 
     const vatRate =
@@ -661,46 +837,88 @@ function getFormData() {
 
 
     const vatAmount =
-        subtotal * vatRate / 100;
+        subtotal *
+        vatRate /
+        100;
 
 
     const total =
-        subtotal + vatAmount;
+        subtotal +
+        vatAmount;
+
+
+    const paymentMethod =
+        getValue(
+            "paymentMethod"
+        );
+
+
+    const paymentNumber =
+        getValue(
+            "paymentNumber"
+        );
+
+
+    const otherPayment =
+        getValue(
+            "otherPayment"
+        );
 
 
     return {
 
         invoiceNumber:
-            getValue("invoiceNumber") ||
+            getValue(
+                "invoiceNumber"
+            ) ||
             generateInvoiceNumber(),
 
+
         invoiceDate:
-            getValue("invoiceDate"),
+            getValue(
+                "invoiceDate"
+            ),
+
 
         currency:
-            getValue("currency") ||
+            getValue(
+                "currency"
+            ) ||
             "FCFA",
 
 
         company: {
 
             name:
-                getValue("companyName"),
+                getValue(
+                    "companyName"
+                ),
 
             ninea:
-                getValue("companyNinea"),
+                getValue(
+                    "companyNinea"
+                ),
 
             rccm:
-                getValue("companyRccm"),
+                getValue(
+                    "companyRccm"
+                ),
 
             address:
-                getValue("companyAddress"),
+                getValue(
+                    "companyAddress"
+                ),
 
             phone:
-                getValue("companyPhone"),
+                getValue(
+                    "companyPhone"
+                ),
 
             email:
-                getValue("companyEmail")
+                getValue(
+                    "companyEmail"
+                )
+
         },
 
 
@@ -710,38 +928,58 @@ function getFormData() {
                 clientName,
 
             contact:
-                getValue("clientContact"),
+                getValue(
+                    "clientContact"
+                ),
 
             address:
                 clientAddress,
 
             phone:
-                getValue("clientPhone"),
+                getValue(
+                    "clientPhone"
+                ),
 
             email:
-                getValue("clientEmail"),
+                getValue(
+                    "clientEmail"
+                ),
 
             ninea:
-                getValue("clientNinea"),
+                getValue(
+                    "clientNinea"
+                ),
 
             country:
-                getValue("clientCountry")
+                getValue(
+                    "clientCountry"
+                )
+
         },
 
 
         rental: {
 
             startDate:
-                getValue("startDate"),
+                getValue(
+                    "startDate"
+                ),
 
             endDate:
-                getValue("endDate"),
+                getValue(
+                    "endDate"
+                ),
 
             paymentTerms:
-                getValue("paymentTerms"),
+                getValue(
+                    "paymentTerms"
+                ),
 
             locationTerms:
-                getValue("locationTerms")
+                getValue(
+                    "locationTerms"
+                )
+
         },
 
 
@@ -760,84 +998,141 @@ function getFormData() {
         payment: {
 
             method:
-                getValue("paymentMethod"),
+                paymentMethod,
+
+            number:
+                paymentNumber,
+
+            other:
+                otherPayment,
 
             dueDate:
-                getValue("dueDate")
+                getValue(
+                    "dueDate"
+                )
+
         },
 
 
         bank: {
 
             name:
-                getValue("bankName"),
+                getValue(
+                    "bankName"
+                ),
 
             agency:
-                getValue("bankAgency"),
+                getValue(
+                    "bankAgency"
+                ),
 
             rib:
-                getValue("bankRib"),
+                getValue(
+                    "bankRib"
+                ),
 
             swift:
-                getValue("bankSwift"),
+                getValue(
+                    "bankSwift"
+                ),
 
             account:
-                getValue("bankAccount"),
+                getValue(
+                    "bankAccount"
+                ),
 
             holder:
-                getValue("bankHolder")
+                getValue(
+                    "bankHolder"
+                )
+
         },
 
 
         note:
-            getValue("invoiceNote")
+            getValue(
+                "invoiceNote"
+            )
+
     };
 }
 
 
 /* =========================================================
-   MONTANT EN LETTRES
+   NOMBRE EN LETTRES
    ========================================================= */
 
 function numberToLetters(number) {
 
-    number = Math.floor(
-        Math.abs(Number(number) || 0)
-    );
+    number =
+        Math.floor(
+            Math.abs(
+                Number(number) || 0
+            )
+        );
 
 
     const units = [
+
         "",
+
         "un",
+
         "deux",
+
         "trois",
+
         "quatre",
+
         "cinq",
+
         "six",
+
         "sept",
+
         "huit",
+
         "neuf",
+
         "dix",
+
         "onze",
+
         "douze",
+
         "treize",
+
         "quatorze",
+
         "quinze",
+
         "seize"
+
     ];
 
 
     const tens = [
+
         "",
+
         "",
+
         "vingt",
+
         "trente",
+
         "quarante",
+
         "cinquante",
+
         "soixante",
+
         "soixante",
+
         "quatre-vingt",
+
         "quatre-vingt"
+
     ];
 
 
@@ -849,7 +1144,8 @@ function numberToLetters(number) {
 
 
         if (n < 20) {
-            return "dix-" + units[n - 10];
+            return "dix-" +
+                units[n - 10];
         }
 
 
@@ -868,11 +1164,16 @@ function numberToLetters(number) {
 
 
             if (unit === 1) {
-                return `${tens[ten]} et un`;
+
+                return (
+                    `${tens[ten]} et un`
+                );
             }
 
 
-            return `${tens[ten]}-${units[unit]}`;
+            return (
+                `${tens[ten]}-${units[unit]}`
+            );
         }
 
 
@@ -882,7 +1183,9 @@ function numberToLetters(number) {
                 return "soixante et onze";
             }
 
-            return `soixante-${convertBelow100(n - 60)}`;
+            return (
+                `soixante-${convertBelow100(n - 60)}`
+            );
         }
 
 
@@ -892,7 +1195,9 @@ function numberToLetters(number) {
                 return "quatre-vingts";
             }
 
-            return `quatre-vingt-${convertBelow100(n - 80)}`;
+            return (
+                `quatre-vingt-${convertBelow100(n - 80)}`
+            );
         }
 
 
@@ -928,7 +1233,8 @@ function numberToLetters(number) {
 
 
             if (remainder > 0) {
-                result += ` ${convert(remainder)}`;
+                result +=
+                    ` ${convert(remainder)}`;
             }
 
 
@@ -952,7 +1258,8 @@ function numberToLetters(number) {
 
 
             if (remainder > 0) {
-                result += ` ${convert(remainder)}`;
+                result +=
+                    ` ${convert(remainder)}`;
             }
 
 
@@ -976,7 +1283,8 @@ function numberToLetters(number) {
 
 
             if (remainder > 0) {
-                result += ` ${convert(remainder)}`;
+                result +=
+                    ` ${convert(remainder)}`;
             }
 
 
@@ -985,7 +1293,9 @@ function numberToLetters(number) {
 
 
         const milliards =
-            Math.floor(n / 1000000000);
+            Math.floor(
+                n / 1000000000
+            );
 
         const remainder =
             n % 1000000000;
@@ -998,7 +1308,9 @@ function numberToLetters(number) {
 
 
         if (remainder > 0) {
-            result += ` ${convert(remainder)}`;
+
+            result +=
+                ` ${convert(remainder)}`;
         }
 
 
@@ -1018,11 +1330,18 @@ function generateInvoice() {
 
     let data;
 
+
     try {
 
-        data = getFormData();
+        data =
+            getFormData();
 
     } catch (error) {
+
+        console.error(
+            "Erreur lors de la génération :",
+            error
+        );
 
         return;
     }
@@ -1034,112 +1353,135 @@ function generateInvoice() {
 
 
     const preview =
-        document.getElementById("invoicePreview");
+        document.getElementById(
+            "invoicePreview"
+        );
+
 
     const previewSection =
-        document.getElementById("previewSection");
+        document.getElementById(
+            "previewSection"
+        );
 
 
-    if (!preview || !previewSection) {
+    if (
+        !preview ||
+        !previewSection
+    ) {
         return;
     }
 
 
     const productsRows =
         data.products
-            .map((product, index) => {
+            .map(
+                (product, index) => {
 
-                return `
-                    <tr>
+                    return `
+                        <tr>
 
-                        <td class="invoice-number-cell">
-                            ${index + 1}
-                        </td>
+                            <td class="invoice-number-cell">
+                                ${index + 1}
+                            </td>
 
 
-                        <td class="invoice-truck-cell">
+                            <td class="invoice-truck-cell">
 
-                            <div class="truck-mini">
+                                <div class="truck-mini">
 
-                                ${getCamionHTML()}
+                                    ${getCamionHTML()}
 
-                                <div>
-                                    <strong>
-                                        ${escapeHTML(product.name)}
-                                    </strong>
+                                    <div>
 
-                                    ${
-                                        product.registration
-                                            ? `<small>
-                                                Immatriculation :
-                                                ${escapeHTML(product.registration)}
-                                            </small>`
-                                            : ""
-                                    }
+                                        <strong>
+                                            ${escapeHTML(
+                                                product.name
+                                            )}
+                                        </strong>
+
+                                        ${
+                                            product.registration
+                                                ? `
+                                                    <small>
+                                                        Immatriculation :
+                                                        ${escapeHTML(
+                                                            product.registration
+                                                        )}
+                                                    </small>
+                                                `
+                                                : ""
+                                        }
+
+                                    </div>
 
                                 </div>
 
-                            </div>
-
-                        </td>
+                            </td>
 
 
-                        <td>
-                            ${
-                                escapeHTML(
-                                    product.specs
-                                ) || "—"
-                            }
-                        </td>
+                            <td>
+                                ${
+                                    escapeHTML(
+                                        product.specs
+                                    ) || "—"
+                                }
+                            </td>
 
 
-                        <td class="text-center">
-                            ${product.quantity}
-                        </td>
+                            <td class="text-center">
+                                ${product.quantity}
+                            </td>
 
 
-                        <td class="text-center">
-                            ${product.days}
-                        </td>
+                            <td class="text-center">
+                                ${product.days}
+                            </td>
 
 
-                        <td class="text-right">
-                            ${formatMoney(
-                                product.price,
-                                data.currency
-                            )}
-                        </td>
+                            <td class="text-right">
+                                ${formatMoney(
+                                    product.price,
+                                    data.currency
+                                )}
+                            </td>
 
 
-                        <td class="text-right total-cell">
-                            ${formatMoney(
-                                product.lineTotal,
-                                data.currency
-                            )}
-                        </td>
+                            <td class="text-right total-cell">
+                                ${formatMoney(
+                                    product.lineTotal,
+                                    data.currency
+                                )}
+                            </td>
 
-                    </tr>
-                `;
-            })
+                        </tr>
+                    `;
+                }
+            )
             .join("");
+
+
+    const paymentDisplay =
+        getPaymentDisplay(data);
 
 
     preview.innerHTML = `
 
         <div class="invoice-document">
 
-
             <!-- =========================
-                 EN-TÊTE FACTURE
-            ========================== -->
+                 EN-TÊTE
+                 ========================= -->
 
             <div class="invoice-header">
 
                 <div class="invoice-company">
 
                     <div class="invoice-logo-wrapper">
+
                         ${getLogoHTML()}
+
                     </div>
+
 
                     <div class="company-details">
 
@@ -1150,11 +1492,14 @@ function generateInvoice() {
                             )}
                         </h1>
 
+
                         ${
                             data.company.ninea
                                 ? `
                                     <p>
-                                        <strong>NINEA :</strong>
+                                        <strong>
+                                            NINEA :
+                                        </strong>
                                         ${escapeHTML(
                                             data.company.ninea
                                         )}
@@ -1163,11 +1508,14 @@ function generateInvoice() {
                                 : ""
                         }
 
+
                         ${
                             data.company.rccm
                                 ? `
                                     <p>
-                                        <strong>RCCM :</strong>
+                                        <strong>
+                                            RCCM :
+                                        </strong>
                                         ${escapeHTML(
                                             data.company.rccm
                                         )}
@@ -1175,6 +1523,7 @@ function generateInvoice() {
                                 `
                                 : ""
                         }
+
 
                         ${
                             data.company.address
@@ -1188,6 +1537,7 @@ function generateInvoice() {
                                 : ""
                         }
 
+
                         ${
                             data.company.phone
                                 ? `
@@ -1200,6 +1550,7 @@ function generateInvoice() {
                                 `
                                 : ""
                         }
+
 
                         ${
                             data.company.email
@@ -1225,21 +1576,30 @@ function generateInvoice() {
                         FACTURE
                     </h2>
 
+
                     <h3>
                         DE LOCATION DE CAMIONS
                     </h3>
 
+
                     <div class="invoice-meta">
 
                         <p>
-                            <strong>N° :</strong>
+                            <strong>
+                                N° :
+                            </strong>
+
                             ${escapeHTML(
                                 data.invoiceNumber
                             )}
                         </p>
 
+
                         <p>
-                            <strong>Date :</strong>
+                            <strong>
+                                Date :
+                            </strong>
+
                             ${formatDate(
                                 data.invoiceDate
                             )}
@@ -1253,8 +1613,8 @@ function generateInvoice() {
 
 
             <!-- =========================
-                 INFORMATIONS CLIENT
-            ========================== -->
+                 CLIENT + PÉRIODE
+                 ========================= -->
 
             <div class="invoice-parties">
 
@@ -1263,6 +1623,7 @@ function generateInvoice() {
                     <div class="party-title">
                         CLIENT / LOCATAIRE
                     </div>
+
 
                     <div class="party-content">
 
@@ -1359,36 +1720,51 @@ function generateInvoice() {
                         PÉRIODE DE LOCATION
                     </div>
 
+
                     <div class="party-content">
 
                         <span>
-                            <strong>Début :</strong>
+
+                            <strong>
+                                Début :
+                            </strong>
+
                             ${
                                 formatDate(
                                     data.rental.startDate
                                 ) || "—"
                             }
+
                         </span>
 
 
                         <span>
-                            <strong>Fin :</strong>
+
+                            <strong>
+                                Fin :
+                            </strong>
+
                             ${
                                 formatDate(
                                     data.rental.endDate
                                 ) || "—"
                             }
+
                         </span>
 
 
                         <span>
-                            <strong>Durée :</strong>
-                            ${
-                                getDays(
-                                    data.rental.startDate,
-                                    data.rental.endDate
-                                )
-                            } jour(s)
+
+                            <strong>
+                                Durée :
+                            </strong>
+
+                            ${getDays(
+                                data.rental.startDate,
+                                data.rental.endDate
+                            )}
+                            jour(s)
+
                         </span>
 
 
@@ -1396,10 +1772,15 @@ function generateInvoice() {
                             data.payment.dueDate
                                 ? `
                                     <span>
-                                        <strong>Échéance :</strong>
+
+                                        <strong>
+                                            Échéance :
+                                        </strong>
+
                                         ${formatDate(
                                             data.payment.dueDate
                                         )}
+
                                     </span>
                                 `
                                 : ""
@@ -1413,8 +1794,8 @@ function generateInvoice() {
 
 
             <!-- =========================
-                 TABLE DES CAMIONS
-            ========================== -->
+                 TABLEAU DES CAMIONS
+                 ========================= -->
 
             <div class="invoice-table-wrapper">
 
@@ -1469,12 +1850,13 @@ function generateInvoice() {
 
 
             <!-- =========================
-                 TOTAUX
-            ========================== -->
+                 TOTAL
+                 ========================= -->
 
             <div class="invoice-summary">
 
-                <div class="summary-spacer"></div>
+                <div class="summary-spacer">
+                </div>
 
 
                 <div class="summary-box">
@@ -1498,8 +1880,7 @@ function generateInvoice() {
                     <div class="summary-line">
 
                         <span>
-                            TVA
-                            (${data.vatRate}%)
+                            TVA (${data.vatRate}%)
                         </span>
 
                         <strong>
@@ -1533,8 +1914,8 @@ function generateInvoice() {
 
 
             <!-- =========================
-                 TOTAL EN LETTRES
-            ========================== -->
+                 MONTANT EN LETTRES
+                 ========================= -->
 
             <div class="amount-words">
 
@@ -1542,25 +1923,26 @@ function generateInvoice() {
                     Arrêté la présente facture à la somme de :
                 </strong>
 
+
                 <span>
                     ${escapeHTML(
-                        numberToLetters(data.total)
-                    )} ${
-                        escapeHTML(
-                            data.currency
+                        numberToLetters(
+                            data.total
                         )
-                    }
+                    )}
+                    ${escapeHTML(
+                        data.currency
+                    )}
                 </span>
 
             </div>
 
 
             <!-- =========================
-                 CONDITIONS
-            ========================== -->
+                 CONDITIONS + PAIEMENT
+                 ========================= -->
 
             <div class="invoice-information-grid">
-
 
                 <div class="invoice-info-box">
 
@@ -1568,11 +1950,13 @@ function generateInvoice() {
                         CONDITIONS DE LOCATION
                     </h3>
 
+
                     <p>
                         ${
                             escapeHTML(
                                 data.rental.locationTerms
-                            ) || "Aucune condition particulière."
+                            ) ||
+                            "Aucune condition particulière."
                         }
                     </p>
 
@@ -1581,6 +1965,7 @@ function generateInvoice() {
                         data.rental.paymentTerms
                             ? `
                                 <p>
+
                                     <strong>
                                         Conditions de paiement :
                                     </strong>
@@ -1588,27 +1973,14 @@ function generateInvoice() {
                                     ${escapeHTML(
                                         data.rental.paymentTerms
                                     )}
+
                                 </p>
                             `
                             : ""
                     }
 
 
-                    ${
-                        data.payment.method
-                            ? `
-                                <p>
-                                    <strong>
-                                        Mode de paiement :
-                                    </strong>
-
-                                    ${escapeHTML(
-                                        data.payment.method
-                                    )}
-                                </p>
-                            `
-                            : ""
-                    }
+                    ${paymentDisplay}
 
                 </div>
 
@@ -1624,10 +1996,15 @@ function generateInvoice() {
                         data.bank.name
                             ? `
                                 <p>
-                                    <strong>Banque :</strong>
+
+                                    <strong>
+                                        Banque :
+                                    </strong>
+
                                     ${escapeHTML(
                                         data.bank.name
                                     )}
+
                                 </p>
                             `
                             : ""
@@ -1638,10 +2015,15 @@ function generateInvoice() {
                         data.bank.agency
                             ? `
                                 <p>
-                                    <strong>Agence :</strong>
+
+                                    <strong>
+                                        Agence :
+                                    </strong>
+
                                     ${escapeHTML(
                                         data.bank.agency
                                     )}
+
                                 </p>
                             `
                             : ""
@@ -1652,10 +2034,15 @@ function generateInvoice() {
                         data.bank.rib
                             ? `
                                 <p>
-                                    <strong>RIB :</strong>
+
+                                    <strong>
+                                        RIB :
+                                    </strong>
+
                                     ${escapeHTML(
                                         data.bank.rib
                                     )}
+
                                 </p>
                             `
                             : ""
@@ -1666,10 +2053,15 @@ function generateInvoice() {
                         data.bank.swift
                             ? `
                                 <p>
-                                    <strong>SWIFT :</strong>
+
+                                    <strong>
+                                        SWIFT :
+                                    </strong>
+
                                     ${escapeHTML(
                                         data.bank.swift
                                     )}
+
                                 </p>
                             `
                             : ""
@@ -1680,10 +2072,15 @@ function generateInvoice() {
                         data.bank.account
                             ? `
                                 <p>
-                                    <strong>Compte :</strong>
+
+                                    <strong>
+                                        Compte :
+                                    </strong>
+
                                     ${escapeHTML(
                                         data.bank.account
                                     )}
+
                                 </p>
                             `
                             : ""
@@ -1694,10 +2091,15 @@ function generateInvoice() {
                         data.bank.holder
                             ? `
                                 <p>
-                                    <strong>Titulaire :</strong>
+
+                                    <strong>
+                                        Titulaire :
+                                    </strong>
+
                                     ${escapeHTML(
                                         data.bank.holder
                                     )}
+
                                 </p>
                             `
                             : ""
@@ -1710,7 +2112,7 @@ function generateInvoice() {
 
             <!-- =========================
                  NOTE
-            ========================== -->
+                 ========================= -->
 
             ${
                 data.note
@@ -1734,8 +2136,8 @@ function generateInvoice() {
 
 
             <!-- =========================
-                 SIGNATURE
-            ========================== -->
+                 SIGNATURES
+                 ========================= -->
 
             <div class="invoice-signature-section">
 
@@ -1745,11 +2147,13 @@ function generateInvoice() {
                         Pour TerraTransport
                     </strong>
 
+
                     <div class="signature-space">
 
                         ${getSignatureHTML()}
 
                     </div>
+
 
                     <div class="signature-line">
                         Signature / Cachet
@@ -1764,8 +2168,10 @@ function generateInvoice() {
                         Le client / locataire
                     </strong>
 
+
                     <div class="signature-space">
                     </div>
+
 
                     <div class="signature-line">
                         Signature / Cachet
@@ -1778,7 +2184,7 @@ function generateInvoice() {
 
             <!-- =========================
                  PIED DE PAGE
-            ========================== -->
+                 ========================= -->
 
             <div class="invoice-footer">
 
@@ -1788,6 +2194,7 @@ function generateInvoice() {
                         "Terratransport"
                     )}
                 </strong>
+
 
                 <span>
                     Votre transport, notre engagement
@@ -1799,8 +2206,17 @@ function generateInvoice() {
     `;
 
 
-    previewSection.style.display = "block";
+    previewSection.style.display =
+        "block";
 
+
+    /*
+     * On ne modifie aucune donnée
+     * du formulaire ici.
+     *
+     * On fait uniquement défiler
+     * l'utilisateur vers l'aperçu.
+     */
 
     previewSection.scrollIntoView({
         behavior: "smooth",
@@ -1821,7 +2237,10 @@ function downloadPDF() {
         );
 
 
-    if (!invoice || !invoice.innerHTML.trim()) {
+    if (
+        !invoice ||
+        !invoice.innerHTML.trim()
+    ) {
 
         alert(
             "Veuillez d'abord générer la facture."
@@ -1831,38 +2250,78 @@ function downloadPDF() {
     }
 
 
+    /*
+     * IMPORTANT :
+     *
+     * On attend que toutes les images
+     * soient complètement chargées.
+     *
+     * Cela évite que le navigateur
+     * déplace le contenu lorsque
+     * l'impression commence.
+     */
+
     const images =
         invoice.querySelectorAll("img");
 
 
     const imagePromises =
-        Array.from(images).map((image) => {
+        Array.from(images).map(
+            (image) => {
 
-            if (image.complete) {
-                return Promise.resolve();
+                if (
+                    image.complete &&
+                    image.naturalWidth > 0
+                ) {
+                    return Promise.resolve();
+                }
+
+
+                return new Promise(
+                    (resolve) => {
+
+                        image.addEventListener(
+                            "load",
+                            resolve,
+                            {
+                                once: true
+                            }
+                        );
+
+
+                        image.addEventListener(
+                            "error",
+                            resolve,
+                            {
+                                once: true
+                            }
+                        );
+
+                    }
+                );
+
             }
-
-            return new Promise((resolve) => {
-
-                image.addEventListener(
-                    "load",
-                    resolve,
-                    { once: true }
-                );
-
-                image.addEventListener(
-                    "error",
-                    resolve,
-                    { once: true }
-                );
-            });
-        });
+        );
 
 
     Promise.all(imagePromises)
         .then(() => {
 
-            window.print();
+            /*
+             * Petit délai pour laisser
+             * le navigateur terminer
+             * le calcul de la mise en page.
+             */
+
+            requestAnimationFrame(() => {
+
+                requestAnimationFrame(() => {
+
+                    window.print();
+
+                });
+
+            });
 
         })
         .catch(() => {
@@ -1902,11 +2361,51 @@ function resetForm() {
 
 
         if (preview) {
-            preview.style.display = "none";
+            preview.style.display =
+                "none";
         }
 
 
         setDefaults();
+
+
+        const paymentMethod =
+            document.getElementById(
+                "paymentMethod"
+            );
+
+
+        if (paymentMethod) {
+            paymentMethod.value =
+                "Virement bancaire";
+        }
+
+
+        const paymentNumber =
+            document.getElementById(
+                "paymentNumber"
+            );
+
+
+        if (paymentNumber) {
+            paymentNumber.value =
+                "77 072 02 02";
+        }
+
+
+        const otherPayment =
+            document.getElementById(
+                "otherPayment"
+            );
+
+
+        if (otherPayment) {
+            otherPayment.value =
+                "";
+        }
+
+
+        updatePaymentFields();
 
 
         addProduct();
@@ -1928,6 +2427,29 @@ document.addEventListener(
         attachProductListeners();
 
         addProduct();
+
+
+        /*
+         * Gestion du mode de paiement
+         */
+
+        const paymentMethod =
+            document.getElementById(
+                "paymentMethod"
+            );
+
+
+        if (paymentMethod) {
+
+            paymentMethod.addEventListener(
+                "change",
+                updatePaymentFields
+            );
+
+        }
+
+
+        updatePaymentFields();
 
     }
 );
